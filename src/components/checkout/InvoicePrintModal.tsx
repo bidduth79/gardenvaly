@@ -85,7 +85,9 @@ export const InvoicePrintModal: React.FC<InvoicePrintModalProps> = ({ isOpen, on
             <div>
               <p className="text-[11px] font-bold text-stone-400 uppercase">{isBn ? 'ডেলিভারি ঠিকানা' : 'Delivery Address'}</p>
               <p className="text-stone-700 mt-1">{order.customer.addressDetail}</p>
-              <p className="text-stone-500">{order.customer.district}, {order.customer.division}</p>
+              <p className="text-stone-500">
+                {[order.customer.union, order.customer.upazila, order.customer.district, order.customer.division].filter(Boolean).join(', ')}
+              </p>
             </div>
           </div>
 

@@ -19,6 +19,7 @@ import { adminService } from '../../services/adminService';
 import { Product, ProductCategoryType } from '../../types/product';
 import { useRouter } from '../../context/RouterContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
 
 export const AdminProductsPage: React.FC = () => {
   const { navigate } = useRouter();
@@ -160,9 +161,10 @@ export const AdminProductsPage: React.FC = () => {
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
                         <img
-                          src={prod.imageUrl}
+                          src={getSafeImageUrl(prod.imageUrl, { type: prod.type, categorySlug: prod.categorySlug })}
                           alt={prod.nameEn}
                           className="w-11 h-11 rounded-xl object-cover border border-stone-200 shrink-0"
+                          onError={(e) => handleImageError(e, getProductFallbackImage(prod))}
                         />
                         <div className="max-w-xs truncate">
                           <p className="font-semibold text-stone-900 truncate">

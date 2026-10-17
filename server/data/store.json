@@ -10,7 +10,7 @@
       "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=120&auto=format&fit=crop&q=80",
       "createdAt": "2026-10-13T13:52:31.917Z",
       "updatedAt": "2026-10-13T13:52:31.918Z",
-      "lastLogin": "2026-10-14T12:06:12.890Z"
+      "lastLogin": "2026-10-17T14:04:49.290Z"
     },
     {
       "id": "usr-2",
@@ -25,88 +25,183 @@
   ],
   "categories": [
     {
-      "id": "indoor-plants",
-      "slug": "indoor-plants",
-      "type": "plant",
-      "nameEn": "Indoor Plants",
-      "nameBn": "ইনডোর গাছ",
-      "descriptionEn": "Money Plants, Monsteras, and Peace Lilies for clean, modern home air.",
-      "descriptionBn": "মানি প্ল্যান্ট ও স্নেক প্ল্যান্ট যা ঘরের শোভা বাড়ায় এবং বাতাস বিশুদ্ধ রাখে।",
-      "imageUrl": "https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&w=800&q=80",
-      "isActive": true,
-      "itemCount": 24,
-      "createdAt": "2026-10-13T13:52:31.918Z",
-      "updatedAt": "2026-10-13T13:52:31.918Z"
-    },
-    {
-      "id": "cat-plants-outdoor",
-      "slug": "outdoor-plants",
-      "type": "plant",
-      "nameEn": "Outdoor Plants",
-      "nameBn": "আউটডোর ও ছাদবাগান গাছ",
-      "descriptionEn": "Hardy perennial plants and flowering shrubs for Bangladeshi climate.",
-      "descriptionBn": "বাংলাদেশের আবহাওয়ায় মানানসই রৌদ্রপ্রিয় ও ছাদবাগানের আকর্ষণীয় গাছপালা।",
-      "imageUrl": "https://images.unsplash.com/photo-1512428813834-c702c7702b78?w=800&auto=format&fit=crop&q=80",
-      "isActive": true,
-      "itemCount": 6,
-      "createdAt": "2026-10-13T13:52:31.918Z",
-      "updatedAt": "2026-10-13T13:52:31.918Z"
-    },
-    {
-      "id": "vegetable-seeds",
-      "slug": "vegetable-seeds",
-      "type": "seed",
-      "nameEn": "Vegetable Seeds",
-      "nameBn": "সবজির বীজ",
-      "descriptionEn": "Tomato, Chili, Coriander, and Eggplant heirloom kitchen garden seeds.",
-      "descriptionBn": "টমেটো, কাঁচামরিচ, ধনেপাতা ও বেগুনের দেশি ও উচ্চফলনশীল বীজ।",
-      "imageUrl": "https://images.unsplash.com/photo-1592417817098-8f3d6910985c?auto=format&fit=crop&w=800&q=80",
-      "isActive": true,
-      "itemCount": 38,
-      "createdAt": "2026-10-13T13:52:31.918Z",
-      "updatedAt": "2026-10-13T13:52:31.918Z"
-    },
-    {
-      "id": "flower-seeds",
-      "slug": "flower-seeds",
-      "type": "seed",
-      "nameEn": "Flower Seeds",
-      "nameBn": "ফুলের বীজ",
-      "descriptionEn": "Marigold, Sunflower, Zinnia, and Petunia seeds for vibrant balconies.",
-      "descriptionBn": "গাঁদা, সূর্যমুখী, জিনিয়া ও ডালিয়া ফুলের উজ্জ্বল রঙিন বীজ।",
-      "imageUrl": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=800&q=80",
-      "isActive": true,
-      "itemCount": 27,
-      "createdAt": "2026-10-13T13:52:31.918Z",
-      "updatedAt": "2026-10-13T13:52:31.918Z"
-    },
-    {
       "id": "fruit-plants",
       "slug": "fruit-plants",
       "type": "plant",
       "nameEn": "Fruit Plants",
-      "nameBn": "ফলের গাছ",
-      "descriptionEn": "Mango, Guava, Lemon, and Pomegranate saplings for terrace and garden.",
-      "descriptionBn": "ছাদবাগান ও আঙিনার জন্য ফলনশীল আম, পেয়ারা ও লেবুর কলম চারা।",
+      "nameBn": "ফল গাছ",
+      "descriptionEn": "Fruiting trees including native, all-season, and exotic cultivars.",
+      "descriptionBn": "দেশি, বারোমাসি ও বিদেশি ফলনশীল কলম চারা গাছ।",
       "imageUrl": "https://images.unsplash.com/photo-1553279768-865429fa0078?auto=format&fit=crop&w=800&q=80",
-      "itemCount": 28,
       "isActive": true,
-      "createdAt": "2026-10-14T01:52:51.466Z",
-      "updatedAt": "2026-10-14T01:52:51.466Z"
+      "itemCount": 130,
+      "iconName": "tree",
+      "subcategories": [
+        {
+          "id": "deshi-fruit",
+          "slug": "deshi-fruit-plants",
+          "nameEn": "Native Fruit Plants",
+          "nameBn": "দেশি ফল গাছ",
+          "itemCount": 52,
+          "iconName": "tree"
+        },
+        {
+          "id": "baromasi-fruit",
+          "slug": "baromasi-fruit-plants",
+          "nameEn": "All-Season Fruit Plants",
+          "nameBn": "বারোমাসি ফল গাছ",
+          "itemCount": 71,
+          "iconName": "tree"
+        },
+        {
+          "id": "bideshi-fruit",
+          "slug": "bideshi-fruit-plants",
+          "nameEn": "Exotic Fruit Plants",
+          "nameBn": "বিদেশি ফল গাছ",
+          "itemCount": 100,
+          "iconName": "tree"
+        }
+      ],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
     },
     {
       "id": "flowering-plants",
       "slug": "flowering-plants",
       "type": "plant",
       "nameEn": "Flowering Plants",
-      "nameBn": "ফুলের গাছ",
-      "descriptionEn": "Rose, Jasmine, Hibiscus, and Bougainvillea in vivid blooming colors.",
-      "descriptionBn": "গোলাপ, জবা, জুঁই ও গন্ধরাজ ফুলের সুবাসিত দেশি-বিদেশি চারা।",
+      "nameBn": "ফুল গাছ",
+      "descriptionEn": "Fragrant, creeper, all-season, and winter blossoming flowers.",
+      "descriptionBn": "সুগন্ধি, লতা জাতীয়, বারোমাসি ও রঙিন ফুলের চারা।",
       "imageUrl": "https://images.unsplash.com/photo-1508615039623-a25605d2b022?auto=format&fit=crop&w=800&q=80",
-      "itemCount": 35,
       "isActive": true,
-      "createdAt": "2026-10-14T01:52:51.466Z",
-      "updatedAt": "2026-10-14T01:52:51.466Z"
+      "itemCount": 183,
+      "iconName": "flower",
+      "subcategories": [
+        {
+          "id": "deshi-flower",
+          "slug": "deshi-flowering-plants",
+          "nameEn": "Native Flowers",
+          "nameBn": "দেশি ফুল গাছ",
+          "itemCount": 130,
+          "iconName": "flower"
+        },
+        {
+          "id": "baromasi-flower",
+          "slug": "baromasi-flowering-plants",
+          "nameEn": "All-Season Flowers",
+          "nameBn": "বারোমাসি ফুল গাছ",
+          "itemCount": 102,
+          "iconName": "flower"
+        },
+        {
+          "id": "bideshi-flower",
+          "slug": "bideshi-flowering-plants",
+          "nameEn": "Exotic Flowers",
+          "nameBn": "বিদেশি ফুল গাছ",
+          "itemCount": 132,
+          "iconName": "flower"
+        },
+        {
+          "id": "creeper-flower",
+          "slug": "creeper-flowering-plants",
+          "nameEn": "Creeper Flowering Plants",
+          "nameBn": "লতা জাতীয় ফুল গাছ",
+          "itemCount": 33,
+          "iconName": "flower"
+        },
+        {
+          "id": "winter-flower",
+          "slug": "winter-flowers",
+          "nameEn": "Winter Blossoms",
+          "nameBn": "শীতকালীন ফুল",
+          "itemCount": 22,
+          "iconName": "flower"
+        },
+        {
+          "id": "fragrant-flower",
+          "slug": "fragrant-flowers",
+          "nameEn": "Fragrant Flowering Plants",
+          "nameBn": "সুগন্ধি ফুল গাছ",
+          "itemCount": 74,
+          "iconName": "flower"
+        }
+      ],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
+    },
+    {
+      "id": "ornamental-plants",
+      "slug": "ornamental-plants",
+      "type": "plant",
+      "nameEn": "Ornamental Plants",
+      "nameBn": "শোভাময় গাছ",
+      "descriptionEn": "Indoor, outdoor, bonsai, succulents, and hanging decorative greenery.",
+      "descriptionBn": "ইনডোর, আউটডোর, বনসাই, ক্যাকটাস ও হ্যাঙ্গিং শোভাবর্ধক গাছ।",
+      "imageUrl": "https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&w=800&q=80",
+      "isActive": true,
+      "itemCount": 124,
+      "iconName": "potted",
+      "subcategories": [
+        {
+          "id": "outdoor-plant",
+          "slug": "outdoor-plants",
+          "nameEn": "Outdoor Plants",
+          "nameBn": "আউটডোর প্লান্টস",
+          "itemCount": 122,
+          "iconName": "potted"
+        },
+        {
+          "id": "indoor-plant",
+          "slug": "indoor-plants",
+          "nameEn": "Indoor Plants",
+          "nameBn": "ইনডোর প্লান্টস",
+          "itemCount": 93,
+          "iconName": "potted"
+        },
+        {
+          "id": "cactus-succulent",
+          "slug": "cactus-succulents",
+          "nameEn": "Cactus & Succulents",
+          "nameBn": "ক্যাকটাস ও স্যাকুলেন্ট",
+          "itemCount": 4,
+          "iconName": "potted"
+        },
+        {
+          "id": "bonsai-plant",
+          "slug": "bonsai-plants",
+          "nameEn": "Bonsai Trees",
+          "nameBn": "বনসাই",
+          "itemCount": 2,
+          "iconName": "potted"
+        },
+        {
+          "id": "hanging-plant",
+          "slug": "hanging-plants",
+          "nameEn": "Hanging Plants",
+          "nameBn": "হ্যাঙ্গিং প্লান্টস",
+          "itemCount": 27,
+          "iconName": "potted"
+        }
+      ],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
+    },
+    {
+      "id": "spice-plants",
+      "slug": "spice-plants",
+      "type": "plant",
+      "nameEn": "Spice Plants",
+      "nameBn": "মশলা জাতীয় গাছ",
+      "descriptionEn": "Culinary spice and herb plants including bay leaf, black pepper, and cardamom.",
+      "descriptionBn": "তেজপাতা, গোলমরিচ, এলাচ ও রান্নাঘরের খাঁটি মশলা জাতীয় গাছ।",
+      "imageUrl": "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=800&q=80",
+      "isActive": true,
+      "itemCount": 15,
+      "iconName": "leaf",
+      "subcategories": [],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
     },
     {
       "id": "medicinal-plants",
@@ -114,27 +209,15 @@
       "type": "plant",
       "nameEn": "Medicinal Plants",
       "nameBn": "ঔষধি গাছ",
-      "descriptionEn": "Aloe Vera, Tulsi, Neem, and Mint with natural healing properties.",
-      "descriptionBn": "অ্যালোভেরা, তুলসী, নিম ও পুদিনা পাতার প্রাকৃতিক ভেষজ গুণসম্পন্ন গাছ।",
+      "descriptionEn": "Natural healing herbs such as Aloe Vera, Tulsi, and Neem.",
+      "descriptionBn": "অ্যালোভেরা, তুলসী, নিম ও বাসক পাতার প্রাকৃতিক ভেষজ গাছ।",
       "imageUrl": "https://images.unsplash.com/photo-1509423350716-97f9360b4e09?auto=format&fit=crop&w=800&q=80",
-      "itemCount": 16,
       "isActive": true,
-      "createdAt": "2026-10-14T01:52:51.466Z",
-      "updatedAt": "2026-10-14T01:52:51.466Z"
-    },
-    {
-      "id": "ornamental-plants",
-      "slug": "ornamental-plants",
-      "type": "plant",
-      "nameEn": "Ornamental Plants",
-      "nameBn": "শোভাবর্ধক গাছ",
-      "descriptionEn": "Architectural foliage, Crotons, and Ferns for decorative landscaping.",
-      "descriptionBn": "রঙিন ক্রোটন, পাতাবাহার ও ফার্ন যা বাড়িকে সাজিয়ে তোলে অপরূপ সাজে।",
-      "imageUrl": "https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&w=800&q=80",
-      "itemCount": 22,
-      "isActive": true,
-      "createdAt": "2026-10-14T01:52:51.466Z",
-      "updatedAt": "2026-10-14T01:52:51.466Z"
+      "itemCount": 21,
+      "iconName": "leaf",
+      "subcategories": [],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
     },
     {
       "id": "rare-plants",
@@ -142,13 +225,47 @@
       "type": "plant",
       "nameEn": "Rare Plants",
       "nameBn": "বিরল গাছ",
-      "descriptionEn": "Exotic collector cultivars, variegated greens, and miniature bonsai.",
+      "descriptionEn": "Exotic collector cultivars and variegated greens.",
       "descriptionBn": "সংগ্রাহকদের পছন্দের বিরল প্রজাতির ভ্যারিগেটেড গাছ ও প্রাচীন বনসাই।",
       "imageUrl": "https://images.unsplash.com/photo-1512428813834-c702c7702b78?auto=format&fit=crop&w=800&q=80",
-      "itemCount": 12,
       "isActive": true,
-      "createdAt": "2026-10-14T01:52:51.466Z",
-      "updatedAt": "2026-10-14T01:52:51.466Z"
+      "itemCount": 12,
+      "iconName": "tree",
+      "subcategories": [],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
+    },
+    {
+      "id": "vegetable-seeds",
+      "slug": "vegetable-seeds",
+      "type": "seed",
+      "nameEn": "Vegetable Seeds",
+      "nameBn": "সবজির বীজ",
+      "descriptionEn": "High-germination vegetable seeds for rooftop kitchen gardens.",
+      "descriptionBn": "উচ্চ অঙ্কুরোদ্গম ক্ষমতাসম্পন্ন দেশি ও হাইব্রিড সবজি বীজ।",
+      "imageUrl": "https://images.unsplash.com/photo-1592417817098-8f3d6910985c?auto=format&fit=crop&w=800&q=80",
+      "isActive": true,
+      "itemCount": 38,
+      "iconName": "seed",
+      "subcategories": [],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
+    },
+    {
+      "id": "flower-seeds",
+      "slug": "flower-seeds",
+      "type": "seed",
+      "nameEn": "Flower Seeds",
+      "nameBn": "ফুলের বীজ",
+      "descriptionEn": "Vibrant seasonal flower seeds for colorful balconies.",
+      "descriptionBn": "গাঁদা, ডালিয়া, সূর্যমুখী ও জিনিয়ার রঙিন ফুলের বীজ।",
+      "imageUrl": "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=800&q=80",
+      "isActive": true,
+      "itemCount": 27,
+      "iconName": "flower",
+      "subcategories": [],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
     },
     {
       "id": "fruit-seeds",
@@ -156,13 +273,15 @@
       "type": "seed",
       "nameEn": "Fruit Seeds",
       "nameBn": "ফলের বীজ",
-      "descriptionEn": "Papaya, Watermelon, Rockmelon, and Strawberry seeds.",
-      "descriptionBn": "পেঁপে, তরমুজ, সাম্মাম ও স্ট্রবেরির মানসম্মত ফল বীজ।",
+      "descriptionEn": "Papaya, Watermelon, and Strawberry seeds.",
+      "descriptionBn": "পেঁপে, তরমুজ ও স্ট্রবেরির মানসম্মত ফল বীজ।",
       "imageUrl": "https://images.unsplash.com/photo-1550258987-190a2d41a8ba?auto=format&fit=crop&w=800&q=80",
-      "itemCount": 18,
       "isActive": true,
-      "createdAt": "2026-10-14T01:52:51.466Z",
-      "updatedAt": "2026-10-14T01:52:51.466Z"
+      "itemCount": 18,
+      "iconName": "seed",
+      "subcategories": [],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
     },
     {
       "id": "agricultural-seeds",
@@ -170,41 +289,47 @@
       "type": "seed",
       "nameEn": "Agricultural Seeds",
       "nameBn": "কৃষিজ বীজ",
-      "descriptionEn": "High-purity green fodder, mustard, sesame, and field crop seeds.",
+      "descriptionEn": "High-purity field crop seeds.",
       "descriptionBn": "সরিষা, তিল ও মাঠ ফসলের উচ্চ বিশুদ্ধতাসম্পন্ন কৃষিজ বীজ।",
       "imageUrl": "https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=800&q=80",
-      "itemCount": 20,
       "isActive": true,
-      "createdAt": "2026-10-14T01:52:51.467Z",
-      "updatedAt": "2026-10-14T01:52:51.467Z"
+      "itemCount": 20,
+      "iconName": "seed",
+      "subcategories": [],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
     },
     {
       "id": "gardening-tools",
       "slug": "gardening-tools",
       "type": "tool",
-      "nameEn": "Garden Tools & Equipment",
+      "nameEn": "Garden Tools",
       "nameBn": "গার্ডেন টুলস ও সরঞ্জাম",
-      "descriptionEn": "Pruning shears, trowels, sprayers, and irrigation equipment for healthy gardens.",
-      "descriptionBn": "গাছ ছাঁটাইয়ের কাঁচি, খুরপি, প্রেসার স্প্রেয়ার ও অটো ওয়াটারিং ড্রিপ কিট।",
+      "descriptionEn": "Pruning shears, trowels, sprayers, and gardening accessories.",
+      "descriptionBn": "গাছ ছাঁটাইয়ের কাঁচি, খুরপি ও প্রেসার স্প্রেয়ার।",
       "imageUrl": "https://images.unsplash.com/photo-1617576683096-00fc8eecb3af?auto=format&fit=crop&w=800&q=80",
-      "itemCount": 18,
       "isActive": true,
-      "createdAt": "2026-10-14T01:52:51.467Z",
-      "updatedAt": "2026-10-14T01:52:51.467Z"
+      "itemCount": 18,
+      "iconName": "tool",
+      "subcategories": [],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
     },
     {
       "id": "plant-care",
       "slug": "plant-care",
       "type": "tool",
-      "nameEn": "Soil, Compost & Plant Care",
+      "nameEn": "Compost & Plant Care",
       "nameBn": "জৈব সার ও গাছ পরিচর্যা",
-      "descriptionEn": "Pure vermicompost, cocopeat substrates, organic neem oil, and natural plant boosters.",
-      "descriptionBn": "খাঁটি কেঁচো সার, ট্রিপল-ওয়াশড কোকোপিট, পোকা প্রতিরোধী নিম তেল ও ভিটামিন।",
+      "descriptionEn": "Vermicompost, cocopeat, and neem oil.",
+      "descriptionBn": "খাঁটি কেঁচো সার, ট্রিপল-ওয়াশড কোকোপিট ও নিম তেল।",
       "imageUrl": "https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=800&q=80",
-      "itemCount": 15,
       "isActive": true,
-      "createdAt": "2026-10-14T01:52:51.467Z",
-      "updatedAt": "2026-10-14T01:52:51.467Z"
+      "itemCount": 15,
+      "iconName": "leaf",
+      "subcategories": [],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
     },
     {
       "id": "pots-planters",
@@ -212,13 +337,15 @@
       "type": "tool",
       "nameEn": "Pots & Planters",
       "nameBn": "টব ও প্ল্যান্টার",
-      "descriptionEn": "Glazed ceramic pots, nursery grow bags, and aesthetic hanging planter bowls.",
-      "descriptionBn": "নান্দনিক সিরামিক টব, ড্রেনেজ ট্রে ও ছাদবাগানের জন্য টেকসই গ্রোব্যাগ।",
+      "descriptionEn": "Ceramic pots, grow bags, and hanging planters.",
+      "descriptionBn": "সিরামিক টব, ড্রেনেজ ট্রে ও টেকসই গ্রোব্যাগ।",
       "imageUrl": "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=800&q=80",
-      "itemCount": 24,
       "isActive": true,
-      "createdAt": "2026-10-14T01:52:51.467Z",
-      "updatedAt": "2026-10-14T01:52:51.467Z"
+      "itemCount": 24,
+      "iconName": "potted",
+      "subcategories": [],
+      "createdAt": "2026-10-17T14:39:33.423Z",
+      "updatedAt": "2026-10-17T14:39:33.423Z"
     }
   ],
   "products": [
@@ -544,7 +671,7 @@
       "discountPercent": 15,
       "rating": 4.9,
       "reviewsCount": 58,
-      "stockQuantity": 15,
+      "stockQuantity": 14,
       "SKU": "PL-ROS-003",
       "createdAt": "2026-03-15",
       "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
@@ -1208,7 +1335,7 @@
       "rating": 4.9,
       "reviewsCount": 36,
       "soldCount": 185,
-      "stockQuantity": 28,
+      "stockQuantity": 26,
       "SKU": "TL-PRN-001",
       "createdAt": "2026-03-01",
       "imageUrl": "https://images.unsplash.com/photo-1589051039495-eb777145827b?auto=format&fit=crop&w=800&q=80",
@@ -1598,7 +1725,12 @@
       "firstOrderDate": "2025-11-12T14:20:00Z",
       "lastOrderDate": "2026-10-13T13:52:31.918Z",
       "createdAt": "2025-11-12T14:20:00Z",
-      "updatedAt": "2026-10-13T13:52:31.918Z"
+      "updatedAt": "2026-10-17T12:56:01.797Z",
+      "wishlist": [
+        "organic-neem-oil-spray",
+        "drip-irrigation-kit-10pot",
+        "cocopeat-block-5kg"
+      ]
     },
     {
       "id": "cust-102",
@@ -1623,15 +1755,1524 @@
       "division": "Dhaka",
       "district": "Dhaka",
       "addressDetail": "Test Address 123",
-      "totalOrders": 58,
-      "totalSpent": 102080,
+      "totalOrders": 70,
+      "totalSpent": 123200,
       "firstOrderDate": "2026-10-13T14:10:27.454Z",
-      "lastOrderDate": "2026-10-14T13:00:56.445Z",
+      "lastOrderDate": "2026-10-17T14:48:51.750Z",
       "createdAt": "2026-10-13T14:10:27.454Z",
-      "updatedAt": "2026-10-14T13:00:56.445Z"
+      "updatedAt": "2026-10-17T14:48:51.750Z"
+    },
+    {
+      "id": "cust-1792221728098",
+      "fullName": "পক",
+      "mobileNumber": "01829300000",
+      "division": "Mymensingh",
+      "district": "Sherpur",
+      "upazila": "Sherpur Sadar",
+      "addressDetail": "ববববব",
+      "totalOrders": 3,
+      "totalSpent": 1420,
+      "firstOrderDate": "2026-10-17T07:22:08.098Z",
+      "lastOrderDate": "2026-10-17T13:33:30.951Z",
+      "createdAt": "2026-10-17T07:22:08.098Z",
+      "updatedAt": "2026-10-17T13:33:30.951Z",
+      "email": "ctrkb79@gmail.com",
+      "passwordHash": "$2b$10$/5C2C5u6IBHBc6GSjQGIGu2pY7h3d/OVWL2nwa4wXr8NGt/vKv87O",
+      "wishlist": []
     }
   ],
   "orders": [
+    {
+      "id": "ord-1792248531749",
+      "orderNumber": "GV-2026-6660",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T14:48:51.749Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:48:51.757Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:48:51.760Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T14:48:51.750Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:48:51.752Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:48:51.754Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:48:51.757Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:48:51.757Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:48:51.760Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T14:48:51.750Z",
+      "updatedAt": "2026-10-17T14:48:51.760Z",
+      "codCollectedAt": "2026-10-17T14:48:51.754Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
+    {
+      "id": "ord-1792247584164",
+      "orderNumber": "GV-2026-3026",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T14:33:04.164Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:33:04.173Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:33:04.176Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T14:33:04.165Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:33:04.167Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:33:04.170Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:33:04.173Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:33:04.173Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:33:04.176Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T14:33:04.165Z",
+      "updatedAt": "2026-10-17T14:33:04.176Z",
+      "codCollectedAt": "2026-10-17T14:33:04.170Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
+    {
+      "id": "ord-1792247285492",
+      "orderNumber": "GV-2026-5264",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T14:28:05.492Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:28:05.501Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:28:05.504Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T14:28:05.492Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:28:05.495Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:28:05.498Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:28:05.501Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:28:05.501Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:28:05.504Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T14:28:05.492Z",
+      "updatedAt": "2026-10-17T14:28:05.504Z",
+      "codCollectedAt": "2026-10-17T14:28:05.498Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
+    {
+      "id": "ord-1792247073637",
+      "orderNumber": "GV-2026-7667",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T14:24:33.637Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:24:33.647Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:24:33.650Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T14:24:33.637Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:24:33.640Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:24:33.643Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:24:33.647Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:24:33.647Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:24:33.650Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T14:24:33.637Z",
+      "updatedAt": "2026-10-17T14:24:33.650Z",
+      "codCollectedAt": "2026-10-17T14:24:33.643Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
+    {
+      "id": "ord-1792246800550",
+      "orderNumber": "GV-2026-1671",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T14:20:00.550Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:20:00.558Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:20:00.560Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T14:20:00.550Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:20:00.553Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:20:00.555Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:20:00.558Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:20:00.558Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:20:00.560Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T14:20:00.550Z",
+      "updatedAt": "2026-10-17T14:20:00.560Z",
+      "codCollectedAt": "2026-10-17T14:20:00.555Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
+    {
+      "id": "ord-1792246357847",
+      "orderNumber": "GV-2026-7921",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T14:12:37.847Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:12:37.857Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:12:37.860Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T14:12:37.847Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:12:37.850Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:12:37.854Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:12:37.857Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:12:37.857Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:12:37.860Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T14:12:37.847Z",
+      "updatedAt": "2026-10-17T14:12:37.860Z",
+      "codCollectedAt": "2026-10-17T14:12:37.854Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
+    {
+      "id": "ord-1792246200038",
+      "orderNumber": "GV-2026-5835",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T14:10:00.038Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:10:00.049Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T14:10:00.052Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T14:10:00.039Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:10:00.042Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:10:00.045Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:10:00.049Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:10:00.049Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T14:10:00.052Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T14:10:00.039Z",
+      "updatedAt": "2026-10-17T14:10:00.052Z",
+      "codCollectedAt": "2026-10-17T14:10:00.045Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
+    {
+      "id": "ord-1792244010950",
+      "orderNumber": "GV-2026-1707",
+      "customer": {
+        "fullName": "পক",
+        "mobileNumber": "01829300000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "upazila": "Dhaka City",
+        "union": "",
+        "addressDetail": "ববববব",
+        "deliveryInstructions": ""
+      },
+      "items": [
+        {
+          "productId": "rose-plant",
+          "productName": "Fragrant Kashmiri Rose Plant",
+          "slug": "rose-plant",
+          "imageUrl": "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80",
+          "quantity": 1,
+          "unitPrice": 220,
+          "lineSubtotal": 220
+        }
+      ],
+      "subtotal": 220,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 280,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "delivered",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T13:33:30.950Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "confirmed",
+          "changedAt": "2026-10-17T13:34:10.366Z",
+          "note": "টপ",
+          "changedBy": "Hasna Hena"
+        },
+        {
+          "status": "processing",
+          "changedAt": "2026-10-17T13:34:22.911Z",
+          "note": "াা",
+          "changedBy": "Hasna Hena"
+        },
+        {
+          "status": "packed",
+          "changedAt": "2026-10-17T13:34:31.134Z",
+          "note": "্প",
+          "changedBy": "Hasna Hena"
+        },
+        {
+          "status": "shipped",
+          "changedAt": "2026-10-17T13:35:10.504Z",
+          "note": "Dispatched via Steadfast Courier tracking #STDF-300516",
+          "changedBy": "Courier Integration"
+        },
+        {
+          "status": "delivered",
+          "changedAt": "2026-10-17T13:37:48.951Z",
+          "note": "টটট",
+          "changedBy": "Hasna Hena"
+        }
+      ],
+      "adminNotes": "1-Click Instant Buy Now modal order",
+      "codExpectedAmount": 280,
+      "codCollectedAmount": 280,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": false,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T13:33:30.950Z",
+          "details": "Order created with 1 items. Total: ৳280. Payment: cash-on-delivery"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Hasna Hena",
+          "timestamp": "2026-10-17T13:34:10.366Z",
+          "previousValue": "pending",
+          "newValue": "confirmed",
+          "details": "টপ"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Hasna Hena",
+          "timestamp": "2026-10-17T13:34:22.911Z",
+          "previousValue": "confirmed",
+          "newValue": "processing",
+          "details": "াা"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Hasna Hena",
+          "timestamp": "2026-10-17T13:34:31.134Z",
+          "previousValue": "processing",
+          "newValue": "packed",
+          "details": "্প"
+        },
+        {
+          "action": "DELIVERY_INFO_UPDATED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T13:35:10.503Z",
+          "details": "Courier provider: Steadfast Courier, Tracking: STDF-300516"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Courier Integration",
+          "timestamp": "2026-10-17T13:35:10.504Z",
+          "previousValue": "packed",
+          "newValue": "shipped",
+          "details": "Dispatched via Steadfast Courier tracking #STDF-300516"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Hasna Hena",
+          "timestamp": "2026-10-17T13:37:48.951Z",
+          "previousValue": "shipped",
+          "newValue": "delivered",
+          "details": "টটট"
+        },
+        {
+          "action": "DELIVERY_INFO_UPDATED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T13:38:58.830Z",
+          "details": "Courier provider: Pathao Courier, Tracking: PTH-964737"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Hasna Hena",
+          "timestamp": "2026-10-17T13:43:18.399Z",
+          "details": "Collected ৳280 out of expected ৳280 by Nursery Delivery Staff. Outstanding: ৳0"
+        }
+      ],
+      "createdAt": "2026-10-17T13:33:30.951Z",
+      "updatedAt": "2026-10-17T13:43:18.399Z",
+      "deliveryProvider": "Pathao Courier",
+      "trackingNumber": "PTH-964737",
+      "dispatchDate": "2026-10-17T13:38:58.830Z",
+      "expectedDeliveryDate": "2026-10-19",
+      "deliveryNotes": "Dispatched via Pathao Courier (Tracking: PTH-964737)",
+      "trackingUrl": "https://merchant.pathao.com/tracking?consignment_id=PTH-964737",
+      "courierResponse": {
+        "success": true,
+        "provider": "pathao",
+        "trackingNumber": "PTH-964737",
+        "trackingUrl": "https://merchant.pathao.com/tracking?consignment_id=PTH-964737",
+        "consignmentId": "CSG-964737",
+        "simulated": true
+      },
+      "actualDeliveryDate": "2026-10-17T13:37:48.951Z",
+      "codCollectedAt": "2026-10-17T13:43:18.399Z",
+      "codCollectedByStaff": "Nursery Delivery Staff"
+    },
+    {
+      "id": "ord-1792231969993",
+      "orderNumber": "GV-2026-4951",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T10:12:49.993Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T10:12:50.001Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T10:12:50.003Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T10:12:49.994Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:12:49.996Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:12:49.998Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:12:50.001Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:12:50.001Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:12:50.003Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T10:12:49.994Z",
+      "updatedAt": "2026-10-17T10:12:50.003Z",
+      "codCollectedAt": "2026-10-17T10:12:49.998Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
+    {
+      "id": "ord-1792231894865",
+      "orderNumber": "GV-2026-7250",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T10:11:34.865Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T10:11:34.873Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T10:11:34.876Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T10:11:34.865Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:11:34.867Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:11:34.870Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:11:34.873Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:11:34.873Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:11:34.876Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T10:11:34.865Z",
+      "updatedAt": "2026-10-17T10:11:34.876Z",
+      "codCollectedAt": "2026-10-17T10:11:34.870Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
+    {
+      "id": "ord-1792231411830",
+      "orderNumber": "GV-2026-6251",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T10:03:31.830Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T10:03:31.838Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T10:03:31.841Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T10:03:31.830Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:03:31.833Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:03:31.835Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:03:31.838Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:03:31.838Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T10:03:31.841Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T10:03:31.830Z",
+      "updatedAt": "2026-10-17T10:03:31.841Z",
+      "codCollectedAt": "2026-10-17T10:03:31.835Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
+    {
+      "id": "ord-1792222804111",
+      "orderNumber": "GV-2026-8220",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T07:40:04.111Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T07:40:04.123Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T07:40:04.125Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T07:40:04.112Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T07:40:04.115Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T07:40:04.119Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T07:40:04.123Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T07:40:04.123Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T07:40:04.125Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T07:40:04.112Z",
+      "updatedAt": "2026-10-17T07:40:04.125Z",
+      "codCollectedAt": "2026-10-17T07:40:04.119Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
+    {
+      "id": "ord-1792222140561",
+      "orderNumber": "GV-2026-8074",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T07:29:00.561Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T07:29:00.571Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T07:29:00.573Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T07:29:00.561Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T07:29:00.564Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T07:29:00.567Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T07:29:00.571Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T07:29:00.571Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T07:29:00.573Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T07:29:00.561Z",
+      "updatedAt": "2026-10-17T07:29:00.573Z",
+      "codCollectedAt": "2026-10-17T07:29:00.567Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
+    {
+      "id": "ord-1792221775123",
+      "orderNumber": "GV-2026-6028",
+      "customer": {
+        "fullName": "rakibul hasan",
+        "mobileNumber": "01829300000",
+        "email": "ctrkb79@gmail.com",
+        "division": "Mymensingh",
+        "district": "Sherpur",
+        "upazila": "Sherpur Sadar",
+        "addressDetail": "sherpur",
+        "deliveryInstructions": ""
+      },
+      "items": [
+        {
+          "productId": "pruning-shears-pro",
+          "productName": "Heavy-Duty Garden Pruning Shears",
+          "slug": "pruning-shears-pro",
+          "imageUrl": "https://images.unsplash.com/photo-1589051039495-eb777145827b?auto=format&fit=crop&w=800&q=80",
+          "quantity": 1,
+          "unitPrice": 450,
+          "lineSubtotal": 450
+        }
+      ],
+      "subtotal": 450,
+      "deliveryCharge": 120,
+      "discountAmount": 0,
+      "totalAmount": 570,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "unpaid",
+      "status": "pending",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T07:22:55.123Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        }
+      ],
+      "adminNotes": "Direct store checkout",
+      "codExpectedAmount": 570,
+      "codCollectedAmount": 0,
+      "codOutstandingBalance": 570,
+      "codStatus": "awaiting_collection",
+      "isStockRestored": false,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T07:22:55.123Z",
+          "details": "Order created with 1 items. Total: ৳570. Payment: cash-on-delivery"
+        }
+      ],
+      "createdAt": "2026-10-17T07:22:55.123Z",
+      "updatedAt": "2026-10-17T07:22:55.123Z"
+    },
+    {
+      "id": "ord-1792221728098",
+      "orderNumber": "GV-2026-3525",
+      "customer": {
+        "fullName": "Roman ali",
+        "mobileNumber": "01829300000",
+        "division": "Mymensingh",
+        "district": "Sherpur",
+        "upazila": "Sherpur Sadar",
+        "addressDetail": "sherpur",
+        "deliveryInstructions": ""
+      },
+      "items": [
+        {
+          "productId": "pruning-shears-pro",
+          "productName": "Heavy-Duty Garden Pruning Shears",
+          "slug": "pruning-shears-pro",
+          "imageUrl": "https://images.unsplash.com/photo-1589051039495-eb777145827b?auto=format&fit=crop&w=800&q=80",
+          "quantity": 1,
+          "unitPrice": 450,
+          "lineSubtotal": 450
+        }
+      ],
+      "subtotal": 450,
+      "deliveryCharge": 120,
+      "discountAmount": 0,
+      "totalAmount": 570,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "unpaid",
+      "status": "processing",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T07:22:08.098Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "confirmed",
+          "changedAt": "2026-10-17T13:44:12.855Z",
+          "note": "পরিচিত",
+          "changedBy": "Hasna Hena"
+        },
+        {
+          "status": "processing",
+          "changedAt": "2026-10-17T13:44:29.814Z",
+          "note": "হ্যা",
+          "changedBy": "Hasna Hena"
+        }
+      ],
+      "adminNotes": "Direct store checkout",
+      "codExpectedAmount": 570,
+      "codCollectedAmount": 0,
+      "codOutstandingBalance": 570,
+      "codStatus": "awaiting_collection",
+      "isStockRestored": false,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T07:22:08.098Z",
+          "details": "Order created with 1 items. Total: ৳570. Payment: cash-on-delivery"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Hasna Hena",
+          "timestamp": "2026-10-17T13:44:12.855Z",
+          "previousValue": "pending",
+          "newValue": "confirmed",
+          "details": "পরিচিত"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Hasna Hena",
+          "timestamp": "2026-10-17T13:44:29.814Z",
+          "previousValue": "confirmed",
+          "newValue": "processing",
+          "details": "হ্যা"
+        }
+      ],
+      "createdAt": "2026-10-17T07:22:08.098Z",
+      "updatedAt": "2026-10-17T13:44:29.814Z"
+    },
     {
       "id": "ord-1791982856445",
       "orderNumber": "GV-2026-1118",
@@ -7427,6 +9068,126 @@
     }
   ],
   "inventoryAdjustments": [
+    {
+      "id": "adj-1792248531757-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-6660) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T14:48:51.757Z"
+    },
+    {
+      "id": "adj-1792247584173-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-3026) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T14:33:04.173Z"
+    },
+    {
+      "id": "adj-1792247285501-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-5264) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T14:28:05.501Z"
+    },
+    {
+      "id": "adj-1792247073647-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-7667) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T14:24:33.647Z"
+    },
+    {
+      "id": "adj-1792246800558-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-1671) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T14:20:00.558Z"
+    },
+    {
+      "id": "adj-1792246357857-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-7921) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T14:12:37.857Z"
+    },
+    {
+      "id": "adj-1792246200049-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-5835) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T14:10:00.049Z"
+    },
+    {
+      "id": "adj-1792231970001-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-4951) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T10:12:50.001Z"
+    },
+    {
+      "id": "adj-1792231894873-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-7250) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T10:11:34.873Z"
+    },
+    {
+      "id": "adj-1792231411838-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-6251) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T10:03:31.838Z"
+    },
+    {
+      "id": "adj-1792222804123-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-8220) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T07:40:04.123Z"
+    },
+    {
+      "id": "adj-1792222140571-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-8074) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T07:29:00.571Z"
+    },
     {
       "id": "adj-1791982856458-plant-1",
       "productId": "plant-1",

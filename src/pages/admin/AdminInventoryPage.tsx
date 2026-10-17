@@ -18,6 +18,7 @@ import {
 import { adminService } from '../../services/adminService';
 import { Product } from '../../types/product';
 import { useLanguage } from '../../context/LanguageContext';
+import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
 
 export const AdminInventoryPage: React.FC = () => {
   const { language } = useLanguage();
@@ -156,9 +157,10 @@ export const AdminInventoryPage: React.FC = () => {
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-3">
                       <img
-                        src={p.imageUrl}
+                        src={getSafeImageUrl(p.imageUrl, { type: p.type, categorySlug: p.categorySlug })}
                         alt={p.nameEn}
                         className="w-10 h-10 rounded-xl object-cover border border-stone-200 shrink-0"
+                        onError={(e) => handleImageError(e, getProductFallbackImage(p))}
                       />
                       <div className="max-w-xs truncate">
                         <p className="font-semibold text-stone-900 truncate">

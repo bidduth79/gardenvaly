@@ -42,9 +42,19 @@ export const whatsappService = {
       })
       .join('\n');
 
+    const fullAddress = [
+      customer.addressDetail,
+      customer.union,
+      customer.upazila,
+      customer.district,
+      customer.division,
+    ]
+      .filter(Boolean)
+      .join(', ');
+
     const customerDetails = isBn
-      ? `👤 *গ্রাহক তথ্য:*\nনাম: ${customer.fullName}\nমোবাইল: ${customer.mobileNumber}\nঠিকানা: ${customer.addressDetail}, ${customer.upazila}, ${customer.district}, ${customer.division}`
-      : `👤 *Customer Details:*\nName: ${customer.fullName}\nPhone: ${customer.mobileNumber}\nAddress: ${customer.addressDetail}, ${customer.upazila}, ${customer.district}, ${customer.division}`;
+      ? `👤 *গ্রাহক তথ্য:*\nনাম: ${customer.fullName}\nমোবাইল: ${customer.mobileNumber}\nঠিকানা: ${fullAddress}`
+      : `👤 *Customer Details:*\nName: ${customer.fullName}\nPhone: ${customer.mobileNumber}\nAddress: ${fullAddress}`;
 
     const instructions = customer.deliveryInstructions
       ? `\n${isBn ? 'নির্দেশনা' : 'Notes'}: ${customer.deliveryInstructions}`

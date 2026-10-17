@@ -10,7 +10,7 @@
     "start": "node server.ts",
     "clean": "rm -rf dist server.js",
     "lint": "tsc --noEmit",
-    "test": "tsx tests/orderManagement.test.ts && tsx tests/reportsAnalytics.test.ts && tsx tests/seoOptimization.test.ts && tsx tests/mobileResponsiveness.test.ts"
+    "test": "tsx tests/orderManagement.test.ts && tsx tests/reportsAnalytics.test.ts && tsx tests/seoOptimization.test.ts && tsx tests/mobileResponsiveness.test.ts && tsx tests/imageFallback.test.ts && tsx tests/heroVideo.test.ts && tsx tests/announcementBar.test.ts && tsx tests/seedToTreeJourney.test.ts && tsx tests/livingTreeBackground.test.ts && tsx tests/categoryHierarchyFilter.test.ts && tsx tests/megaMenuNavigation.test.ts && tsx tests/modernStorefrontFeatures.test.ts && tsx tests/themeMode.test.ts"
   },
   "dependencies": {
     "@google/genai": "^2.4.0",
@@ -37,7 +37,7 @@
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "autoprefixer": "^10.4.21",
-    "esbuild": "^0.25.0",
+    "esbuild": "^0.28.0",
     "tailwindcss": "^4.3.3",
     "tsx": "^4.21.0",
     "typescript": "^7.0.2"

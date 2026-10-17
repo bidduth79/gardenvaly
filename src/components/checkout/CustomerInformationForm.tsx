@@ -8,6 +8,7 @@ import { CustomerInfo } from '../../types/cart';
 import { useLanguage } from '../../context/LanguageContext';
 import { useCustomerAuth } from '../../context/CustomerAuthContext';
 import { Sparkles, CheckCircle2 } from 'lucide-react';
+import { BangladeshAddressSelector } from '../common/BangladeshAddressSelector';
 
 interface CustomerInformationFormProps {
   formData: CustomerInfo;
@@ -29,7 +30,10 @@ export const CustomerInformationForm: React.FC<CustomerInformationFormProps> = (
       if (!formData.fullName && customer.fullName) onChange('fullName', customer.fullName);
       if (!formData.mobileNumber && customer.mobileNumber) onChange('mobileNumber', customer.mobileNumber);
       if (!formData.email && customer.email) onChange('email', customer.email);
+      if (!formData.division && customer.division) onChange('division', customer.division);
       if (!formData.district && customer.district) onChange('district', customer.district);
+      if (!formData.upazila && customer.upazila) onChange('upazila', customer.upazila);
+      if (!formData.union && customer.union) onChange('union', customer.union);
       if (!formData.addressDetail && customer.addressDetail) onChange('addressDetail', customer.addressDetail);
     }
   }, [isAuthenticated, customer]);
@@ -106,58 +110,16 @@ export const CustomerInformationForm: React.FC<CustomerInformationFormProps> = (
         {errors.email && <p className="text-[11px] text-red-500 mt-1">{errors.email}</p>}
       </div>
 
-      {/* Division, District, Upazila */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <div>
-          <label className="block text-xs font-semibold text-stone-700 mb-1">
-            {t('division')} <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={formData.division}
-            onChange={(e) => onChange('division', e.target.value)}
-            placeholder="e.g. Dhaka"
-            autoComplete="address-level1"
-            className={`w-full px-3.5 py-3 rounded-xl border text-base sm:text-sm focus:outline-none focus:ring-2 min-h-[44px] ${
-              errors.division ? 'border-red-400 focus:ring-red-400' : 'border-stone-200 focus:ring-[#174D35]'
-            }`}
-          />
-          {errors.division && <p className="text-[11px] text-red-500 mt-1">{errors.division}</p>}
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold text-stone-700 mb-1">
-            {t('district')} <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={formData.district}
-            onChange={(e) => onChange('district', e.target.value)}
-            placeholder="e.g. Dhaka"
-            autoComplete="address-level2"
-            className={`w-full px-3.5 py-3 rounded-xl border text-base sm:text-sm focus:outline-none focus:ring-2 min-h-[44px] ${
-              errors.district ? 'border-red-400 focus:ring-red-400' : 'border-stone-200 focus:ring-[#174D35]'
-            }`}
-          />
-          {errors.district && <p className="text-[11px] text-red-500 mt-1">{errors.district}</p>}
-        </div>
-
-        <div>
-          <label className="block text-xs font-semibold text-stone-700 mb-1">
-            {t('upazila')} <span className="text-red-500">*</span>
-          </label>
-          <input
-            type="text"
-            value={formData.upazila}
-            onChange={(e) => onChange('upazila', e.target.value)}
-            placeholder="e.g. Dhanmondi"
-            className={`w-full px-3.5 py-3 rounded-xl border text-base sm:text-sm focus:outline-none focus:ring-2 min-h-[44px] ${
-              errors.upazila ? 'border-red-400 focus:ring-red-400' : 'border-stone-200 focus:ring-[#174D35]'
-            }`}
-          />
-          {errors.upazila && <p className="text-[11px] text-red-500 mt-1">{errors.upazila}</p>}
-        </div>
-      </div>
+      {/* Division, District, Upazila & Union Cascading Dropdown Selector */}
+      <BangladeshAddressSelector
+        division={formData.division}
+        district={formData.district}
+        upazila={formData.upazila}
+        union={formData.union}
+        onChange={(field, val) => onChange(field, val)}
+        errors={errors}
+        showUnion={true}
+      />
 
       {/* Detailed Address */}
       <div>

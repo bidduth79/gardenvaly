@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, ArrowLeft, Sun, Droplet, Check, Star, Flame, User, ThumbsUp, MessageSquare, Send, Heart } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, Sun, Droplet, Check, Star, Flame, User, ThumbsUp, MessageSquare, Send, Heart, Zap } from 'lucide-react';
 import { Product } from '../types/product';
 import { productService } from '../services/productService';
 import { useRouter } from '../context/RouterContext';
@@ -17,6 +17,7 @@ import { ProductGallery } from '../components/shop/ProductGallery';
 import { ProductCard } from '../components/home/ProductCard';
 import { Button } from '../components/common/Button';
 import { PlantCareGuideModal } from '../components/home/PlantCareGuideModal';
+import { InstantBuyNowModal } from '../components/shop/InstantBuyNowModal';
 import { reviewService, REVIEWS_UPDATED_EVENT } from '../services/reviewService';
 import { MOCK_PRODUCTS } from '../data/mockProducts';
 
@@ -37,6 +38,7 @@ export const ProductDetailPage: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [justAdded, setJustAdded] = useState(false);
+  const [isInstantBuyOpen, setIsInstantBuyOpen] = useState(false);
   const [isCareModalOpen, setIsCareModalOpen] = useState(false);
   const [localReviews, setLocalReviews] = useState(() => reviewService.getReviews());
   const [isWriteReviewOpen, setIsWriteReviewOpen] = useState(false);
@@ -194,7 +196,16 @@ export const ProductDetailPage: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
         <div className="lg:col-span-6">
-          <ProductGallery images={product.images} name={name} />
+          <ProductGallery
+            images={
+              product.images && product.images.length > 0
+                ? product.images
+                : [product.imageUrl].filter((u): u is string => Boolean(u && u.trim().length > 0))
+            }
+            name={name}
+            type={product.type}
+            categorySlug={product.categorySlug}
+          />
         </div>
 
         <div className="lg:col-span-6 space-y-5">
@@ -322,13 +333,10 @@ export const ProductDetailPage: React.FC = () => {
               size="md"
               className="min-h-[44px]"
               disabled={!product.inStock}
-              onClick={() => {
-                addToCart(product, quantity);
-                analyticsService.trackAddToCart(product, quantity, language);
-                navigate('/checkout');
-              }}
+              icon={<Zap className="w-4 h-4 fill-current" />}
+              onClick={() => setIsInstantBuyOpen(true)}
             >
-              {t('buyNow')}
+              {language === 'bn' ? '১-ক্লিকে সরাসরি অর্ডার (ক্যাশ অন ডেলিভারি)' : t('buyNow')}
             </Button>
           </div>
         </div>
@@ -433,18 +441,25 @@ export const ProductDetailPage: React.FC = () => {
           <h2 className="text-xl sm:text-2xl font-serif-botanical font-bold text-stone-900">{t('relatedProducts')}</h2>
           <div className="grid grid-cols-1 min-[360px]:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6">
             {relatedProducts.map((p) => (
-              <ProductCard key={p.id} product={p} onQuickView={() => navigate(`/product/${p.slug}`)} />
+              <ProductCard key={p.id} product={p} />
             ))}
           </div>
         </div>
       )}
 
       {product && (
-        <PlantCareGuideModal
-          isOpen={isCareModalOpen}
-          onClose={() => setIsCareModalOpen(false)}
-          product={product}
-        />
+        <>
+          <PlantCareGuideModal
+            isOpen={isCareModalOpen}
+            onClose={() => setIsCareModalOpen(false)}
+            product={product}
+          />
+          <InstantBuyNowModal
+            isOpen={isInstantBuyOpen}
+            onClose={() => setIsInstantBuyOpen(false)}
+            product={product}
+          />
+        </>
       )}
     </div>
   );

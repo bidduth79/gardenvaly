@@ -13,6 +13,7 @@ export interface CustomerProfile {
   division: string;
   district: string;
   upazila?: string;
+  union?: string;
   addressDetail: string;
   wishlist?: string[];
   totalOrders: number;
@@ -42,5 +43,6 @@ export interface CustomerRegisterPayload {
   division?: string;
   district?: string;
   upazila?: string;
+  union?: string;
   addressDetail?: string;
 }

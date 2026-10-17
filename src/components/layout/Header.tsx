@@ -8,8 +8,10 @@ import { Search, ShoppingBag, Menu, Heart, User } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
 import { Navigation } from './Navigation';
 import { LanguageSwitcher } from './LanguageSwitcher';
+import { ThemeToggle } from '../common/ThemeToggle';
 import { MobileMenu } from './MobileMenu';
 import { AnnouncementBar } from './AnnouncementBar';
+import { MobileBottomNav } from './MobileBottomNav';
 import { useLanguage } from '../../context/LanguageContext';
 import { useCart } from '../../context/CartContext';
 import { useCustomerAuth } from '../../context/CustomerAuthContext';
@@ -48,6 +50,9 @@ export const Header: React.FC = () => {
 
         {/* Action Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+          {/* Day / Night Mode Switcher */}
+          <ThemeToggle />
+
           {/* Language Switcher (Visible on desktop, inside mobile hamburger menu on mobile) */}
           <div className="hidden lg:flex items-center shrink-0">
             <LanguageSwitcher />
@@ -137,6 +142,11 @@ export const Header: React.FC = () => {
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
+      />
+
+      {/* Floating App-like Mobile Bottom Navigation Dock */}
+      <MobileBottomNav
+        onOpenCategories={() => setIsMobileMenuOpen(true)}
       />
     </header>
   );

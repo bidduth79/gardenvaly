@@ -18,11 +18,15 @@ import {
   ArrowDown,
   Layers,
   Smartphone,
-  Monitor
+  Monitor,
+  Video,
+  Film
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useRouter } from '../../context/RouterContext';
 import { HeroImageEditorModal, HeroSlide } from '../../components/home/HeroImageEditorModal';
+import { isVideoSlide, getYouTubeEmbedUrl } from '../../utils/videoUtils';
+import { DEFAULT_FALLBACK_IMAGE, handleImageError } from '../../utils/imageFallback';
 
 const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   {
@@ -36,7 +40,7 @@ const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   },
   {
     id: 'rooftop-blooms',
-    imageUrl: 'https://images.unsplash.com/photo-1508873696983-2df57046475b?auto=format&fit=crop&w=1200&q=85',
+    imageUrl: 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1200&q=85',
     titleBn: 'রঙিন ফুলে ভরিয়ে তুলুন ছাদবাগান',
     titleEn: 'Vibrant Blossoms for Your Terrace',
     subtitleBn: 'দেশি-বিদেশি ফুলের সমাহার',
@@ -86,7 +90,16 @@ export const AdminBannersPage: React.FC = () => {
         if (saved) {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed;
+            // Migrate any cached slide containing the old broken 404 Unsplash image
+            return parsed.map((s: HeroSlide) => {
+              if (s.imageUrl && s.imageUrl.includes('photo-1508873696983-2df57046475b')) {
+                return {
+                  ...s,
+                  imageUrl: 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1200&q=85',
+                };
+              }
+              return s;
+            });
           }
         }
       } catch (e) {
@@ -220,12 +233,32 @@ export const AdminBannersPage: React.FC = () => {
           <div className="relative rounded-2xl overflow-hidden aspect-video bg-stone-900 shadow-lg border border-stone-200 group">
             {activeSlide && (
               <>
-                <img
-                  src={activeSlide.imageUrl}
-                  alt={activeSlide.altText}
-                  className="w-full h-full object-cover transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-900/30 to-black/10" />
+                {isVideoSlide(activeSlide) && getYouTubeEmbedUrl(activeSlide.videoUrl) ? (
+                  <iframe
+                    src={getYouTubeEmbedUrl(activeSlide.videoUrl)!}
+                    className="w-full h-full object-cover"
+                    allow="autoplay; encrypted-media"
+                    title={activeSlide.altText}
+                  />
+                ) : isVideoSlide(activeSlide) && activeSlide.videoUrl ? (
+                  <video
+                    src={activeSlide.videoUrl}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    poster={activeSlide.imageUrl}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <img
+                    src={activeSlide.imageUrl}
+                    alt={activeSlide.altText}
+                    onError={(e) => handleImageError(e, DEFAULT_FALLBACK_IMAGE)}
+                    className="w-full h-full object-cover transition-transform duration-700"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-900/30 to-black/10 pointer-events-none" />
 
                 <div className="absolute bottom-6 left-6 right-6 text-white">
                   <span className="inline-block px-2.5 py-0.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-[#C5A059] text-[11px] font-semibold uppercase mb-1">
@@ -307,6 +340,11 @@ export const AdminBannersPage: React.FC = () => {
                   <span className="absolute bottom-0 left-0 bg-black/70 text-white text-[9px] font-bold px-1 rounded-tr">
                     #{idx + 1}
                   </span>
+                  {slide.videoUrl && (
+                    <span className="absolute top-1 right-1 bg-black/80 text-amber-400 p-0.5 rounded shadow flex items-center justify-center" title="Video Banner">
+                      <Video className="w-2.5 h-2.5" />
+                    </span>
+                  )}
                 </div>
 
                 {/* Details */}

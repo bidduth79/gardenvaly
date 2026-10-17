@@ -91,6 +91,7 @@ export interface DBCustomer {
   division: string;
   district: string;
   upazila?: string;
+  union?: string;
   addressDetail: string;
   wishlist?: string[];
   totalOrders: number;
@@ -130,6 +131,7 @@ export interface DBOrder {
     division: string;
     district: string;
     upazila?: string;
+    union?: string;
     addressDetail: string;
     deliveryInstructions?: string;
   };
@@ -163,6 +165,8 @@ export interface DBOrder {
   // Courier & Delivery details
   deliveryProvider?: string;
   trackingNumber?: string;
+  trackingUrl?: string;
+  courierResponse?: any;
   dispatchDate?: string;
   expectedDeliveryDate?: string;
   actualDeliveryDate?: string;
@@ -232,6 +236,38 @@ export interface DBStoreSettings {
   orderNotificationEmail: string;
   maintenanceMode: boolean;
   demoModeNotice: boolean;
+
+  // Courier API Integrations
+  courierProvider?: 'steadfast' | 'pathao' | 'redx' | 'manual';
+  steadfastApiKey?: string;
+  steadfastSecretKey?: string;
+  pathaoClientId?: string;
+  pathaoClientSecret?: string;
+  pathaoStoreId?: string;
+  redxApiToken?: string;
+  autoCreateCourierParcel?: boolean;
+
+  // SMS Gateway Integrations
+  smsProvider?: 'greenweb' | 'bulksmsbd' | 'custom_webhook' | 'disabled';
+  smsApiKey?: string;
+  smsSenderId?: string;
+  smsWebhookUrl?: string;
+  sendSmsOnOrderPlaced?: boolean;
+  sendSmsOnOrderConfirmed?: boolean;
+  sendSmsOnOrderShipped?: boolean;
+  sendSmsOnOrderDelivered?: boolean;
+
+  // Online Payment Gateways (bKash Checkout & SSLCommerz)
+  bkashMerchantEnabled?: boolean;
+  bkashAppKey?: string;
+  bkashAppSecret?: string;
+  bkashUsername?: string;
+  bkashPassword?: string;
+  bkashSandbox?: boolean;
+  sslcommerzEnabled?: boolean;
+  sslcommerzStoreId?: string;
+  sslcommerzStorePass?: string;
+  sslcommerzSandbox?: boolean;
 }
 
 interface DBStorageSchema {
@@ -649,6 +685,24 @@ class DatabaseService {
       orderNotificationEmail: 'admin@gardenvaly.com',
       maintenanceMode: false,
       demoModeNotice: true,
+      // Default Courier Config
+      courierProvider: 'steadfast',
+      steadfastApiKey: '',
+      steadfastSecretKey: '',
+      autoCreateCourierParcel: false,
+      // Default SMS Config
+      smsProvider: 'disabled',
+      smsApiKey: '',
+      smsSenderId: 'Gardenvaly',
+      sendSmsOnOrderPlaced: true,
+      sendSmsOnOrderConfirmed: true,
+      sendSmsOnOrderShipped: true,
+      sendSmsOnOrderDelivered: true,
+      // Default Payment Gateway Config
+      bkashMerchantEnabled: false,
+      bkashSandbox: true,
+      sslcommerzEnabled: false,
+      sslcommerzSandbox: true,
     };
 
     this.data = {
@@ -767,6 +821,17 @@ class DatabaseService {
 
   // CATEGORIES
   public getCategories(): DBCategory[] {
+    if (fs.existsSync(DATA_FILE)) {
+      try {
+        const raw = fs.readFileSync(DATA_FILE, 'utf-8');
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed.categories)) {
+          this.data.categories = parsed.categories;
+        }
+      } catch {
+        // fallback to memory
+      }
+    }
     return [...this.data.categories];
   }
 

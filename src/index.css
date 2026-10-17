@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @layer base {
   :root {
     --color-forest: #174d35;
@@ -18,37 +20,29 @@
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
     min-height: 100vh;
+    background-color: #f7f5ec;
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
-  body.lang-bn {
-    font-family: 'Hind Siliguri', 'Plus Jakarta Sans', sans-serif;
+  body.lang-bn, [lang="bn"], .lang-bn, .font-bengali-modern, .font-bengali-clean {
+    font-family: 'Hind Siliguri', 'Anek Bangla', 'Plus Jakarta Sans', system-ui, sans-serif;
   }
 
-  .font-serif-botanical {
-    font-family: 'Playfair Display', Georgia, serif;
+  body.lang-bn button, body.lang-bn input, body.lang-bn select, body.lang-bn textarea {
+    font-family: 'Hind Siliguri', 'Anek Bangla', system-ui, sans-serif;
   }
 
-  /* Accessible focus indicators */
-  *:focus-visible {
-    outline: 2px solid #174D35;
-    outline-offset: 2px;
+  .font-serif-botanical { font-family: 'Playfair Display', Georgia, serif; }
+  body.lang-bn .font-serif-botanical, [lang="bn"] .font-serif-botanical, .font-bengali-serif {
+    font-family: 'Noto Serif Bengali', 'Playfair Display', Georgia, serif;
   }
 
-  /* Prevent 300ms tap delay on mobile devices */
-  button,
-  a,
-  input,
-  select,
-  textarea {
-    touch-action: manipulation;
-  }
+  *:focus-visible { outline: 2px solid #174D35; outline-offset: 2px; }
+  button, a, input, select, textarea { touch-action: manipulation; }
 }
 
-/* Reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -56,27 +50,144 @@
   }
 }
 
-/* Custom scrollbar for subtle aesthetic */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-::-webkit-scrollbar-track {
-  background: #f7f5ec;
-}
-::-webkit-scrollbar-thumb {
-  background: #174d3540;
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: #174d3580;
+/* Custom scrollbars */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f7f5ec; }
+::-webkit-scrollbar-thumb { background: #174d3540; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #174d3580; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Custom Category Filter Slim Scrollbar */
+.category-filter-scroll::-webkit-scrollbar { width: 4px; }
+.category-filter-scroll::-webkit-scrollbar-track { background: transparent; }
+.category-filter-scroll::-webkit-scrollbar-thumb { background: rgba(92, 141, 80, 0.35); border-radius: 9999px; }
+.category-filter-scroll::-webkit-scrollbar-thumb:hover { background: rgba(92, 141, 80, 0.65); }
+html.dark .category-filter-scroll::-webkit-scrollbar-thumb { background: rgba(52, 211, 153, 0.3); }
+
+/* Botanical Living Tree Wind Sway */
+@keyframes botanicalWindSway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(0.85deg); } }
+@keyframes botanicalFruitSway { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(2.5deg); } 75% { transform: rotate(-2.5deg); } }
+.animate-bough-sway { transform-origin: 160px 180px; animation: botanicalWindSway 7.5s ease-in-out infinite; }
+.animate-fruit-sway { transform-box: fill-box; transform-origin: 50% 0%; animation: botanicalFruitSway 4.5s ease-in-out infinite; }
+.animate-fruit-sway-delayed { transform-box: fill-box; transform-origin: 50% 0%; animation: botanicalFruitSway 5.5s ease-in-out infinite 1.5s; }
+
+/* =========================================================
+   NIGHT / DARK MODE - Obsidian Deep Forest Green Theme
+   ========================================================= */
+html.dark { color-scheme: dark; }
+html.dark body { background-color: #06120D !important; color: #F8FAF8; }
+html.dark ::-webkit-scrollbar-track { background: #06120D; }
+html.dark ::-webkit-scrollbar-thumb { background: #1B3B2E; }
+html.dark ::-webkit-scrollbar-thumb:hover { background: #255240; }
+
+/* Cards & Elevated Surfaces (White -> Dark Forest Green) */
+html.dark .bg-white,
+html.dark .bg-white\/98,
+html.dark .bg-white\/95,
+html.dark .bg-white\/90,
+html.dark .bg-white\/80,
+html.dark .bg-white\/70,
+html.dark .bg-white\/60,
+html.dark .bg-\[\#FCFAF7\],
+html.dark .bg-\[\#FCFAF7\]\/98,
+html.dark .bg-\[\#FCFAF7\]\/95,
+html.dark .bg-\[\#FAF9F6\] {
+  background-color: #0C2018 !important;
 }
 
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
+html.dark .bg-\[\#F7F5EC\],
+html.dark .bg-\[\#F7F5EC\]\/95,
+html.dark .bg-\[\#F7F5EC\]\/90 {
+  background-color: #06120D !important;
 }
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+html.dark .bg-\[\#F7F5EC\]\/80,
+html.dark .bg-\[\#F7F5EC\]\/70,
+html.dark .bg-\[\#F7F5EC\]\/60,
+html.dark .bg-\[\#F7F5EC\]\/50,
+html.dark .bg-\[\#F7F5EC\]\/40 {
+  background-color: #0C2018 !important;
 }
 
+html.dark .bg-stone-50,
+html.dark .bg-emerald-50,
+html.dark .bg-amber-50,
+html.dark .bg-teal-50 {
+  background-color: #10261E !important;
+}
+html.dark .bg-stone-100 {
+  background-color: #11291F !important;
+}
+html.dark .bg-stone-100\/60 {
+  background-color: rgba(17, 41, 31, 0.6) !important;
+}
+html.dark .bg-stone-200,
+html.dark .bg-stone-200\/90,
+html.dark .bg-stone-200\/80,
+html.dark .bg-stone-200\/70,
+html.dark .bg-stone-200\/60,
+html.dark .bg-stone-200\/50 {
+  background-color: #0C2018 !important;
+}
+
+/* Borders & Dividers */
+html.dark .border-stone-200,
+html.dark .border-stone-200\/90,
+html.dark .border-stone-200\/80,
+html.dark .border-stone-200\/70,
+html.dark .border-stone-200\/60,
+html.dark .border-stone-100,
+html.dark .border-stone-300,
+html.dark .border-stone-300\/60,
+html.dark .border-stone-300\/80,
+html.dark .border-emerald-200\/60,
+html.dark .border-amber-200\/60,
+html.dark .border-teal-200\/60 {
+  border-color: #1B3B2E !important;
+}
+html.dark .border-\[\#174D35\]\/10,
+html.dark .border-\[\#174D35\]\/15,
+html.dark .border-\[\#174D35\]\/20 {
+  border-color: #1B3B2E !important;
+}
+html.dark .divide-stone-200,
+html.dark .divide-stone-200\/70,
+html.dark .divide-stone-200\/80,
+html.dark .divide-stone-200\/90 {
+  border-color: #1B3B2E !important;
+}
+
+/* Gradients & SVG transitions */
+html.dark .via-stone-100 {
+  --tw-gradient-via: #06120D !important;
+  --tw-gradient-stops: var(--tw-gradient-from) 0%, #06120D 50%, var(--tw-gradient-to) 100% !important;
+}
+html.dark .to-\[\#FAF9F6\] {
+  --tw-gradient-to: #06120D !important;
+}
+html.dark .text-\[\#FAF9F6\] {
+  color: #06120D !important;
+}
+
+/* High Contrast Typography & Text for Night Mode */
+html.dark .text-stone-900 { color: #F8FAF8 !important; }
+html.dark .text-stone-800 { color: #F1F5F9 !important; }
+html.dark .text-stone-700 { color: #E2E8F0 !important; }
+html.dark .text-stone-600 { color: #CBD5E1 !important; }
+html.dark .text-stone-500 { color: #A8C4B5 !important; }
+html.dark .text-stone-400 { color: #8FA89B !important; }
+html.dark .text-\[\#174D35\] { color: #34D399 !important; }
+
+/* Form Controls */
+html.dark input:not([type="checkbox"]):not([type="radio"]), html.dark select, html.dark textarea {
+  background-color: #0E241B !important; color: #F8FAF8 !important; border-color: #1B3B2E !important;
+}
+html.dark input::placeholder, html.dark textarea::placeholder { color: #5D7A6C !important; }
+
+/* Custom Category Scrollbar */
+.category-filter-scroll::-webkit-scrollbar { width: 5px; }
+.category-filter-scroll::-webkit-scrollbar-track { background: rgba(220, 225, 220, 0.4); border-radius: 9999px; }
+.category-filter-scroll::-webkit-scrollbar-thumb { background: #A3B899; border-radius: 9999px; }
+.category-filter-scroll::-webkit-scrollbar-thumb:hover { background: #7D9D74; }
+html.dark .category-filter-scroll::-webkit-scrollbar-track { background: rgba(16, 38, 30, 0.6); }
+html.dark .category-filter-scroll::-webkit-scrollbar-thumb { background: #255740; }

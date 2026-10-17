@@ -42,6 +42,7 @@ import { Product } from '../../types/product';
 import { useRouter } from '../../context/RouterContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { SalesTrendChart, StatusDistributionChart } from '../../components/admin/DashboardCharts';
+import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
 
 export const AdminDashboardPage: React.FC = () => {
   const { navigate } = useRouter();
@@ -463,13 +464,12 @@ export const AdminDashboardPage: React.FC = () => {
               {topProducts.map((p, idx) => (
                 <div key={idx} className="py-2.5 flex items-center justify-between gap-3 text-xs">
                   <div className="flex items-center gap-2.5">
-                    {p.imageUrl ? (
-                      <img src={p.imageUrl} alt={p.nameEn} className="w-9 h-9 rounded-xl object-cover border border-stone-200" />
-                    ) : (
-                      <div className="w-9 h-9 rounded-xl bg-stone-100 flex items-center justify-center text-stone-400 font-bold">
-                        {idx + 1}
-                      </div>
-                    )}
+                    <img
+                      src={getSafeImageUrl(p.imageUrl)}
+                      alt={p.nameEn}
+                      className="w-9 h-9 rounded-xl object-cover border border-stone-200"
+                      onError={(e) => handleImageError(e, getProductFallbackImage())}
+                    />
                     <div>
                       <p className="font-semibold text-stone-900 line-clamp-1">
                         {language === 'bn' ? p.nameBn : p.nameEn}
@@ -514,13 +514,12 @@ export const AdminDashboardPage: React.FC = () => {
               {lowStockList.map((item, idx) => (
                 <div key={idx} className="py-2.5 flex items-center justify-between gap-3 text-xs">
                   <div className="flex items-center gap-2.5">
-                    {item.imageUrl ? (
-                      <img src={item.imageUrl} alt={item.nameEn} className="w-9 h-9 rounded-xl object-cover border border-stone-200" />
-                    ) : (
-                      <div className="w-9 h-9 rounded-xl bg-stone-100 flex items-center justify-center text-stone-400">
-                        📦
-                      </div>
-                    )}
+                    <img
+                      src={getSafeImageUrl(item.imageUrl)}
+                      alt={item.nameEn}
+                      className="w-9 h-9 rounded-xl object-cover border border-stone-200"
+                      onError={(e) => handleImageError(e, getProductFallbackImage())}
+                    />
                     <div>
                       <p className="font-semibold text-stone-900 line-clamp-1">
                         {language === 'bn' ? item.nameBn : item.nameEn}

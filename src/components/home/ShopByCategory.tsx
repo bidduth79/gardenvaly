@@ -9,6 +9,7 @@ import { Category, ProductCategoryType } from '../../types/product';
 import { useLanguage } from '../../context/LanguageContext';
 import { useRouter } from '../../context/RouterContext';
 import { formatNumeral } from '../../utils/formatters';
+import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
 import { PlantFinderModal } from './PlantFinderModal';
 
 interface ShopByCategoryProps {
@@ -24,7 +25,7 @@ export const ShopByCategory: React.FC<ShopByCategoryProps> = ({ categories }) =>
   const filtered = categories.filter((c) => c.type === activeTab);
 
   return (
-    <section id="categories" className="pt-8 sm:pt-12 pb-14 sm:pb-18 bg-[#FAF9F6]">
+    <section id="categories" className="pt-8 sm:pt-12 pb-14 sm:pb-18 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
@@ -44,14 +45,14 @@ export const ShopByCategory: React.FC<ShopByCategoryProps> = ({ categories }) =>
           {/* 3 Menus Side-by-Side (গাছপালার ক্যাটাগরি, বীজের ক্যাটাগরি, স্মার্ট ম্যাচ) */}
           {/* Menus (গাছপালার ক্যাটাগরি, বীজের ক্যাটাগরি, বাগান সামগ্রী, স্মার্ট ম্যাচ) */}
           <div className="w-full md:w-auto overflow-x-auto no-scrollbar py-0.5 self-start md:self-auto">
-            <div className="flex items-center gap-1 sm:gap-1.5 bg-stone-200/70 p-1 sm:p-1.5 rounded-2xl border border-stone-300/60 w-max shrink-0">
+            <div className="flex items-center gap-1 sm:gap-1.5 bg-stone-200/70 dark:bg-[#0C2018] p-1 sm:p-1.5 rounded-2xl border border-stone-300/60 dark:border-[#1B3B2E] w-max shrink-0 shadow-2xs">
               <button
                 type="button"
                 onClick={() => setActiveTab('plant')}
                 className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'plant'
-                    ? 'bg-[#174D35] text-white shadow-xs'
-                    : 'text-stone-700 hover:text-[#174D35] hover:bg-stone-100/60'
+                    ? 'bg-[#174D35] dark:bg-[#1B3B2E] text-white shadow-xs dark:border dark:border-[#34D399]/30'
+                    : 'text-stone-700 dark:text-[#CBD5E1] hover:text-[#174D35] dark:hover:text-white hover:bg-stone-100/60 dark:hover:bg-[#10261E]'
                 }`}
               >
                 <Leaf className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
@@ -62,8 +63,8 @@ export const ShopByCategory: React.FC<ShopByCategoryProps> = ({ categories }) =>
                 onClick={() => setActiveTab('seed')}
                 className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'seed'
-                    ? 'bg-[#174D35] text-white shadow-xs'
-                    : 'text-stone-700 hover:text-[#174D35] hover:bg-stone-100/60'
+                    ? 'bg-[#174D35] dark:bg-[#1B3B2E] text-white shadow-xs dark:border dark:border-[#34D399]/30'
+                    : 'text-stone-700 dark:text-[#CBD5E1] hover:text-[#174D35] dark:hover:text-white hover:bg-stone-100/60 dark:hover:bg-[#10261E]'
                 }`}
               >
                 <Sparkles className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
@@ -74,8 +75,8 @@ export const ShopByCategory: React.FC<ShopByCategoryProps> = ({ categories }) =>
                 onClick={() => setActiveTab('tool')}
                 className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm font-semibold rounded-xl transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                   activeTab === 'tool'
-                    ? 'bg-[#174D35] text-white shadow-xs'
-                    : 'text-stone-700 hover:text-[#174D35] hover:bg-stone-100/60'
+                    ? 'bg-[#174D35] dark:bg-[#1B3B2E] text-white shadow-xs dark:border dark:border-[#34D399]/30'
+                    : 'text-stone-700 dark:text-[#CBD5E1] hover:text-[#174D35] dark:hover:text-white hover:bg-stone-100/60 dark:hover:bg-[#10261E]'
                 }`}
               >
                 <Wrench className="w-3.5 h-3.5 sm:w-4 sm:h-4 shrink-0" />
@@ -84,7 +85,7 @@ export const ShopByCategory: React.FC<ShopByCategoryProps> = ({ categories }) =>
               <button
                 type="button"
                 onClick={() => setIsFinderOpen(true)}
-                className="flex items-center gap-1.5 px-3 sm:px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl text-stone-700 hover:text-[#174D35] hover:bg-stone-100/60 transition-all cursor-pointer whitespace-nowrap shrink-0"
+                className="flex items-center gap-1.5 px-3 sm:px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl text-stone-700 dark:text-[#CBD5E1] hover:text-[#174D35] dark:hover:text-white hover:bg-stone-100/60 dark:hover:bg-[#10261E] transition-all cursor-pointer whitespace-nowrap shrink-0"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#C5A059] shrink-0" />
                 <span>{language === 'bn' ? 'স্মার্ট ম্যাচ' : 'Smart Match'}</span>
@@ -119,12 +120,13 @@ export const ShopByCategory: React.FC<ShopByCategoryProps> = ({ categories }) =>
               >
                 <div className="relative h-36 sm:h-44 overflow-hidden bg-stone-100">
                   <img
-                    src={cat.imageUrl}
+                    src={getSafeImageUrl(cat.imageUrl, { type: cat.type, categorySlug: cat.slug })}
                     alt={`${name} collection - Gardenvaly`}
                     width={300}
                     height={200}
                     loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-500"
+                    onError={(e) => handleImageError(e, getProductFallbackImage({ type: cat.type, categorySlug: cat.slug }))}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-60 group-hover:opacity-40 transition-opacity" />
                   <span className="absolute top-2.5 right-2.5 bg-white/95 backdrop-blur-xs text-[#174D35] text-[10px] font-bold px-2 py-0.5 rounded-full shadow-xs">

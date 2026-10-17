@@ -5,7 +5,7 @@
  */
 
 import React, { useState } from 'react';
-import { Banknote, MessageCircle, Smartphone, Copy, Check, Info } from 'lucide-react';
+import { Banknote, MessageCircle, Smartphone, Copy, Check, Info, CreditCard, Zap } from 'lucide-react';
 import { PaymentMethodId } from '../../types/cart';
 import { PAYMENT_CONFIG, PaymentOption } from '../../config/paymentConfig';
 import { useLanguage } from '../../context/LanguageContext';
@@ -42,8 +42,12 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
         return <Banknote className="w-5 h-5" />;
       case 'bkash':
         return <span className="font-bold text-xs tracking-tight">bKash</span>;
+      case 'bkash-online':
+        return <Zap className="w-5 h-5 text-pink-600" />;
       case 'nagad':
         return <span className="font-bold text-xs tracking-tight">Nagad</span>;
+      case 'sslcommerz':
+        return <CreditCard className="w-5 h-5 text-amber-600" />;
       case 'whatsapp-order':
         return <MessageCircle className="w-5 h-5 text-emerald-600" />;
       default:
@@ -77,10 +81,12 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
                 <div
                   className={`p-2 rounded-lg flex items-center justify-center min-w-[36px] min-h-[36px] ${
                     isSelected
-                      ? opt.id === 'bkash'
+                      ? opt.id === 'bkash' || opt.id === 'bkash-online'
                         ? 'bg-pink-600 text-white'
                         : opt.id === 'nagad'
                         ? 'bg-amber-600 text-white'
+                        : opt.id === 'sslcommerz'
+                        ? 'bg-amber-700 text-white'
                         : 'bg-[#174D35] text-white'
                       : 'bg-stone-100 text-stone-600'
                   }`}
@@ -221,6 +227,39 @@ export const PaymentMethodSelector: React.FC<PaymentMethodSelectorProps> = ({
               />
             </div>
           )}
+        </div>
+      )}
+      {/* SSLCommerz Details */}
+      {selectedPayment === 'sslcommerz' && (
+        <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-2 animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <CreditCard className="w-4 h-4 text-amber-700" />
+            <span className="text-xs font-bold text-amber-950">
+              {isBn ? 'SSLCommerz মাল্টি-চ্যানেল নিরাপদ পেমেন্ট' : 'SSLCommerz Secure Multi-Channel Gateway'}
+            </span>
+          </div>
+          <p className="text-xs text-amber-900 leading-relaxed">
+            {isBn
+              ? 'ভিসা, মাস্টারকার্ড, ডিবিবিএল নেক্সাস, ইন্টারনেট ব্যাংকিং বা মোবাইল ওয়ালেট দিয়ে এক ক্লিকে সরাসরি পেমেন্ট করতে পারবেন।'
+              : 'Pay securely using any VISA, Mastercard, Amex, DBBL Nexus, or Net Banking channel.'}
+          </p>
+        </div>
+      )}
+
+      {/* bKash Online Gateway Details */}
+      {selectedPayment === 'bkash-online' && (
+        <div className="p-4 rounded-2xl bg-pink-50/70 border border-pink-200 space-y-2 animate-in fade-in">
+          <div className="flex items-center gap-2">
+            <Zap className="w-4 h-4 text-pink-600" />
+            <span className="text-xs font-bold text-pink-950">
+              {isBn ? 'বিকাশ ইনস্ট্যান্ট অনলাইন গেটওয়ে' : 'Instant bKash Checkout'}
+            </span>
+          </div>
+          <p className="text-xs text-pink-900 leading-relaxed">
+            {isBn
+              ? 'অর্ডার সাবমিট করার পর অফিসিয়াল বিকাশ পেমেন্ট পপআপ দৃশ্যমান হবে। ওটিপি ও পিন দিয়ে তৎক্ষণাৎ স্বয়ংক্রিয়ভাবে পেমেন্ট ভেরিফাই হবে।'
+              : 'Official bKash payment gateway will prompt automatically. Your payment will be verified instantly.'}
+          </p>
         </div>
       )}
     </div>

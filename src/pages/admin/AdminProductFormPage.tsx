@@ -13,11 +13,13 @@ import {
   Sparkles,
   Upload,
   X,
+  Plus,
 } from 'lucide-react';
 import { adminService } from '../../services/adminService';
 import { Product, ProductCategoryType, Category } from '../../types/product';
 import { useRouter } from '../../context/RouterContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
 
 export const AdminProductFormPage: React.FC = () => {
   const { currentPath, navigate } = useRouter();
@@ -45,6 +47,7 @@ export const AdminProductFormPage: React.FC = () => {
     stockQuantity: 15,
     SKU: '',
     imageUrl: '',
+    images: [] as string[],
     isFeatured: false,
     isBestseller: false,
     descriptionEn: '',
@@ -60,6 +63,68 @@ export const AdminProductFormPage: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [newImageUrl, setNewImageUrl] = useState('');
+
+  const handleAddImageUrl = () => {
+    const trimmed = newImageUrl.trim();
+    if (!trimmed) return;
+    setFormData((prev) => {
+      const updated = [...(prev.images || []), trimmed];
+      return {
+        ...prev,
+        images: updated,
+        imageUrl: prev.imageUrl || trimmed,
+      };
+    });
+    setNewImageUrl('');
+  };
+
+  const handleDeviceFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    Array.from(files).forEach((file) => {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const result = ev.target?.result as string;
+        if (result) {
+          setFormData((prev) => {
+            const updated = [...(prev.images || []), result];
+            return {
+              ...prev,
+              images: updated,
+              imageUrl: prev.imageUrl || result,
+            };
+          });
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+    e.target.value = '';
+  };
+
+  const handleRemoveImage = (indexToRemove: number) => {
+    setFormData((prev) => {
+      const updated = (prev.images || []).filter((_, idx) => idx !== indexToRemove);
+      return {
+        ...prev,
+        images: updated,
+        imageUrl: updated[0] || '',
+      };
+    });
+  };
+
+  const handleSetCover = (index: number) => {
+    setFormData((prev) => {
+      const list = [...(prev.images || [])];
+      const [selected] = list.splice(index, 1);
+      const updated = [selected, ...list];
+      return {
+        ...prev,
+        images: updated,
+        imageUrl: updated[0] || '',
+      };
+    });
+  };
 
   useEffect(() => {
     async function init() {
@@ -70,6 +135,9 @@ export const AdminProductFormPage: React.FC = () => {
         setLoading(true);
         const prod = await adminService.getProductById(productId);
         if (prod) {
+          const initImages = Array.isArray(prod.images) && prod.images.length > 0
+            ? prod.images
+            : (prod.imageUrl ? [prod.imageUrl] : []);
           setFormData({
             nameEn: prod.nameEn,
             nameBn: prod.nameBn,
@@ -82,6 +150,7 @@ export const AdminProductFormPage: React.FC = () => {
             stockQuantity: prod.stockQuantity,
             SKU: prod.SKU,
             imageUrl: prod.imageUrl,
+            images: initImages,
             isFeatured: prod.isFeatured,
             isBestseller: Boolean(prod.isBestseller),
             descriptionEn: prod.shortDescEn || prod.descriptionEn || '',
@@ -98,7 +167,6 @@ export const AdminProductFormPage: React.FC = () => {
         }
         setLoading(false);
       } else {
-        // Preset SKU for new product
         setFormData((prev) => ({
           ...prev,
           SKU: `GV-${Math.floor(1000 + Math.random() * 9000)}`,
@@ -124,13 +192,20 @@ export const AdminProductFormPage: React.FC = () => {
     if (!validate()) return;
 
     setLoading(true);
+    const finalImages = formData.images && formData.images.length > 0
+      ? formData.images
+      : (formData.imageUrl ? [formData.imageUrl] : []);
+    const primaryImg = finalImages[0] || formData.imageUrl;
+
     await adminService.saveProduct({
       id: productId || undefined,
       ...formData,
+      images: finalImages,
       inStock: formData.stockQuantity > 0,
-      imageUrl:
-        formData.imageUrl ||
-        'https://images.unsplash.com/photo-1545241047-6083a3684587?w=600&auto=format&fit=crop&q=80',
+      imageUrl: getSafeImageUrl(primaryImg, {
+        type: formData.type,
+        categorySlug: formData.categorySlug,
+      }),
     });
 
     setLoading(false);
@@ -344,59 +419,115 @@ export const AdminProductFormPage: React.FC = () => {
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {language === 'bn' ? 'পণ্যের ছবি (ডিভাইস আপলোড বা লিংক)' : 'Product Image (Upload or URL)'}
-                </label>
-                <div className="flex items-center gap-2">
+              <div className="sm:col-span-2">
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="block text-xs font-semibold text-stone-700">
+                    {language === 'bn' ? 'পণ্যের গ্যালারি ছবি (১ থেকে ৫+ ছবি)' : 'Product Gallery Images (1 to 5+ Photos)'}
+                  </label>
+                  <span className="text-[11px] font-bold text-[#174D35] bg-emerald-50 px-2 py-0.5 rounded-full">
+                    {language === 'bn' ? `মোট ছবি: ${formData.images.length}টি` : `Total Images: ${formData.images.length}`}
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap sm:flex-nowrap items-center gap-2">
                   <input
                     type="text"
-                    value={formData.imageUrl}
-                    onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
-                    placeholder="https://images.unsplash.com/... বা আপলোড করুন"
-                    className="flex-1 px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#174D35]"
+                    value={newImageUrl}
+                    onChange={(e) => setNewImageUrl(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        handleAddImageUrl();
+                      }
+                    }}
+                    placeholder="https://images.unsplash.com/... বা লিংক দিয়ে যোগ করুন"
+                    className="flex-1 min-w-[200px] px-3.5 py-2.5 rounded-xl border border-stone-200 text-xs focus:outline-none focus:ring-2 focus:ring-[#174D35]"
                   />
+                  <button
+                    type="button"
+                    onClick={handleAddImageUrl}
+                    className="inline-flex items-center gap-1 px-3 py-2.5 rounded-xl bg-[#174D35] hover:bg-[#123e2a] text-white text-xs font-bold transition-all shadow-xs cursor-pointer shrink-0"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>{language === 'bn' ? 'যোগ করুন' : 'Add'}</span>
+                  </button>
                   <label className="inline-flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-stone-100 hover:bg-[#174D35] hover:text-white text-stone-700 text-xs font-semibold border border-stone-300 transition-colors cursor-pointer shrink-0">
                     <Upload className="w-3.5 h-3.5" />
-                    <span>{language === 'bn' ? 'ডিভাইস ফাইল' : 'Browse'}</span>
+                    <span>{language === 'bn' ? 'ডিভাইস ফাইল' : 'Upload'}</span>
                     <input
                       type="file"
+                      multiple
                       accept="image/*"
                       className="hidden"
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        const reader = new FileReader();
-                        reader.onload = (ev) => {
-                          if (ev.target?.result) {
-                            setFormData({ ...formData, imageUrl: ev.target.result as string });
-                          }
-                        };
-                        reader.readAsDataURL(file);
-                        e.target.value = '';
-                      }}
+                      onChange={handleDeviceFiles}
                     />
                   </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const def = getProductFallbackImage(formData);
+                      setFormData((prev) => ({
+                        ...prev,
+                        images: [...(prev.images || []), def],
+                        imageUrl: prev.imageUrl || def,
+                      }));
+                    }}
+                    className="inline-flex items-center gap-1 px-2.5 py-2.5 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold border border-stone-300 transition-colors cursor-pointer shrink-0"
+                    title={language === 'bn' ? 'অরজিনাল ডিফল্ট ছবি যোগ করুন' : 'Add default sample photo'}
+                  >
+                    <span>{language === 'bn' ? 'ডিফল্ট ছবি' : 'Default'}</span>
+                  </button>
                 </div>
-                {formData.imageUrl && (
-                  <div className="mt-2 flex items-center gap-2 p-1.5 bg-stone-50 rounded-xl border border-stone-200">
-                    <img
-                      src={formData.imageUrl}
-                      alt="Product preview"
-                      className="w-12 h-12 rounded-lg object-cover bg-stone-200 shrink-0"
-                    />
-                    <div className="flex-1 min-w-0 text-[11px] text-stone-500 truncate">
-                      {language === 'bn' ? 'ছবি প্রিভিউ যুক্ত হয়েছে' : 'Image attached'}
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => setFormData({ ...formData, imageUrl: '' })}
-                      className="p-1 text-stone-400 hover:text-red-500 rounded-lg cursor-pointer"
-                      title="Remove image"
-                    >
-                      <X className="w-3.5 h-3.5" />
-                    </button>
+
+                {/* Uploaded Images Thumbnails Grid */}
+                {formData.images && formData.images.length > 0 ? (
+                  <div className="mt-3 grid grid-cols-2 min-[440px]:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5 p-3 bg-stone-50 rounded-2xl border border-stone-200">
+                    {formData.images.map((img, idx) => (
+                      <div
+                        key={idx}
+                        className={`relative rounded-xl overflow-hidden border-2 bg-white flex flex-col group ${
+                          idx === 0 ? 'border-[#174D35] ring-2 ring-[#174D35]/20 shadow-xs' : 'border-stone-200'
+                        }`}
+                      >
+                        <div className="h-24 bg-stone-100 overflow-hidden relative">
+                          <img
+                            src={img}
+                            alt={`Preview ${idx + 1}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => handleImageError(e, getProductFallbackImage(formData))}
+                          />
+                          {idx === 0 && (
+                            <span className="absolute top-1 left-1 bg-[#174D35] text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow-xs">
+                              ★ {language === 'bn' ? 'কভার' : 'Cover'}
+                            </span>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(idx)}
+                            className="absolute top-1 right-1 w-6 h-6 rounded-full bg-black/60 hover:bg-red-600 text-white flex items-center justify-center transition-colors cursor-pointer"
+                            title="Remove image"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        {idx !== 0 && (
+                          <button
+                            type="button"
+                            onClick={() => handleSetCover(idx)}
+                            className="py-1 text-[10px] font-bold text-stone-600 hover:text-[#174D35] hover:bg-emerald-50 transition-colors border-t border-stone-100 cursor-pointer"
+                          >
+                            {language === 'bn' ? 'কভার বানান' : 'Set as Cover'}
+                          </button>
+                        )}
+                      </div>
+                    ))}
                   </div>
+                ) : (
+                  <p className="mt-2 text-[11px] text-stone-400 italic">
+                    {language === 'bn'
+                      ? '⚠️ কোনো ছবি যোগ করা হয়নি। অন্তত ০১টি ছবি যোগ করুন।'
+                      : '⚠️ No images added yet. Please add at least 1 image.'}
+                  </p>
                 )}
               </div>
             </div>

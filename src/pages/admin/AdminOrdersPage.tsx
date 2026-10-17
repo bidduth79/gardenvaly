@@ -437,7 +437,7 @@ export const AdminOrdersPage: React.FC = () => {
                         <span>{ord.customer.mobileNumber}</span>
                       </div>
                       <p className="text-[11px] text-stone-400">
-                        {ord.customer.district || 'Dhaka'}, {ord.customer.division || 'Dhaka'}
+                        {[ord.customer.union, ord.customer.upazila, ord.customer.district || 'Dhaka', ord.customer.division || 'Dhaka'].filter(Boolean).join(', ')}
                       </p>
                     </td>
 

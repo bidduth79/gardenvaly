@@ -26,6 +26,8 @@ import {
   Package,
   ShieldCheck,
   Send,
+  ExternalLink,
+  MessageSquare,
 } from 'lucide-react';
 import { orderService } from '../../services/orderService';
 import { AdminOrder, OrderStatus } from '../../types/order';
@@ -33,6 +35,7 @@ import { useRouter } from '../../context/RouterContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { OrderActionModal, ModalType } from '../../components/admin/OrderActionModal';
 import { ORDER_STATUS_REGISTRY, ALLOWED_STATUS_TRANSITIONS } from '../../../server/utils/orderLifecycle';
+import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
 
 export const AdminOrderDetailPage: React.FC = () => {
   const { currentPath, navigate } = useRouter();
@@ -131,6 +134,11 @@ export const AdminOrderDetailPage: React.FC = () => {
         } else {
           setUpdateFeedback({ type: 'error', message: res.error || 'Failed to record refund' });
         }
+      } else if (modalType === 'send-sms') {
+        setUpdateFeedback({
+          type: 'success',
+          message: language === 'bn' ? 'এসএমএস সফলভাবে কাস্টমারকে পাঠানো হয়েছে!' : 'SMS dispatched to customer!',
+        });
       }
     } finally {
       setIsUpdating(false);
@@ -254,6 +262,15 @@ export const AdminOrderDetailPage: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2 pt-1">
+          {/* Direct Send SMS Button */}
+          <button
+            onClick={() => setModalType('send-sms')}
+            className="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 text-xs font-semibold shadow-xs transition-colors cursor-pointer flex items-center gap-1.5"
+          >
+            <MessageSquare className="w-3.5 h-3.5 text-emerald-700" />
+            <span>{language === 'bn' ? 'এসএমএস পাঠান' : 'Send SMS'}</span>
+          </button>
+
           {allowedTransitions.includes('confirmed') && (
             <button
               onClick={() => handleOpenStatusModal('confirmed')}
@@ -367,13 +384,12 @@ export const AdminOrderDetailPage: React.FC = () => {
                     <tr key={idx} className="hover:bg-stone-50/50">
                       <td className="py-3 px-2">
                         <div className="flex items-center gap-3">
-                          {item.imageUrl && (
-                            <img
-                              src={item.imageUrl}
-                              alt={item.productName}
-                              className="w-10 h-10 rounded-xl object-cover border border-stone-200"
-                            />
-                          )}
+                          <img
+                            src={getSafeImageUrl(item.imageUrl)}
+                            alt={item.productName}
+                            className="w-10 h-10 rounded-xl object-cover border border-stone-200 shrink-0"
+                            onError={(e) => handleImageError(e, getProductFallbackImage())}
+                          />
                           <div>
                             <p className="font-semibold text-stone-900">{item.productName}</p>
                             <p className="text-[10px] text-stone-400 font-mono">SKU / ID: {item.productId}</p>
@@ -450,6 +466,23 @@ export const AdminOrderDetailPage: React.FC = () => {
                   {order.actualDeliveryDate ? new Date(order.actualDeliveryDate).toLocaleDateString('en-GB') : 'In transit'}
                 </p>
               </div>
+
+              {(order.trackingUrl || order.trackingNumber) && (
+                <div className="sm:col-span-2 pt-2 border-t border-stone-200/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                  <span className="text-stone-500 text-xs">
+                    {language === 'bn' ? 'সরাসরি কুরিয়ার ট্র্যাকিং লিঙ্ক:' : 'Direct Live Courier Tracking:'}
+                  </span>
+                  <a
+                    href={order.trackingUrl || `https://steadfast.com.bd/t/${order.trackingNumber}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs transition-colors w-fit"
+                  >
+                    <span>{language === 'bn' ? 'কুরিয়ার পোর্টালে দেখুন' : 'Track on Courier'}</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
+                </div>
+              )}
             </div>
           </div>
 
@@ -517,8 +550,7 @@ export const AdminOrderDetailPage: React.FC = () => {
                   {order.customer.addressDetail}
                 </p>
                 <p className="text-stone-600 text-[11px] mt-0.5">
-                  {order.customer.upazila ? `${order.customer.upazila}, ` : ''}
-                  {order.customer.district}, {order.customer.division}
+                  {[order.customer.union, order.customer.upazila, order.customer.district, order.customer.division].filter(Boolean).join(', ')}
                 </p>
               </div>
 

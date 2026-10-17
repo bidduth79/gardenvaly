@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { X, Filter, RotateCcw, Check } from 'lucide-react';
+import { X, Filter, RotateCcw } from 'lucide-react';
 import { Category, ProductFilterState, ProductCategoryType, IndoorOutdoorType } from '../../types/product';
 import { useLanguage } from '../../context/LanguageContext';
 import { Button } from '../common/Button';
+import { CategoryHierarchyFilter } from './CategoryHierarchyFilter';
 
 interface FilterMobileDrawerProps {
   isOpen: boolean;
@@ -47,6 +48,22 @@ export const FilterMobileDrawer: React.FC<FilterMobileDrawerProps> = ({
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
+
+  const selectedSlugs = filters.categorySlugs && filters.categorySlugs.length > 0
+    ? filters.categorySlugs
+    : filters.categorySlug
+    ? [filters.categorySlug]
+    : [];
+
+  const handleToggleSlug = (slug: string) => {
+    const nextSlugs = selectedSlugs.includes(slug)
+      ? selectedSlugs.filter((s) => s !== slug)
+      : [...selectedSlugs, slug];
+    onFilterChange({
+      categorySlugs: nextSlugs,
+      categorySlug: nextSlugs.length === 1 ? nextSlugs[0] : undefined,
+    });
+  };
 
   return (
     <div
@@ -101,33 +118,13 @@ export const FilterMobileDrawer: React.FC<FilterMobileDrawerProps> = ({
             </div>
           </div>
 
-          {/* Categories */}
-          <div className="space-y-2">
-            <label className="text-xs font-bold uppercase tracking-wider text-[#5C8D50]">
-              {t('filterCategory')}
-            </label>
-            <div className="space-y-1 text-xs max-h-48 overflow-y-auto">
-              <button
-                onClick={() => onFilterChange({ categorySlug: undefined })}
-                className={`w-full text-left px-3 py-2 rounded-lg ${
-                  !filters.categorySlug ? 'bg-[#174D35] text-white font-semibold' : 'text-stone-700 bg-stone-50'
-                }`}
-              >
-                {t('allCategories')}
-              </button>
-              {categories.map((c) => (
-                <button
-                  key={c.slug}
-                  onClick={() => onFilterChange({ categorySlug: c.slug })}
-                  className={`w-full text-left px-3 py-2 rounded-lg ${
-                    filters.categorySlug === c.slug ? 'bg-[#174D35] text-white font-semibold' : 'text-stone-700 bg-stone-50'
-                  }`}
-                >
-                  {language === 'bn' ? c.nameBn : c.nameEn}
-                </button>
-              ))}
-            </div>
-          </div>
+          {/* Hierarchical Categories */}
+          <CategoryHierarchyFilter
+            categories={categories}
+            selectedSlugs={selectedSlugs}
+            activeType={filters.type}
+            onToggleSlug={handleToggleSlug}
+          />
 
           {/* Placement */}
           <div className="space-y-2">

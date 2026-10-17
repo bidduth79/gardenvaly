@@ -18,7 +18,13 @@ export interface CartState {
 }
 
 export type DeliveryMethodId = 'home-delivery' | 'local-pickup';
-export type PaymentMethodId = 'cash-on-delivery' | 'bkash' | 'nagad' | 'whatsapp-order';
+export type PaymentMethodId =
+  | 'cash-on-delivery'
+  | 'bkash'
+  | 'nagad'
+  | 'whatsapp-order'
+  | 'sslcommerz'
+  | 'bkash-online';
 
 export interface CustomerInfo {
   fullName: string;
@@ -27,6 +33,7 @@ export interface CustomerInfo {
   division: string;
   district: string;
   upazila: string;
+  union?: string;
   addressDetail: string;
   deliveryInstructions?: string;
 }

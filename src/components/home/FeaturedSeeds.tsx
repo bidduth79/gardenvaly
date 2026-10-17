@@ -12,7 +12,7 @@ import { useRouter } from '../../context/RouterContext';
 
 interface FeaturedSeedsProps {
   products: Product[];
-  onQuickView: (product: Product) => void;
+  onQuickView?: (product: Product) => void;
 }
 
 export const FeaturedSeeds: React.FC<FeaturedSeedsProps> = ({ products, onQuickView }) => {

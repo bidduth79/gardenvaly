@@ -1,11 +1,21 @@
 /**
  * @file product.ts
- * @description Centralized domain models for Products, Categories, and Filtering.
+ * @description Centralized domain models for Products, Categories, Subcategories, and Filtering.
  */
 
 export type ProductCategoryType = 'plant' | 'seed' | 'tool' | 'care';
 export type IndoorOutdoorType = 'indoor' | 'outdoor' | 'both';
 export type SortOption = 'featured' | 'newest' | 'price-asc' | 'price-desc' | 'name-asc';
+export type CategoryIconType = 'tree' | 'flower' | 'potted' | 'leaf' | 'tool' | 'seed';
+
+export interface Subcategory {
+  id: string;
+  slug: string;
+  nameEn: string;
+  nameBn: string;
+  itemCount: number;
+  iconName?: CategoryIconType;
+}
 
 export interface Category {
   id: string;
@@ -17,6 +27,8 @@ export interface Category {
   descriptionBn: string;
   imageUrl: string;
   itemCount: number;
+  iconName?: CategoryIconType;
+  subcategories?: Subcategory[];
 }
 
 export interface Product {
@@ -27,6 +39,8 @@ export interface Product {
   botanicalName?: string;
   category: string;
   categorySlug: string;
+  subcategory?: string;
+  subcategorySlug?: string;
   type: ProductCategoryType;
   price: number;
   originalPrice?: number;
@@ -74,6 +88,9 @@ export interface Product {
 export interface ProductFilterState {
   type?: ProductCategoryType;
   categorySlug?: string;
+  categorySlugs?: string[];
+  subcategorySlug?: string;
+  subcategorySlugs?: string[];
   minPrice?: number;
   maxPrice?: number;
   inStockOnly?: boolean;

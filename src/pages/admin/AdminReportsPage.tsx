@@ -32,6 +32,7 @@ import {
 } from '../../types/admin';
 import { useLanguage } from '../../context/LanguageContext';
 import { apiClient } from '../../services/apiClient';
+import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
 
 export const AdminReportsPage: React.FC = () => {
   const { language } = useLanguage();
@@ -333,9 +334,12 @@ export const AdminReportsPage: React.FC = () => {
                     <td className="py-3 px-3 font-bold text-stone-400">{idx + 1}</td>
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2.5">
-                        {p.imageUrl && (
-                          <img src={p.imageUrl} alt={p.nameEn} className="w-8 h-8 rounded-lg object-cover border border-stone-200" />
-                        )}
+                        <img
+                          src={getSafeImageUrl(p.imageUrl, { type: p.type })}
+                          alt={p.nameEn}
+                          className="w-8 h-8 rounded-lg object-cover border border-stone-200 shrink-0"
+                          onError={(e) => handleImageError(e, getProductFallbackImage({ type: p.type }))}
+                        />
                         <div>
                           <p className="font-semibold text-stone-900">{language === 'bn' ? p.nameBn : p.nameEn}</p>
                           <p className="text-[10px] text-stone-400 capitalize">{p.type}</p>
@@ -380,9 +384,12 @@ export const AdminReportsPage: React.FC = () => {
                   <tr key={idx} className="hover:bg-stone-50/50">
                     <td className="py-3 px-3">
                       <div className="flex items-center gap-2.5">
-                        {item.imageUrl && (
-                          <img src={item.imageUrl} alt={item.nameEn} className="w-8 h-8 rounded-lg object-cover border border-stone-200" />
-                        )}
+                        <img
+                          src={getSafeImageUrl(item.imageUrl, { categorySlug: item.categorySlug })}
+                          alt={item.nameEn}
+                          className="w-8 h-8 rounded-lg object-cover border border-stone-200 shrink-0"
+                          onError={(e) => handleImageError(e, getProductFallbackImage({ categorySlug: item.categorySlug }))}
+                        />
                         <div>
                           <p className="font-semibold text-stone-900">{language === 'bn' ? item.nameBn : item.nameEn}</p>
                           <p className="text-[10px] text-stone-400">{item.nameEn}</p>

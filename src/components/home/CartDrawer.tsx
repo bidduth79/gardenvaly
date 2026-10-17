@@ -1,16 +1,18 @@
 /**
  * @file CartDrawer.tsx
- * @description Shopping cart drawer with delete confirmation dialogs (Rule #8).
+ * @description Shopping cart drawer with free delivery progress bar and delete confirmations (Rule #8).
  */
 
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, X, Trash2, Plus, Minus, ArrowRight } from 'lucide-react';
+import { ShoppingBag, X, ArrowRight } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatPrice, formatNumeral } from '../../utils/formatters';
 import { Button } from '../common/Button';
 import { ConfirmationDialog } from '../common/ConfirmationDialog';
 import { useRouter } from '../../context/RouterContext';
+import { FreeDeliveryProgressBar } from '../cart/FreeDeliveryProgressBar';
+import { CartDrawerItem } from '../cart/CartDrawerItem';
 
 export const CartDrawer: React.FC = () => {
   const { cart, isCartOpen, setIsCartOpen, updateQuantity, removeFromCart, clearCart } = useCart();
@@ -20,7 +22,6 @@ export const CartDrawer: React.FC = () => {
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
 
-  // Lock body scroll when cart is open
   useEffect(() => {
     if (isCartOpen) {
       document.body.style.overflow = 'hidden';
@@ -32,7 +33,6 @@ export const CartDrawer: React.FC = () => {
     };
   }, [isCartOpen]);
 
-  // Handle escape key
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && isCartOpen) {
@@ -83,51 +83,20 @@ export const CartDrawer: React.FC = () => {
             </div>
           ) : (
             <>
-              {cart.items.map((item) => {
-                const name = language === 'bn' ? item.product.nameBn : item.product.nameEn;
-                return (
-                  <div key={item.product.id} className="flex gap-3 p-3 rounded-xl border border-stone-100 bg-stone-50/50">
-                    <img src={item.product.imageUrl} alt={name} className="w-16 h-16 rounded-xl object-cover" />
-                    <div className="flex-1 flex flex-col justify-between">
-                      <div className="flex justify-between items-start">
-                        <h4 className="text-sm font-semibold text-stone-900 line-clamp-1">{name}</h4>
-                        <button
-                          onClick={() => setItemToDelete(item.product.id)}
-                          className="text-stone-400 hover:text-red-600 w-8 h-8 flex items-center justify-center rounded-lg hover:bg-red-50 transition-colors cursor-pointer"
-                          aria-label="Remove item"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                      <div className="flex items-center justify-between mt-2">
-                        <span className="text-xs font-bold text-[#174D35]">
-                          {formatPrice(item.product.price * item.quantity, language)}
-                        </span>
-                        <div className="flex items-center border border-stone-200 rounded-lg bg-white">
-                          <button
-                            onClick={() => {
-                              if (item.quantity === 1) setItemToDelete(item.product.id);
-                              else updateQuantity(item.product.id, item.quantity - 1);
-                            }}
-                            className="w-8 h-8 flex items-center justify-center text-stone-500 hover:text-stone-800 hover:bg-stone-100 rounded-l-lg cursor-pointer"
-                            aria-label="Decrease quantity"
-                          >
-                            <Minus className="w-3.5 h-3.5" />
-                          </button>
-                          <span className="text-xs font-bold px-2">{formatNumeral(item.quantity, language)}</span>
-                          <button
-                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                            className="w-8 h-8 flex items-center justify-center text-stone-500 hover:text-stone-800 hover:bg-stone-100 rounded-r-lg cursor-pointer"
-                            aria-label="Increase quantity"
-                          >
-                            <Plus className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+              {/* Dynamic Free Shipping Progress Bar */}
+              <FreeDeliveryProgressBar subtotal={cart.subtotal} threshold={1500} />
+
+              <div className="space-y-3 pt-1">
+                {cart.items.map((item) => (
+                  <CartDrawerItem
+                    key={item.product.id}
+                    item={item}
+                    onUpdateQuantity={updateQuantity}
+                    onDeleteRequest={(id) => setItemToDelete(id)}
+                  />
+                ))}
+              </div>
+
               <div className="pt-2 flex justify-end">
                 <button
                   onClick={() => setShowClearConfirm(true)}

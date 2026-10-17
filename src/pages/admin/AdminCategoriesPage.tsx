@@ -18,6 +18,7 @@ import {
 import { adminService } from '../../services/adminService';
 import { Category, ProductCategoryType } from '../../types/product';
 import { useLanguage } from '../../context/LanguageContext';
+import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
 
 export const AdminCategoriesPage: React.FC = () => {
   const { language } = useLanguage();
@@ -152,9 +153,10 @@ export const AdminCategoriesPage: React.FC = () => {
             <div>
               <div className="flex items-start justify-between gap-3">
                 <img
-                  src={cat.imageUrl}
+                  src={getSafeImageUrl(cat.imageUrl, { type: cat.type, categorySlug: cat.slug })}
                   alt={cat.nameEn}
                   className="w-14 h-14 rounded-2xl object-cover border border-stone-100 shadow-xs"
+                  onError={(e) => handleImageError(e, getProductFallbackImage({ type: cat.type, categorySlug: cat.slug }))}
                 />
                 <span className="px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-emerald-50 text-emerald-800">
                   {cat.type}
@@ -298,6 +300,19 @@ export const AdminCategoriesPage: React.FC = () => {
                       }}
                     />
                   </label>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFormData({
+                        ...formData,
+                        imageUrl: getProductFallbackImage({ type: formData.type }),
+                      })
+                    }
+                    className="inline-flex items-center gap-1 px-2.5 py-2 rounded-xl bg-stone-100 hover:bg-[#174D35] hover:text-white text-stone-700 text-xs font-semibold border border-stone-300 transition-colors cursor-pointer shrink-0"
+                    title={language === 'bn' ? 'অরজিনাল ডিফল্ট ছবি বসান' : 'Use original default photo'}
+                  >
+                    <span>{language === 'bn' ? 'ডিফল্ট ছবি' : 'Default'}</span>
+                  </button>
                 </div>
                 {formData.imageUrl && (
                   <div className="mt-2 flex items-center gap-2 p-1.5 bg-stone-50 rounded-xl border border-stone-200">
@@ -305,6 +320,7 @@ export const AdminCategoriesPage: React.FC = () => {
                       src={formData.imageUrl}
                       alt="Category preview"
                       className="w-10 h-10 rounded-lg object-cover bg-stone-200 shrink-0"
+                      onError={(e) => handleImageError(e, getProductFallbackImage({ type: formData.type }))}
                     />
                     <div className="flex-1 min-w-0 text-[11px] text-stone-500 truncate">
                       {formData.imageUrl.startsWith('data:') ? 'ডিভাইস থেকে ছবি যুক্ত হয়েছে' : formData.imageUrl}

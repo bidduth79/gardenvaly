@@ -24,6 +24,8 @@ import {
 import { Button } from '../common/Button';
 import { useLanguage } from '../../context/LanguageContext';
 import { HeroSlide } from './HeroImageEditorModal';
+import { isVideoSlide, getYouTubeEmbedUrl } from '../../utils/videoUtils';
+import { DEFAULT_FALLBACK_IMAGE, handleImageError } from '../../utils/imageFallback';
 
 const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   {
@@ -37,7 +39,7 @@ const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   },
   {
     id: 'rooftop-blooms',
-    imageUrl: 'https://images.unsplash.com/photo-1508873696983-2df57046475b?auto=format&fit=crop&w=1920&q=85',
+    imageUrl: 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1920&q=85',
     titleBn: 'রঙিন ফুলে ভরিয়ে তুলুন আপনার ছাদবাগান',
     titleEn: 'Vibrant Blossoms for Your Terrace Sanctuary',
     subtitleBn: 'দেশি-বিদেশি ফুলের অতুলনীয় সমাহার',
@@ -84,7 +86,16 @@ export const HeroSection: React.FC = () => {
         if (saved) {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed;
+            // Migrate any cached slide containing the old broken 404 Unsplash image
+            return parsed.map((s: HeroSlide) => {
+              if (s.imageUrl && s.imageUrl.includes('photo-1508873696983-2df57046475b')) {
+                return {
+                  ...s,
+                  imageUrl: 'https://images.unsplash.com/photo-1526047932273-341f2a7631f9?auto=format&fit=crop&w=1920&q=85',
+                };
+              }
+              return s;
+            });
           }
         }
       } catch (e) {
@@ -203,17 +214,41 @@ export const HeroSection: React.FC = () => {
               }`}
               aria-hidden={!isActive}
             >
-              <img
-                src={slide.imageUrl}
-                alt={slide.altText}
-                loading="eager"
-                fetchPriority="high"
-                decoding="async"
-                referrerPolicy="no-referrer"
-                className={`w-full h-full object-cover transition-transform duration-[7000ms] ease-out ${
-                  isActive ? 'scale-105' : 'scale-100'
-                }`}
-              />
+              {isVideoSlide(slide) && getYouTubeEmbedUrl(slide.videoUrl) ? (
+                <div className="w-full h-full overflow-hidden pointer-events-none">
+                  <iframe
+                    src={getYouTubeEmbedUrl(slide.videoUrl)!}
+                    className="w-full h-full object-cover scale-125 pointer-events-none"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    title={slide.altText}
+                  />
+                </div>
+              ) : isVideoSlide(slide) && slide.videoUrl ? (
+                <video
+                  src={slide.videoUrl}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  poster={slide.imageUrl || DEFAULT_FALLBACK_IMAGE}
+                  className={`w-full h-full object-cover transition-transform duration-[7000ms] ease-out ${
+                    isActive ? 'scale-105' : 'scale-100'
+                  }`}
+                />
+              ) : (
+                <img
+                  src={slide.imageUrl}
+                  alt={slide.altText}
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
+                  referrerPolicy="no-referrer"
+                  onError={(e) => handleImageError(e, DEFAULT_FALLBACK_IMAGE)}
+                  className={`w-full h-full object-cover transition-transform duration-[7000ms] ease-out ${
+                    isActive ? 'scale-105' : 'scale-100'
+                  }`}
+                />
+              )}
 
               {/* Multi-Directional Scrim Gradient for WCAG AA Text Contrast */}
               {/* Left-to-Right Horizontal Scrim (Deep Botanical Shade for typography) */}
@@ -397,13 +432,14 @@ export const HeroSection: React.FC = () => {
             >
               <div className="w-10 h-10 rounded-xl overflow-hidden border border-white/30 shrink-0">
                 <img
-                  src={nextSlidePreview.imageUrl}
+                  src={nextSlidePreview.imageUrl || DEFAULT_FALLBACK_IMAGE}
                   alt={nextSlidePreview.altText}
                   width={40}
                   height={40}
                   loading="lazy"
                   decoding="async"
                   referrerPolicy="no-referrer"
+                  onError={(e) => handleImageError(e, DEFAULT_FALLBACK_IMAGE)}
                   className="w-full h-full object-cover group-hover/thumb:scale-110 transition-transform duration-300"
                 />
               </div>
@@ -426,20 +462,20 @@ export const HeroSection: React.FC = () => {
         1. Overlapping Floating Botanical Trust Bar (-mt-10 sm:-mt-14)
         2. Soft botanical natural canvas with an organic wave SVG divider leading into ShopByCategory
       */}
-      <div className="relative bg-gradient-to-b from-stone-900 via-stone-100 to-[#FAF9F6] pt-0 pb-6">
+      <div className="relative bg-gradient-to-b from-stone-900 via-stone-100 to-[#FAF9F6] dark:via-[#06120D] dark:to-[#06120D] pt-0 pb-6">
         {/* Floating Trust Metric Bar (Bridging the Hero Seam) */}
         <div className="-mt-10 sm:-mt-12 relative z-30 max-w-6xl mx-auto px-4 sm:px-6">
-          <div className="bg-white/95 backdrop-blur-md rounded-2xl sm:rounded-3xl shadow-2xl border border-stone-200/90 p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-stone-200/70">
+          <div className="bg-white/95 dark:bg-[#0C2018] backdrop-blur-md rounded-2xl sm:rounded-3xl shadow-2xl border border-stone-200/90 dark:border-[#1B3B2E] p-4 sm:p-6 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 divide-y sm:divide-y-0 sm:divide-x divide-stone-200/70 dark:divide-[#1B3B2E]">
             {/* Guarantee 1: 100% Healthy Plants */}
             <div className="flex items-center gap-3.5 pt-2 sm:pt-0 sm:px-2">
-              <div className="w-11 h-11 rounded-2xl bg-emerald-50 border border-emerald-200/60 flex items-center justify-center shrink-0 text-[#174D35] shadow-xs">
-                <CheckCircle className="w-6 h-6 text-[#174D35]" />
+              <div className="w-11 h-11 rounded-2xl bg-emerald-50 dark:bg-[#10261E] border border-emerald-200/60 dark:border-[#1B3B2E] flex items-center justify-center shrink-0 text-[#174D35] dark:text-[#34D399] shadow-xs">
+                <CheckCircle className="w-6 h-6 text-[#174D35] dark:text-[#34D399]" />
               </div>
               <div>
-                <p className="text-sm sm:text-base font-bold text-stone-900 leading-snug">
+                <p className="text-sm sm:text-base font-bold text-stone-900 dark:text-white leading-snug">
                   {isBn ? '১০০% সুস্থ ও সতেজ গাছ' : '100% Healthy & Fresh'}
                 </p>
-                <p className="text-xs text-stone-500 mt-0.5">
+                <p className="text-xs text-stone-500 dark:text-[#9CB5A7] mt-0.5 font-medium">
                   {isBn ? 'নার্সারি থেকে নিবিড় যত্নে সুরক্ষিত ডেলিভারি' : 'Hand-curated & safely delivered across BD'}
                 </p>
               </div>
@@ -447,14 +483,14 @@ export const HeroSection: React.FC = () => {
 
             {/* Guarantee 2: Heirloom Organic Seeds */}
             <div className="flex items-center gap-3.5 pt-3 sm:pt-0 sm:px-4">
-              <div className="w-11 h-11 rounded-2xl bg-amber-50 border border-amber-200/60 flex items-center justify-center shrink-0 text-amber-700 shadow-xs">
-                <ShieldCheck className="w-6 h-6 text-amber-600" />
+              <div className="w-11 h-11 rounded-2xl bg-amber-50 dark:bg-[#10261E] border border-amber-200/60 dark:border-[#1B3B2E] flex items-center justify-center shrink-0 text-amber-700 dark:text-amber-400 shadow-xs">
+                <ShieldCheck className="w-6 h-6 text-amber-600 dark:text-amber-400" />
               </div>
               <div>
-                <p className="text-sm sm:text-base font-bold text-stone-900 leading-snug">
+                <p className="text-sm sm:text-base font-bold text-stone-900 dark:text-white leading-snug">
                   {isBn ? 'পরীক্ষিত খাঁটি অর্গানিক বীজ' : 'Tested Organic Seeds'}
                 </p>
-                <p className="text-xs text-stone-500 mt-0.5">
+                <p className="text-xs text-stone-500 dark:text-[#9CB5A7] mt-0.5 font-medium">
                   {isBn ? '৯৮% অঙ্কুরোদগম নিশ্চয়তা ও উচ্চ ফলন' : '98% germination rate & heirloom varieties'}
                 </p>
               </div>
@@ -462,14 +498,14 @@ export const HeroSection: React.FC = () => {
 
             {/* Guarantee 3: Horticultural Care & Guidance */}
             <div className="flex items-center gap-3.5 pt-3 sm:pt-0 sm:px-4">
-              <div className="w-11 h-11 rounded-2xl bg-teal-50 border border-teal-200/60 flex items-center justify-center shrink-0 text-[#174D35] shadow-xs">
-                <HeartHandshake className="w-6 h-6 text-[#174D35]" />
+              <div className="w-11 h-11 rounded-2xl bg-teal-50 dark:bg-[#10261E] border border-teal-200/60 dark:border-[#1B3B2E] flex items-center justify-center shrink-0 text-[#174D35] dark:text-[#34D399] shadow-xs">
+                <HeartHandshake className="w-6 h-6 text-[#174D35] dark:text-[#34D399]" />
               </div>
               <div>
-                <p className="text-sm sm:text-base font-bold text-stone-900 leading-snug">
+                <p className="text-sm sm:text-base font-bold text-stone-900 dark:text-white leading-snug">
                   {isBn ? 'হাসনাহেনার সার্বক্ষণিক পরামর্শ' : 'Expert Horticultural Care'}
                 </p>
-                <p className="text-xs text-stone-500 mt-0.5">
+                <p className="text-xs text-stone-500 dark:text-[#9CB5A7] mt-0.5 font-medium">
                   {isBn ? 'গাছ লালন-পালনের সার্বক্ষণিক গাইডলাইন' : 'Personal care tips from Hasna Hena'}
                 </p>
               </div>
@@ -478,7 +514,7 @@ export const HeroSection: React.FC = () => {
         </div>
 
         {/* Organic Curved Wave Transition into Storefront */}
-        <div className="w-full overflow-hidden leading-none text-[#FAF9F6] mt-4">
+        <div className="w-full overflow-hidden leading-none text-[#FAF9F6] dark:text-[#06120D] mt-4">
           <svg
             className="w-full h-8 sm:h-12 block"
             viewBox="0 0 1440 74"

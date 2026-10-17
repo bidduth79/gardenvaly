@@ -36,6 +36,8 @@ import { Product } from '../types/product';
 import { Button } from '../components/common/Button';
 import { formatPrice, formatNumeral } from '../utils/formatters';
 import { InvoicePrintModal } from '../components/checkout/InvoicePrintModal';
+import { BangladeshAddressSelector } from '../components/common/BangladeshAddressSelector';
+import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../utils/imageFallback';
 
 export const CustomerProfilePage: React.FC = () => {
   const { customer, isAuthenticated, logout, updateProfile, openLoginModal } = useCustomerAuth();
@@ -60,6 +62,7 @@ export const CustomerProfilePage: React.FC = () => {
   const [division, setDivision] = useState(customer?.division || 'Dhaka');
   const [district, setDistrict] = useState(customer?.district || 'Dhaka');
   const [upazila, setUpazila] = useState(customer?.upazila || '');
+  const [union, setUnion] = useState(customer?.union || '');
   const [addressDetail, setAddressDetail] = useState(customer?.addressDetail || '');
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [profileSuccessMsg, setProfileSuccessMsg] = useState<string | null>(null);
@@ -72,6 +75,7 @@ export const CustomerProfilePage: React.FC = () => {
       setDivision(customer.division || 'Dhaka');
       setDistrict(customer.district || 'Dhaka');
       setUpazila(customer.upazila || '');
+      setUnion(customer.union || '');
       setAddressDetail(customer.addressDetail || '');
     }
   }, [customer]);
@@ -111,6 +115,7 @@ export const CustomerProfilePage: React.FC = () => {
         division,
         district,
         upazila,
+        union,
         addressDetail,
       });
       setProfileSuccessMsg(isBn ? 'ঠিকানা ও প্রোফাইল সফলভাবে সংরক্ষিত হয়েছে!' : 'Profile updated successfully!');
@@ -368,17 +373,12 @@ export const CustomerProfilePage: React.FC = () => {
                         <div key={idx} className="flex items-center justify-between gap-4">
                           <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-xl bg-stone-100 overflow-hidden border border-stone-200/60 shrink-0">
-                              {item.imageUrl ? (
-                                <img
-                                  src={item.imageUrl}
-                                  alt={item.productName}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-stone-400">
-                                  🌱
-                                </div>
-                              )}
+                              <img
+                                src={getSafeImageUrl(item.imageUrl)}
+                                alt={item.productName}
+                                className="w-full h-full object-cover"
+                                onError={(e) => handleImageError(e, getProductFallbackImage())}
+                              />
                             </div>
                             <div>
                               <p className="text-sm font-semibold text-stone-900">
@@ -463,10 +463,11 @@ export const CustomerProfilePage: React.FC = () => {
                 >
                   <div className="relative rounded-2xl overflow-hidden aspect-4/3 bg-stone-100 mb-3">
                     <img
-                      src={prod.imageUrl}
+                      src={getSafeImageUrl(prod.imageUrl, { type: prod.type, categorySlug: prod.categorySlug })}
                       alt={isBn ? prod.nameBn : prod.nameEn}
                       className="w-full h-full object-cover"
                       loading="lazy"
+                      onError={(e) => handleImageError(e, getProductFallbackImage(prod))}
                     />
                     <button
                       type="button"
@@ -580,54 +581,20 @@ export const CustomerProfilePage: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {isBn ? 'বিভাগ' : 'Division'}
-                </label>
-                <select
-                  value={division}
-                  onChange={(e) => setDivision(e.target.value)}
-                  className="w-full px-3.5 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:bg-white focus:border-[#174D35] focus:outline-none transition-colors"
-                >
-                  <option value="Dhaka">ঢাকা (Dhaka)</option>
-                  <option value="Chittagong">চট্টগ্রাম (Chittagong)</option>
-                  <option value="Rajshahi">রাজশাহী (Rajshahi)</option>
-                  <option value="Khulna">খুলনা (Khulna)</option>
-                  <option value="Barisal">বরিশাল (Barisal)</option>
-                  <option value="Sylhet">সিলেট (Sylhet)</option>
-                  <option value="Rangpur">রংপুর (Rangpur)</option>
-                  <option value="Mymensingh">ময়মনসিংহ (Mymensingh)</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {isBn ? 'জেলা' : 'District'}
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={district}
-                  onChange={(e) => setDistrict(e.target.value)}
-                  placeholder={isBn ? 'যেমন: ঢাকা' : 'e.g. Dhaka'}
-                  className="w-full px-3.5 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:bg-white focus:border-[#174D35] focus:outline-none transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-700 mb-1">
-                  {isBn ? 'উপজেলা / থানা' : 'Upazila / Thana'}
-                </label>
-                <input
-                  type="text"
-                  value={upazila}
-                  onChange={(e) => setUpazila(e.target.value)}
-                  placeholder={isBn ? 'যেমন: ধানমন্ডি' : 'e.g. Dhanmondi'}
-                  className="w-full px-3.5 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:bg-white focus:border-[#174D35] focus:outline-none transition-colors"
-                />
-              </div>
-            </div>
+            {/* Division, District, Upazila & Union Cascading Dropdowns */}
+            <BangladeshAddressSelector
+              division={division}
+              district={district}
+              upazila={upazila}
+              union={union}
+              onChange={(field, val) => {
+                if (field === 'division') setDivision(val);
+                else if (field === 'district') setDistrict(val);
+                else if (field === 'upazila') setUpazila(val);
+                else if (field === 'union') setUnion(val);
+              }}
+              showUnion={true}
+            />
 
             <div>
               <label className="block text-xs font-semibold text-stone-700 mb-1">

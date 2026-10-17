@@ -20,6 +20,7 @@ import { WhatsAppOrderButton } from '../components/checkout/WhatsAppOrderButton'
 import { PhoneOrderButton } from '../components/checkout/PhoneOrderButton';
 import { Button } from '../components/common/Button';
 import { orderService } from '../services/orderService';
+import { integrationService } from '../services/integrationService';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { analyticsService } from '../services/analyticsService';
 
@@ -46,6 +47,7 @@ export const CheckoutPage: React.FC = () => {
     division: '',
     district: '',
     upazila: '',
+    union: '',
     addressDetail: '',
     deliveryInstructions: '',
   });
@@ -127,6 +129,24 @@ export const CheckoutPage: React.FC = () => {
         cart.subtotal + deliveryCharge,
         items
       );
+
+      // Handle Online Payment Gateway (bKash Checkout or SSLCommerz)
+      if (createdOrder && (paymentMethod === 'bkash-online' || paymentMethod === 'sslcommerz')) {
+        const payRes = await integrationService.initiatePayment(createdOrder.id, paymentMethod);
+        if (payRes.success && payRes.data) {
+          if (payRes.data.simulated && payRes.data.transactionId) {
+            // Automatically verify sandbox test payment
+            await integrationService.verifyPayment(
+              createdOrder.id,
+              payRes.data.transactionId,
+              paymentMethod
+            );
+          } else if (payRes.data.redirectUrl) {
+            window.location.href = payRes.data.redirectUrl;
+            return;
+          }
+        }
+      }
 
       const payload: OrderPayload = {
         items: items.map((it) => ({

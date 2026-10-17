@@ -37,6 +37,20 @@ export const PAYMENT_CONFIG = {
       descBn: 'নগদ অ্যাপ বা ইউএসএসডি কোড থেকে সেন্ড মানি করে TrxID দিন।',
     },
     {
+      id: 'bkash-online',
+      nameEn: 'bKash Instant Gateway',
+      nameBn: 'বিকাশ অনলাইন গেটওয়ে (অটো পেমেন্ট)',
+      descEn: 'Pay directly via official bKash merchant gateway pop-up with instant verification.',
+      descBn: 'বিকাশ অফিসিয়াল গেটওয়ে থেকে সহজে ওটিপি ও পিন দিয়ে তাৎক্ষণিক নিরাপদ পেমেন্ট করুন।',
+    },
+    {
+      id: 'sslcommerz',
+      nameEn: 'Cards / Banking (SSLCommerz)',
+      nameBn: 'কার্ড ও ইন্টারনেট ব্যাংকিং (SSLCommerz)',
+      descEn: 'Pay securely using VISA, Mastercard, DBBL Nexus, or Net Banking.',
+      descBn: 'ভিসা, মাস্টারকার্ড, নেক্সাস পে অথবা ব্যাংক একাউন্ট দিয়ে তাৎক্ষণিক পেমেন্ট করুন।',
+    },
+    {
       id: 'whatsapp-order',
       nameEn: 'Order via WhatsApp Chat',
       nameBn: 'হোয়াটসঅ্যাপে সরাসরি অর্ডার',

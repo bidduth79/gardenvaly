@@ -12,7 +12,7 @@ import { useRouter } from '../../context/RouterContext';
 
 interface FeaturedPlantsProps {
   products: Product[];
-  onQuickView: (product: Product) => void;
+  onQuickView?: (product: Product) => void;
 }
 
 export const FeaturedPlants: React.FC<FeaturedPlantsProps> = ({ products, onQuickView }) => {
@@ -22,7 +22,7 @@ export const FeaturedPlants: React.FC<FeaturedPlantsProps> = ({ products, onQuic
   const { navigate } = useRouter();
 
   return (
-    <section id="plants" className="py-14 sm:py-18 bg-white/50 border-t border-stone-200/70">
+    <section id="plants" className="py-14 sm:py-18 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">

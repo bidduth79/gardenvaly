@@ -15,7 +15,7 @@ import { FilterMobileDrawer } from '../components/shop/FilterMobileDrawer';
 import { ShopHeader } from '../components/shop/ShopHeader';
 import { ProductCard } from '../components/home/ProductCard';
 import { Button } from '../components/common/Button';
-import { usePageSeo } from '../hooks/usePageSeo';
+import { useShopPageSeo } from '../hooks/useShopPageSeo';
 import { MOCK_PRODUCTS } from '../data/mockProducts';
 import { MOCK_CATEGORIES } from '../data/mockCategories';
 
@@ -37,41 +37,45 @@ export const ShopPage: React.FC = () => {
   });
 
   useEffect(() => {
-    async function loadInitial() {
-      const [cats, prods] = await Promise.all([
-        productService.getCategories(),
-        productService.getProducts(),
-      ]);
+    Promise.all([productService.getCategories(), productService.getProducts()]).then(([cats, prods]) => {
       setCategories(cats);
       setProducts(prods);
-    }
-    loadInitial();
+    });
   }, []);
 
   // Sync route changes with filters
   useEffect(() => {
-    if (currentPath === '/plants') setFilters((f) => ({ ...f, type: 'plant', categorySlug: undefined }));
-    else if (currentPath === '/seeds') setFilters((f) => ({ ...f, type: 'seed', categorySlug: undefined }));
-    else if (currentPath === '/supplies' || currentPath === '/tools') setFilters((f) => ({ ...f, type: 'tool', categorySlug: undefined }));
-    else if (params.slug) setFilters((f) => ({ ...f, categorySlug: params.slug }));
+    if (currentPath === '/plants') setFilters((f) => ({ ...f, type: 'plant', categorySlug: undefined, categorySlugs: [] }));
+    else if (currentPath === '/seeds') setFilters((f) => ({ ...f, type: 'seed', categorySlug: undefined, categorySlugs: [] }));
+    else if (currentPath === '/supplies' || currentPath === '/tools') setFilters((f) => ({ ...f, type: 'tool', categorySlug: undefined, categorySlugs: [] }));
+    else if (params.slug) setFilters((f) => ({ ...f, categorySlug: params.slug, categorySlugs: [params.slug] }));
   }, [currentPath, params.slug]);
 
   const activeCategory = useMemo(() => {
-    if (!filters.categorySlug) return null;
-    return categories.find((c) => c.slug === filters.categorySlug) || null;
-  }, [categories, filters.categorySlug]);
+    const slug = filters.categorySlug || (filters.categorySlugs && filters.categorySlugs.length === 1 ? filters.categorySlugs[0] : null);
+    if (!slug) return null;
+    return categories.find((c) => c.slug === slug) || null;
+  }, [categories, filters.categorySlug, filters.categorySlugs]);
 
   // Execute filtering & sorting
   const filteredProducts = useMemo(() => {
     let list = [...products];
     if (filters.type) {
-      if (filters.type === 'tool') {
-        list = list.filter((p) => p.type === 'tool' || p.type === 'care');
-      } else {
-        list = list.filter((p) => p.type === filters.type);
-      }
+      list = list.filter((p) => filters.type === 'tool' ? (p.type === 'tool' || p.type === 'care') : p.type === filters.type);
     }
-    if (filters.categorySlug) list = list.filter((p) => p.categorySlug === filters.categorySlug);
+    if (filters.categorySlugs && filters.categorySlugs.length > 0) {
+      list = list.filter((p) => {
+        return filters.categorySlugs!.includes(p.categorySlug) ||
+          (p.subcategorySlug && filters.categorySlugs!.includes(p.subcategorySlug)) ||
+          (filters.categorySlugs!.includes('baromasi-fruit-plants') && (p.nameBn.includes('লেবু') || p.tagsBn?.some((t) => t.includes('বারোমাসি')))) ||
+          (filters.categorySlugs!.includes('deshi-fruit-plants') && (p.nameBn.includes('আম') || p.tagsBn?.some((t) => t.includes('দেশি')))) ||
+          (filters.categorySlugs!.includes('fragrant-flowers') && (p.nameBn.includes('জুঁই') || p.nameBn.includes('গোলাপ'))) ||
+          (filters.categorySlugs!.includes('indoor-plants') && (p.indoorOutdoor === 'indoor' || p.tagsBn?.some((t) => t.includes('ইনডোর')))) ||
+          (filters.categorySlugs!.includes('outdoor-plants') && (p.indoorOutdoor === 'outdoor' || p.tagsBn?.some((t) => t.includes('আউটডোর'))));
+      });
+    } else if (filters.categorySlug) {
+      list = list.filter((p) => p.categorySlug === filters.categorySlug || p.subcategorySlug === filters.categorySlug);
+    }
     if (filters.maxPrice) list = list.filter((p) => p.price <= (filters.maxPrice as number));
     if (filters.inStockOnly) list = list.filter((p) => p.inStock && p.stockQuantity > 0);
     if (filters.indoorOutdoor) list = list.filter((p) => p.indoorOutdoor === filters.indoorOutdoor || p.indoorOutdoor === 'both');
@@ -89,93 +93,18 @@ export const ShopPage: React.FC = () => {
 
   const displayedProducts = filteredProducts.slice(0, visibleCount);
 
-  // Dynamic Page Title & Breadcrumbs
   const pageTitle = activeCategory
-    ? language === 'bn' ? activeCategory.nameBn : activeCategory.nameEn
-    : filters.type === 'plant'
-    ? t('plantsOnly')
-    : filters.type === 'seed'
-    ? t('seedsOnly')
-    : filters.type === 'tool'
-    ? (language === 'bn' ? 'বাগান সামগ্রী ও সরঞ্জাম' : 'Gardening Supplies & Tools')
-    : t('allProducts');
+    ? (language === 'bn' ? activeCategory.nameBn : activeCategory.nameEn)
+    : filters.type === 'plant' ? t('plantsOnly') : filters.type === 'seed' ? t('seedsOnly')
+    : filters.type === 'tool' ? (language === 'bn' ? 'বাগান সামগ্রী ও সরঞ্জাম' : 'Gardening Supplies & Tools') : t('allProducts');
 
-  const breadcrumbs: BreadcrumbItem[] = [
-    { label: t('shop'), path: '/shop' },
-    ...(activeCategory ? [{ label: pageTitle }] : [{ label: pageTitle }]),
-  ];
+  const breadcrumbs: BreadcrumbItem[] = [{ label: t('shop'), path: '/shop' }, { label: pageTitle }];
 
-  const seoTitle = activeCategory
-    ? language === 'bn'
-      ? `${activeCategory.nameBn} — সংগ্রহ | Gardenvaly (by Hasna Hena)`
-      : `${activeCategory.nameEn} Collection | Gardenvaly by Hasna Hena`
-    : filters.type === 'plant'
-    ? language === 'bn'
-      ? `তাজা গাছের সংগ্রহশালা | Gardenvaly — by Hasna Hena`
-      : `Live Plants Nursery Collection | Gardenvaly by Hasna Hena`
-    : filters.type === 'seed'
-    ? language === 'bn'
-      ? `উন্নত জাতের শাকসবজি ও ফুলের বীজ | Gardenvaly — by Hasna Hena`
-      : `High-Yield Vegetable & Flower Seeds | Gardenvaly by Hasna Hena`
-    : filters.type === 'tool'
-    ? language === 'bn'
-      ? `প্রয়োজনীয় বাগান সামগ্রী ও গার্ডেনিং টুলস | Gardenvaly — by Hasna Hena`
-      : `Essential Gardening Supplies & Tools | Gardenvaly by Hasna Hena`
-    : language === 'bn'
-    ? `গাছ ও অর্গানিক বীজের অনলাইন সংগ্রহ | Gardenvaly — by Hasna Hena`
-    : `Shop Live Plants & Organic Seeds | Gardenvaly by Hasna Hena`;
-
-  const seoDescription = activeCategory
-    ? language === 'bn'
-      ? activeCategory.descriptionBn
-      : activeCategory.descriptionEn
-    : filters.type === 'plant'
-    ? language === 'bn'
-      ? 'এয়ার-পিউরিফায়িং ইনডোর গাছ, বারান্দার চারা ও ছাদবাগানের সতেজ গাছপালা সংগ্রহ করুন খাঁটি নার্সারি গার্ডেনভ্যালিতে।'
-      : 'Explore healthy, well-rooted air-purifying indoor plants and vibrant patio greenery.'
-    : filters.type === 'seed'
-    ? language === 'bn'
-      ? 'উচ্চ অঙ্কুরোদগম ক্ষমতাসম্পন্ন দেশি-বিদেশি শাকসবজি ও বাহারি ফুলের খাঁটি অর্গানিক বীজ সংগ্রহ করুন।'
-      : 'Authentic high-germination heirloom and hybrid vegetable, herb, and flower seeds.'
-    : filters.type === 'tool'
-    ? language === 'bn'
-      ? 'ছাদবাগান ও গাছের পরম যত্নে প্রিমিয়াম কাঁচি, স্প্রেয়ার, খাঁটি কেঁচো সার, কোকোপিট ও টব সংগ্রহ করুন।'
-      : 'Discover heavy-duty pruning shears, 2L pressure sprayers, organic vermicompost, and planter pots.'
-    : language === 'bn'
-    ? 'গার্ডেনভ্যালির সম্পূর্ণ ক্যাটালগ — ইনডোর গাছ, বারান্দার চারা ও খাঁটি বীজ অর্ডার করুন ক্যাশ অন ডেলিভারিতে।'
-    : "Browse Gardenvaly's curated catalog of premium nursery plants, botanical foliage, and certified organic seeds.";
-
-  const canonicalPath = activeCategory
-    ? `/category/${activeCategory.slug}`
-    : filters.type === 'plant'
-    ? '/plants'
-    : filters.type === 'seed'
-    ? '/seeds'
-    : filters.type === 'tool'
-    ? '/supplies'
-    : '/shop';
-
-  usePageSeo({
-    title: seoTitle,
-    description: seoDescription,
-    canonicalPath,
-    robots: 'index, follow',
-    ogType: 'website',
-    ogImage: activeCategory?.imageUrl || 'https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=1200&h=630&q=85',
-    lang: language,
-    jsonLd: [
-      {
-        '@context': 'https://schema.org',
-        '@type': 'BreadcrumbList',
-        itemListElement: [
-          { '@type': 'ListItem', position: 1, name: language === 'bn' ? 'হোম' : 'Home', item: '/' },
-          { '@type': 'ListItem', position: 2, name: language === 'bn' ? 'শপ' : 'Shop', item: '/shop' },
-          ...(activeCategory
-            ? [{ '@type': 'ListItem', position: 3, name: pageTitle, item: `/category/${activeCategory.slug}` }]
-            : []),
-        ],
-      },
-    ],
+  useShopPageSeo({
+    activeCategory,
+    type: filters.type,
+    pageTitle,
+    language,
   });
 
   return (
@@ -203,6 +132,19 @@ export const ShopPage: React.FC = () => {
             onSearchChange={(q) => setFilters((prev) => ({ ...prev, searchQuery: q }))}
             onSortChange={(s) => setFilters((prev) => ({ ...prev, sortBy: s }))}
             onOpenMobileFilters={() => setIsMobileDrawerOpen(true)}
+            categories={categories}
+            selectedCategorySlugs={filters.categorySlugs || (filters.categorySlug ? [filters.categorySlug] : [])}
+            onToggleCategorySlug={(slug) => {
+              const cur = filters.categorySlugs || (filters.categorySlug ? [filters.categorySlug] : []);
+              const next = cur.includes(slug) ? cur.filter((s) => s !== slug) : [...cur, slug];
+              setFilters((prev) => ({ ...prev, categorySlugs: next, categorySlug: next.length === 1 ? next[0] : undefined }));
+            }}
+            onRemoveCategorySlug={(slug) => {
+              const cur = filters.categorySlugs || (filters.categorySlug ? [filters.categorySlug] : []);
+              const next = cur.filter((s) => s !== slug);
+              setFilters((prev) => ({ ...prev, categorySlugs: next, categorySlug: next.length === 1 ? next[0] : undefined }));
+            }}
+            onClearCategorySlugs={() => setFilters((prev) => ({ ...prev, categorySlugs: [], categorySlug: undefined }))}
           />
 
           {filteredProducts.length === 0 ? (
@@ -211,9 +153,7 @@ export const ShopPage: React.FC = () => {
                 <PackageOpen className="w-8 h-8" />
               </div>
               <h3 className="font-semibold text-stone-800 text-base">{t('noProductsFound')}</h3>
-              <p className="text-xs text-stone-500 mt-1 max-w-sm mx-auto">
-                {t('filterEmptyHelp')}
-              </p>
+              <p className="text-xs text-stone-500 mt-1 max-w-sm mx-auto">{t('filterEmptyHelp')}</p>
               <div className="mt-5">
                 <Button variant="outline" size="sm" onClick={() => setFilters({ sortBy: 'featured' })}>
                   <RotateCcw className="w-3.5 h-3.5 mr-1" />
@@ -225,11 +165,7 @@ export const ShopPage: React.FC = () => {
             <>
               <div className="grid grid-cols-1 min-[360px]:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                 {displayedProducts.map((p) => (
-                  <ProductCard
-                    key={p.id}
-                    product={p}
-                    onQuickView={() => navigate(`/product/${p.slug}`)}
-                  />
+                  <ProductCard key={p.id} product={p} />
                 ))}
               </div>
 

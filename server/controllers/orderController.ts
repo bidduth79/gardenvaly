@@ -5,10 +5,12 @@
  */
 
 import type { Request, Response } from 'express';
-import { db} from '../db/database.ts';
+import { db } from '../db/database.ts';
 import type { ApiResponse } from '../types/api.ts';
-import { isValidTransition, type OrderStatus} from '../utils/orderLifecycle.ts';
+import { isValidTransition, type OrderStatus } from '../utils/orderLifecycle.ts';
 import type { AuthenticatedRequest } from '../middleware/auth.ts';
+import { smsService } from '../services/smsService.ts';
+import { courierService } from '../services/courierService.ts';
 
 export const orderController = {
   getOrders: (req: Request, res: Response): void => {
@@ -118,6 +120,7 @@ export const orderController = {
           deliveryMethod: order.deliveryMethod,
           deliveryProvider: order.deliveryProvider,
           trackingNumber: order.trackingNumber,
+          trackingUrl: order.trackingUrl,
           dispatchDate: order.dispatchDate,
           expectedDeliveryDate: order.expectedDeliveryDate,
           actualDeliveryDate: order.actualDeliveryDate,
@@ -129,6 +132,8 @@ export const orderController = {
             fullName: order.customer.fullName,
             district: order.customer.district,
             division: order.customer.division,
+            upazila: order.customer.upazila,
+            union: order.customer.union,
           },
           statusHistory: order.statusHistory,
           createdAt: order.createdAt,
@@ -229,6 +234,7 @@ export const orderController = {
           division: customer.division || (isInsideDhaka ? 'Dhaka' : 'Outside Dhaka'),
           district: customer.district || (isInsideDhaka ? 'Dhaka' : 'Outside Dhaka'),
           upazila: customer.upazila || '',
+          union: customer.union || '',
           addressDetail: customer.addressDetail || '',
           deliveryInstructions: customer.deliveryInstructions || '',
         },
@@ -241,6 +247,9 @@ export const orderController = {
         paymentMethod: safePaymentMethod,
         adminNotes,
       });
+
+      // Automated Bangla SMS confirmation
+      smsService.triggerOrderSms(newOrder, 'order_placed').catch(() => {});
 
       res.status(201).json({
         success: true,
@@ -280,6 +289,19 @@ export const orderController = {
       if (!result.success || !result.order) {
         res.status(400).json({ success: false, error: result.error || 'Failed to update order status' });
         return;
+      }
+
+      // Automated event-based SMS notifications & Courier Auto-dispatch
+      if (targetStatus === 'confirmed') {
+        smsService.triggerOrderSms(result.order, 'order_confirmed').catch(() => {});
+        const currentSettings = db.getSettings();
+        if (currentSettings.autoCreateCourierParcel) {
+          courierService.executeOrderDispatch(result.order).catch(() => {});
+        }
+      } else if (targetStatus === 'shipped') {
+        smsService.triggerOrderSms(result.order, 'order_shipped').catch(() => {});
+      } else if (targetStatus === 'delivered') {
+        smsService.triggerOrderSms(result.order, 'order_delivered').catch(() => {});
       }
 
       res.json({

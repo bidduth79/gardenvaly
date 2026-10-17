@@ -12,7 +12,10 @@ import inventoryRoutes from './inventoryRoutes.ts';
 import customerRoutes from './customerRoutes.ts';
 import settingsRoutes from './settingsRoutes.ts';
 import reportsRoutes from './reportsRoutes.ts';
-import { ENV} from '../config/env.ts';
+import courierRoutes from './courierRoutes.ts';
+import smsRoutes from './smsRoutes.ts';
+import paymentRoutes from './paymentRoutes.ts';
+import { ENV } from '../config/env.ts';
 
 const apiRouter = Router();
 
@@ -36,6 +39,9 @@ apiRouter.use('/inventory', inventoryRoutes);
 apiRouter.use('/customers', customerRoutes);
 apiRouter.use('/settings', settingsRoutes);
 apiRouter.use('/reports', reportsRoutes);
+apiRouter.use('/courier', courierRoutes);
+apiRouter.use('/sms', smsRoutes);
+apiRouter.use('/payments', paymentRoutes);
 
 // 404 handler for unknown API routes
 apiRouter.use('*', (req, res) => {

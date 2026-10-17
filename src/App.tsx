@@ -6,6 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
+import { ThemeProvider } from './context/ThemeContext';
 import { LanguageProvider } from './context/LanguageContext';
 import { CartProvider, useCart } from './context/CartContext';
 import { RouterProvider, useRouter } from './context/RouterContext';
@@ -30,6 +31,9 @@ import { CheckoutPage } from './pages/CheckoutPage';
 import { OrderTrackingPage } from './pages/OrderTrackingPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { FloatingWhatsAppWidget } from './components/common/FloatingWhatsAppWidget';
+import { LivingTreeBackground } from './components/common/LivingTreeBackground';
+import { LivingTreeIndicator } from './components/common/LivingTreeIndicator';
+import { SeedToTreeJourney } from './components/home/SeedToTreeJourney';
 import { productService } from './services/productService';
 import { Product, Category } from './types/product';
 import { loggerService } from './services/loggerService';
@@ -212,9 +216,10 @@ const MainShell: React.FC = () => {
         <main className="flex-1">
           <HeroSection />
           <ShopByCategory categories={categories} />
-          <FeaturedPlants products={products} onQuickView={(p) => navigate(`/product/${p.slug}`)} />
-          <FeaturedSeeds products={products} onQuickView={(p) => navigate(`/product/${p.slug}`)} />
-          <FeaturedSupplies products={products} onQuickView={(p) => navigate(`/product/${p.slug}`)} />
+          <FeaturedPlants products={products} />
+          <FeaturedSeeds products={products} />
+          <SeedToTreeJourney />
+          <FeaturedSupplies products={products} />
           <PromotionalBanner />
           <WhyChooseUs />
           <GardeningTips />
@@ -280,7 +285,8 @@ const MainShell: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#F7F5EC] text-stone-800">
+    <div className="relative min-h-screen flex flex-col text-stone-800 overflow-x-hidden pb-16 lg:pb-0">
+      <LivingTreeBackground />
       <Header />
       {renderContent()}
       <Footer />
@@ -292,6 +298,7 @@ const MainShell: React.FC = () => {
       />
       <CartDrawer />
       <FloatingWhatsAppWidget />
+      <LivingTreeIndicator />
       <CustomerAuthModal />
     </div>
   );
@@ -299,16 +306,18 @@ const MainShell: React.FC = () => {
 
 export default function App() {
   return (
-    <LanguageProvider>
-      <CustomerAuthProvider>
-        <WishlistProvider>
-          <CartProvider>
-            <RouterProvider>
-              <MainShell />
-            </RouterProvider>
-          </CartProvider>
-        </WishlistProvider>
-      </CustomerAuthProvider>
-    </LanguageProvider>
+    <ThemeProvider>
+      <LanguageProvider>
+        <CustomerAuthProvider>
+          <WishlistProvider>
+            <CartProvider>
+              <RouterProvider>
+                <MainShell />
+              </RouterProvider>
+            </CartProvider>
+          </WishlistProvider>
+        </CustomerAuthProvider>
+      </LanguageProvider>
+    </ThemeProvider>
   );
 }

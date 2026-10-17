@@ -48,7 +48,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({ variant = 'dark', size = '
         <span
           className={`font-serif-botanical font-bold tracking-tight leading-none ${
             isLarge ? 'text-2xl sm:text-3xl' : 'text-base sm:text-2xl'
-          } ${isDark ? 'text-[#174D35]' : 'text-white'}`}
+          } ${isDark ? 'text-[#174D35] dark:text-[#E8F5E9]' : 'text-white'}`}
         >
           {storeName}
         </span>

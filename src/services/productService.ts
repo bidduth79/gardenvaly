@@ -46,7 +46,21 @@ export const productService = {
   async getCategories(type?: ProductCategoryType): Promise<Category[]> {
     try {
       const res = await apiClient.get<Category[]>('/categories');
-      const cats = res.success && Array.isArray(res.data) && res.data.length > 0 ? res.data : MOCK_CATEGORIES;
+      let cats: Category[] = MOCK_CATEGORIES;
+      if (res.success && Array.isArray(res.data) && res.data.length > 0) {
+        const apiCatMap = new Map<string, Category>(res.data.map((c) => [c.slug, c]));
+        cats = MOCK_CATEGORIES.map((m) => {
+          const apiCat = apiCatMap.get(m.slug);
+          return {
+            ...m,
+            itemCount: apiCat?.itemCount ?? m.itemCount,
+            nameEn: apiCat?.nameEn || m.nameEn,
+            nameBn: apiCat?.nameBn || m.nameBn,
+            iconName: m.iconName || apiCat?.iconName,
+            subcategories: (m.subcategories && m.subcategories.length > 0) ? m.subcategories : apiCat?.subcategories,
+          };
+        });
+      }
       if (!type) return [...cats];
       return cats.filter((cat) => cat.type === type);
     } catch (err) {
@@ -116,8 +130,18 @@ export const productService = {
       if (filters.type) {
         list = list.filter((p) => p.type === filters.type);
       }
-      if (filters.categorySlug) {
-        list = list.filter((p) => p.categorySlug === filters.categorySlug);
+      if (filters.categorySlugs && filters.categorySlugs.length > 0) {
+        list = list.filter((p) => {
+          return filters.categorySlugs!.includes(p.categorySlug) ||
+            (p.subcategorySlug && filters.categorySlugs!.includes(p.subcategorySlug)) ||
+            (filters.categorySlugs!.includes('baromasi-fruit-plants') && (p.nameBn.includes('লেবু') || p.tagsBn?.some((t) => t.includes('বারোমাসি')))) ||
+            (filters.categorySlugs!.includes('deshi-fruit-plants') && (p.nameBn.includes('আম') || p.tagsBn?.some((t) => t.includes('দেশি')))) ||
+            (filters.categorySlugs!.includes('fragrant-flowers') && (p.nameBn.includes('জুঁই') || p.nameBn.includes('গোলাপ'))) ||
+            (filters.categorySlugs!.includes('indoor-plants') && (p.indoorOutdoor === 'indoor' || p.tagsBn?.some((t) => t.includes('ইনডোর')))) ||
+            (filters.categorySlugs!.includes('outdoor-plants') && (p.indoorOutdoor === 'outdoor' || p.tagsBn?.some((t) => t.includes('আউটডোর'))));
+        });
+      } else if (filters.categorySlug) {
+        list = list.filter((p) => p.categorySlug === filters.categorySlug || p.subcategorySlug === filters.categorySlug);
       }
       if (typeof filters.minPrice === 'number') {
         list = list.filter((p) => p.price >= (filters.minPrice as number));

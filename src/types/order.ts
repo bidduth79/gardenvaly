@@ -58,6 +58,8 @@ export interface OrderAuditLogItem {
   newValue?: string;
 }
 
+export type Order = AdminOrder;
+
 export interface AdminOrder {
   id: string;
   orderNumber: string;
@@ -77,6 +79,8 @@ export interface AdminOrder {
   // Courier & Delivery Management
   deliveryProvider?: string;
   trackingNumber?: string;
+  trackingUrl?: string;
+  courierResponse?: any;
   dispatchDate?: string;
   expectedDeliveryDate?: string;
   actualDeliveryDate?: string;

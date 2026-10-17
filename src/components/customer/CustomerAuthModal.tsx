@@ -8,6 +8,7 @@ import { X, Lock, Phone, User, MapPin, Mail, Sparkles, CheckCircle2, ArrowRight 
 import { useCustomerAuth } from '../../context/CustomerAuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { Button } from '../common/Button';
+import { BangladeshAddressSelector } from '../common/BangladeshAddressSelector';
 
 export const CustomerAuthModal: React.FC = () => {
   const {
@@ -34,6 +35,8 @@ export const CustomerAuthModal: React.FC = () => {
   const [regPassword, setRegPassword] = useState('');
   const [regDivision, setRegDivision] = useState('Dhaka');
   const [regDistrict, setRegDistrict] = useState('Dhaka');
+  const [regUpazila, setRegUpazila] = useState('');
+  const [regUnion, setRegUnion] = useState('');
   const [regAddressDetail, setRegAddressDetail] = useState('');
 
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -96,6 +99,8 @@ export const CustomerAuthModal: React.FC = () => {
         password: regPassword,
         division: regDivision,
         district: regDistrict,
+        upazila: regUpazila,
+        union: regUnion,
         addressDetail: regAddressDetail,
       });
       setSuccessMessage(isBn ? 'স্বাগতম! আপনার একাউন্ট সফলভাবে তৈরি হয়েছে।' : 'Welcome! Account created successfully.');
@@ -337,40 +342,22 @@ export const CustomerAuthModal: React.FC = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2.5">
-                <div>
-                  <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    {isBn ? 'বিভাগ' : 'Division'}
-                  </label>
-                  <select
-                    value={regDivision}
-                    onChange={(e) => setRegDivision(e.target.value)}
-                    className="w-full px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:bg-white focus:border-[#174D35] focus:outline-none transition-colors"
-                  >
-                    <option value="Dhaka">ঢাকা (Dhaka)</option>
-                    <option value="Chittagong">চট্টগ্রাম (Chittagong)</option>
-                    <option value="Rajshahi">রাজশাহী (Rajshahi)</option>
-                    <option value="Khulna">খুলনা (Khulna)</option>
-                    <option value="Barisal">বরিশাল (Barisal)</option>
-                    <option value="Sylhet">সিলেট (Sylhet)</option>
-                    <option value="Rangpur">রংপুর (Rangpur)</option>
-                    <option value="Mymensingh">ময়মনসিংহ (Mymensingh)</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-stone-700 mb-1">
-                    {isBn ? 'জেলা' : 'District'}
-                  </label>
-                  <input
-                    type="text"
-                    value={regDistrict}
-                    onChange={(e) => setRegDistrict(e.target.value)}
-                    placeholder={isBn ? 'যেমন: ঢাকা' : 'e.g. Dhaka'}
-                    className="w-full px-3 py-2 text-xs bg-stone-50 border border-stone-200 rounded-xl focus:bg-white focus:border-[#174D35] focus:outline-none transition-colors"
-                  />
-                </div>
-              </div>
+              {/* Division, District, Upazila & Union Cascading Dropdowns */}
+              <BangladeshAddressSelector
+                division={regDivision}
+                district={regDistrict}
+                upazila={regUpazila}
+                union={regUnion}
+                onChange={(field, val) => {
+                  if (field === 'division') setRegDivision(val);
+                  else if (field === 'district') setRegDistrict(val);
+                  else if (field === 'upazila') setRegUpazila(val);
+                  else if (field === 'union') setRegUnion(val);
+                }}
+                compact={true}
+                showUnion={true}
+                required={false}
+              />
 
               <div>
                 <label className="block text-xs font-semibold text-stone-700 mb-1">

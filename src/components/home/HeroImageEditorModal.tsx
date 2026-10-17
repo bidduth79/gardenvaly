@@ -25,13 +25,19 @@ import {
   Layers,
   Sparkles,
   Pipette,
-  Maximize2
+  Maximize2,
+  Video,
+  Film,
+  Play
 } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
+import { getYouTubeEmbedUrl } from '../../utils/videoUtils';
 
 export interface HeroSlide {
   id: string;
   imageUrl: string;
+  videoUrl?: string;
+  mediaType?: 'image' | 'video';
   titleBn: string;
   titleEn: string;
   subtitleBn: string;
@@ -47,7 +53,7 @@ interface HeroImageEditorModalProps {
   onResetToDefaults: () => void;
 }
 
-type EditorTab = 'crop' | 'color' | 'background' | 'details';
+type EditorTab = 'crop' | 'color' | 'background' | 'details' | 'video';
 type AspectRatio = '16:9' | '4:3' | '1:1' | 'free';
 
 interface FilterPreset {
@@ -116,11 +122,13 @@ export const HeroImageEditorModal: React.FC<HeroImageEditorModalProps> = ({
   const [selectedBgStyle, setSelectedBgStyle] = useState<string>('transparent');
   const [isEyedropperActive, setIsEyedropperActive] = useState<boolean>(false);
 
-  // 4. Slide Metadata
+  // 4. Slide Metadata & Media
   const [titleBn, setTitleBn] = useState('');
   const [titleEn, setTitleEn] = useState('');
   const [subtitleBn, setSubtitleBn] = useState('');
   const [subtitleEn, setSubtitleEn] = useState('');
+  const [videoUrl, setVideoUrl] = useState('');
+  const [mediaType, setMediaType] = useState<'image' | 'video'>('image');
 
   // Canvas Refs
   const previewCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -146,6 +154,8 @@ export const HeroImageEditorModal: React.FC<HeroImageEditorModalProps> = ({
     setFeather(2);
     setSelectedBgStyle('transparent');
     setIsEyedropperActive(false);
+    setVideoUrl('');
+    setMediaType('image');
     setActiveTab('crop');
   };
 
@@ -157,6 +167,8 @@ export const HeroImageEditorModal: React.FC<HeroImageEditorModalProps> = ({
     setTitleEn(slide.titleEn);
     setSubtitleBn(slide.subtitleBn);
     setSubtitleEn(slide.subtitleEn);
+    setVideoUrl(slide.videoUrl || '');
+    setMediaType(slide.mediaType || (slide.videoUrl ? 'video' : 'image'));
 
     const img = new Image();
     img.crossOrigin = 'anonymous';
@@ -430,6 +442,8 @@ export const HeroImageEditorModal: React.FC<HeroImageEditorModalProps> = ({
     const updatedSlide: HeroSlide = {
       id: editingSlide?.id || `slide-${Date.now()}`,
       imageUrl: finalDataUrl,
+      videoUrl: videoUrl.trim() || undefined,
+      mediaType: videoUrl.trim() ? 'video' : 'image',
       titleBn: titleBn.trim() || 'সবুজে সাজুক আপনার আঙিনা',
       titleEn: titleEn.trim() || 'Botanical Living Space',
       subtitleBn: subtitleBn.trim() || 'গার্ডেনভ্যালি সিলেকশন',
@@ -634,11 +648,37 @@ export const HeroImageEditorModal: React.FC<HeroImageEditorModalProps> = ({
                   onMouseUp={handleMouseUp}
                   onMouseLeave={handleMouseUp}
                 >
-                  <canvas
-                    ref={previewCanvasRef}
-                    onClick={handleCanvasClick}
-                    className="max-w-full max-h-[420px] object-contain shadow-2xl rounded-2xl"
-                  />
+                  {activeTab === 'video' && videoUrl ? (
+                    <div className="w-full h-[340px] sm:h-[400px] rounded-2xl overflow-hidden bg-black flex items-center justify-center relative">
+                      {getYouTubeEmbedUrl(videoUrl) ? (
+                        <iframe
+                          src={getYouTubeEmbedUrl(videoUrl)!}
+                          className="w-full h-full"
+                          allow="autoplay; encrypted-media"
+                          title="Hero video preview"
+                        />
+                      ) : (
+                        <video
+                          src={videoUrl}
+                          autoPlay
+                          loop
+                          muted
+                          controls
+                          className="w-full h-full object-cover"
+                        />
+                      )}
+                      <div className="absolute top-3 left-3 bg-black/70 backdrop-blur-md text-amber-400 text-xs px-2.5 py-1 rounded-full flex items-center gap-1 font-semibold">
+                        <Video className="w-3.5 h-3.5" />
+                        <span>{isBn ? 'লাইভ ভিডিও প্রিভিউ' : 'Live Video Preview'}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <canvas
+                      ref={previewCanvasRef}
+                      onClick={handleCanvasClick}
+                      className="max-w-full max-h-[420px] object-contain shadow-2xl rounded-2xl"
+                    />
+                  )}
 
                   {/* Eyedropper Notice Overlay */}
                   {isEyedropperActive && (
@@ -733,6 +773,16 @@ export const HeroImageEditorModal: React.FC<HeroImageEditorModalProps> = ({
                   >
                     <Eye className="w-3.5 h-3.5" />
                     <span>{isBn ? 'শিরোনাম' : 'Titles'}</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('video')}
+                    className={`flex-1 flex items-center justify-center gap-1.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                      activeTab === 'video' ? 'bg-white text-[#174D35] shadow-sm' : 'text-stone-600 hover:text-stone-900'
+                    }`}
+                  >
+                    <Video className="w-3.5 h-3.5 text-amber-600" />
+                    <span>{isBn ? 'ভিডিও' : 'Video'}</span>
                   </button>
                 </div>
 
@@ -1049,6 +1099,113 @@ export const HeroImageEditorModal: React.FC<HeroImageEditorModalProps> = ({
                         placeholder="যেমন: ইনডোর ও ব্যালকনি প্ল্যান্ট"
                         className="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs focus:ring-2 focus:ring-[#174D35] focus:outline-none"
                       />
+                    </div>
+                  </div>
+                )}
+
+                {/* TAB 5: VIDEO BANNER */}
+                {activeTab === 'video' && (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-xs font-bold text-stone-700 mb-1">
+                        {isBn ? 'ভিডিও লিঙ্ক বা URL (MP4, WebM, বা YouTube)' : 'Video Link or URL (MP4, WebM, or YouTube)'}
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={videoUrl}
+                          onChange={(e) => {
+                            setVideoUrl(e.target.value);
+                            setMediaType(e.target.value.trim() ? 'video' : 'image');
+                          }}
+                          placeholder="https://...mp4 অথবা https://www.youtube.com/watch?v=..."
+                          className="flex-1 px-3 py-2 rounded-xl border border-stone-200 text-xs focus:ring-2 focus:ring-[#174D35] focus:outline-none"
+                        />
+                        {videoUrl && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setVideoUrl('');
+                              setMediaType('image');
+                            }}
+                            className="px-2.5 py-2 rounded-xl border border-stone-200 hover:bg-red-50 text-red-600 text-xs font-semibold cursor-pointer"
+                            title={isBn ? 'ভিডিও মুছুন (ছবিতে ফিরুন)' : 'Remove video'}
+                          >
+                            {isBn ? 'মুছুন' : 'Clear'}
+                          </button>
+                        )}
+                      </div>
+                      <p className="text-[11px] text-stone-500 mt-1">
+                        {isBn
+                          ? 'সরাসরি MP4/WebM ভিডিও লিঙ্ক বা YouTube ভিডিওর লিংক দিতে পারেন।'
+                          : 'Paste a direct MP4/WebM video URL or YouTube video link.'}
+                      </p>
+                    </div>
+
+                    {/* Device Video Uploader */}
+                    <div>
+                      <label className="block text-xs font-bold text-stone-700 mb-1">
+                        {isBn ? 'অথবা ডিভাইস থেকে ভিডিও আপলোড করুন' : 'Or Upload Video from Device'}
+                      </label>
+                      <label className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-stone-100 hover:bg-[#174D35] hover:text-white text-stone-700 text-xs font-semibold border border-stone-300 transition-colors cursor-pointer">
+                        <Upload className="w-4 h-4" />
+                        <span>{isBn ? 'ডিভাইসের ভিডিও ফাইল' : 'Select Video File'}</span>
+                        <input
+                          type="file"
+                          accept="video/mp4,video/webm,video/ogg,video/quicktime,video/*"
+                          className="hidden"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (!file) return;
+                            const reader = new FileReader();
+                            reader.onload = (ev) => {
+                              if (ev.target?.result) {
+                                setVideoUrl(ev.target.result as string);
+                                setMediaType('video');
+                              }
+                            };
+                            reader.readAsDataURL(file);
+                            e.target.value = '';
+                          }}
+                        />
+                      </label>
+                    </div>
+
+                    {/* Preset Botanical Video Samples */}
+                    <div className="pt-2 border-t border-stone-100">
+                      <p className="text-xs font-bold text-stone-700 mb-2">
+                        {isBn ? 'নমুনা প্রাকৃতিক ভিডিও ব্যবহার করুন:' : 'Sample Botanical Videos:'}
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setVideoUrl('https://assets.mixkit.co/videos/preview/mixkit-sun-streaming-through-the-leaves-of-a-tree-4155-large.mp4');
+                            setMediaType('video');
+                          }}
+                          className="p-2.5 rounded-xl border border-stone-200 hover:border-[#174D35] hover:bg-[#174D35]/5 text-left text-xs transition-colors cursor-pointer flex items-center gap-2"
+                        >
+                          <Film className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <div>
+                            <div className="font-semibold text-stone-800">{isBn ? 'গাছের পাতার রোদ ঝলমল' : 'Sunlit Leaves'}</div>
+                            <div className="text-[10px] text-stone-500">HD MP4 Video</div>
+                          </div>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setVideoUrl('https://assets.mixkit.co/videos/preview/mixkit-rain-falling-on-the-leaves-of-a-plant-4152-large.mp4');
+                            setMediaType('video');
+                          }}
+                          className="p-2.5 rounded-xl border border-stone-200 hover:border-[#174D35] hover:bg-[#174D35]/5 text-left text-xs transition-colors cursor-pointer flex items-center gap-2"
+                        >
+                          <Film className="w-4 h-4 text-emerald-600 shrink-0" />
+                          <div>
+                            <div className="font-semibold text-stone-800">{isBn ? 'পাতার ওপর বৃষ্টির বিন্দু' : 'Raindrops on Leaves'}</div>
+                            <div className="text-[10px] text-stone-500">HD MP4 Video</div>
+                          </div>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}

@@ -8,6 +8,7 @@ import { Trash2, Plus, Minus } from 'lucide-react';
 import { CartItem } from '../../types/cart';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatPrice, formatNumeral } from '../../utils/formatters';
+import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
 
 interface CartItemRowProps {
   item: CartItem;
@@ -30,9 +31,10 @@ export const CartItemRow: React.FC<CartItemRowProps> = ({
     <div className="py-4 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
       <div className="flex items-center gap-3">
         <img
-          src={item.product.imageUrl}
+          src={getSafeImageUrl(item.product.imageUrl, { type: item.product.type, categorySlug: item.product.categorySlug })}
           alt={name}
           className="w-16 h-16 rounded-xl object-cover shrink-0"
+          onError={(e) => handleImageError(e, getProductFallbackImage(item.product))}
         />
         <div>
           <h3

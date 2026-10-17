@@ -10,6 +10,7 @@ import { productService } from '../../services/productService';
 import { useLanguage } from '../../context/LanguageContext';
 import { useCart } from '../../context/CartContext';
 import { formatPrice } from '../../utils/formatters';
+import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
 
 interface SearchDrawerProps {
   isOpen: boolean;
@@ -142,9 +143,10 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
                 >
                   <div className="flex items-center gap-3">
                     <img
-                      src={product.imageUrl}
+                      src={getSafeImageUrl(product.imageUrl, { type: product.type, categorySlug: product.categorySlug })}
                       alt={name}
                       className="w-12 h-12 rounded-lg object-cover"
+                      onError={(e) => handleImageError(e, getProductFallbackImage(product))}
                     />
                     <div>
                       <h4 className="text-sm font-semibold text-stone-900 line-clamp-1">{name}</h4>

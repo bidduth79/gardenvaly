@@ -123,7 +123,38 @@ export interface StoreSettings {
   standardDeliveryFee: number;
   freeDeliveryThreshold: number;
   enablePickup: boolean;
-  orderNotificationEmail: string;
   maintenanceMode: boolean;
   demoModeNotice: boolean;
+
+  // Courier API Integrations
+  courierProvider?: 'steadfast' | 'pathao' | 'redx' | 'manual';
+  steadfastApiKey?: string;
+  steadfastSecretKey?: string;
+  pathaoClientId?: string;
+  pathaoClientSecret?: string;
+  pathaoStoreId?: string;
+  redxApiToken?: string;
+  autoCreateCourierParcel?: boolean;
+
+  // SMS Gateway Integrations
+  smsProvider?: 'greenweb' | 'bulksmsbd' | 'custom_webhook' | 'disabled';
+  smsApiKey?: string;
+  smsSenderId?: string;
+  smsWebhookUrl?: string;
+  sendSmsOnOrderPlaced?: boolean;
+  sendSmsOnOrderConfirmed?: boolean;
+  sendSmsOnOrderShipped?: boolean;
+  sendSmsOnOrderDelivered?: boolean;
+
+  // Online Payment Gateways (bKash Checkout & SSLCommerz)
+  bkashMerchantEnabled?: boolean;
+  bkashAppKey?: string;
+  bkashAppSecret?: string;
+  bkashUsername?: string;
+  bkashPassword?: string;
+  bkashSandbox?: boolean;
+  sslcommerzEnabled?: boolean;
+  sslcommerzStoreId?: string;
+  sslcommerzStorePass?: string;
+  sslcommerzSandbox?: boolean;
 }

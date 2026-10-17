@@ -46,13 +46,13 @@ export const WhyChooseUs: React.FC = () => {
   ];
 
   return (
-    <section className="py-14 sm:py-18 bg-white/60 border-y border-stone-200/60">
+    <section className="py-14 sm:py-18 bg-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif-botanical font-bold text-stone-900">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif-botanical font-bold text-stone-900 dark:text-white">
             {t('whyChooseTitle')}
           </h2>
-          <p className="text-sm sm:text-base text-stone-600 mt-2">
+          <p className="text-sm sm:text-base text-stone-600 dark:text-[#CBD5E1] mt-2">
             {t('whyChooseSubtitle')}
           </p>
         </div>
@@ -65,16 +65,16 @@ export const WhyChooseUs: React.FC = () => {
             return (
               <div
                 key={feat.id}
-                className="bg-[#F7F5EC]/70 p-6 rounded-2xl border border-stone-200/80 hover:shadow-md transition-shadow flex flex-col justify-between"
+                className="bg-[#F7F5EC]/70 dark:bg-[#0C2018] p-6 rounded-2xl border border-stone-200/80 dark:border-[#1B3B2E] hover:shadow-md transition-shadow flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-white flex items-center justify-center shadow-xs mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#10261E] dark:border dark:border-[#1B3B2E] flex items-center justify-center shadow-xs mb-4">
                     {feat.icon}
                   </div>
-                  <h3 className="font-serif-botanical font-bold text-base text-stone-900">
+                  <h3 className="font-serif-botanical font-bold text-base text-stone-900 dark:text-white">
                     {title}
                   </h3>
-                  <p className="text-xs text-stone-600 mt-2 leading-relaxed">
+                  <p className="text-xs text-stone-600 dark:text-[#CBD5E1] mt-2 leading-relaxed">
                     {desc}
                   </p>
                 </div>

@@ -8,6 +8,7 @@ import { Info } from 'lucide-react';
 import { CartItem } from '../../types/cart';
 import { useLanguage } from '../../context/LanguageContext';
 import { formatPrice, formatNumeral } from '../../utils/formatters';
+import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
 import { calculateOrderTotals } from '../../utils/orderCalculations';
 import { DELIVERY_CONFIG } from '../../config/deliveryConfig';
 
@@ -36,7 +37,12 @@ export const OrderSummaryCard: React.FC<OrderSummaryCardProps> = ({
           return (
             <div key={item.product.id} className="flex items-center justify-between text-xs gap-3">
               <div className="flex items-center gap-2 truncate">
-                <img src={item.product.imageUrl} alt={name} className="w-9 h-9 rounded-lg object-cover shrink-0" />
+                <img
+                  src={getSafeImageUrl(item.product.imageUrl, { type: item.product.type, categorySlug: item.product.categorySlug })}
+                  alt={name}
+                  className="w-9 h-9 rounded-lg object-cover shrink-0"
+                  onError={(e) => handleImageError(e, getProductFallbackImage(item.product))}
+                />
                 <div className="truncate">
                   <p className="font-semibold text-stone-900 truncate">{name}</p>
                   <p className="text-[10px] text-stone-400">
