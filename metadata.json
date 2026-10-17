@@ -1,0 +1,8 @@
+{
+  "name": "5.Gardenvaly by Hasna Hena",
+  "description": "A premium modern bilingual plant and seed e-commerce frontend foundation",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
