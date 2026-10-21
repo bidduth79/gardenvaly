@@ -1,0 +1,146 @@
+/**
+ * @file valleyLandscape.css
+ * @description Smooth 26s storytelling animations for GardenValy plant delivery cycle.
+ */
+
+@keyframes storyVanMotion {
+  0% { transform: translate3d(-240px, 170px, 0); }
+  12%, 30% { transform: translate3d(140px, 170px, 0); }
+  56%, 84% { transform: translate3d(780px, 170px, 0); }
+  96% { transform: translate3d(1520px, 170px, 0); }
+  97%, 100% { transform: translate3d(-240px, 170px, 0); }
+}
+
+@keyframes storyWheelSpin {
+  0% { transform: rotate(0deg); }
+  12% { transform: rotate(1080deg); }
+  30% { transform: rotate(1080deg); }
+  56% { transform: rotate(3240deg); }
+  84% { transform: rotate(3240deg); }
+  96% { transform: rotate(4320deg); }
+  100% { transform: rotate(4320deg); }
+}
+
+@keyframes storyPlantLoad {
+  0%, 14% { opacity: 0; transform: scale(0.5); }
+  20%, 62% { opacity: 1; transform: scale(1); }
+  66%, 100% { opacity: 0; transform: scale(0.7); }
+}
+
+@keyframes storyPlantUnload {
+  0%, 58% { opacity: 0; transform: scale(0.6); }
+  64% { opacity: 1; transform: scale(1.05); }
+  68%, 84% { opacity: 1; transform: scale(1); }
+  88%, 100% { opacity: 0; transform: scale(0.85); }
+}
+
+@keyframes birdsFlyAcross {
+  0% { transform: translate3d(-160px, 15px, 0); }
+  50% { transform: translate3d(700px, -15px, 0); }
+  100% { transform: translate3d(1580px, 5px, 0); }
+}
+
+@keyframes valleyBirdFlap {
+  0%, 100% { transform: translate3d(0, 0, 0) scaleY(1); }
+  50% { transform: translate3d(0, -4px, 0) scaleY(0.72); }
+}
+
+@keyframes farmerWave {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(-24deg); }
+}
+
+@keyframes krishaniWelcome {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(-3px, -2px, 0); }
+}
+
+@keyframes kidHop {
+  0%, 100% { transform: translate3d(0, 0, 0); }
+  50% { transform: translate3d(0, -6px, 0); }
+}
+
+@keyframes kiteSoar {
+  0%, 100% { transform: translate3d(0, 0, 0) rotate(10deg); }
+  35% { transform: translate3d(8px, -12px, 0) rotate(22deg); }
+  70% { transform: translate3d(-5px, -4px, 0) rotate(5deg); }
+}
+
+@keyframes valleySunGlow {
+  0%, 100% { opacity: 0.88; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.06); }
+}
+
+@keyframes valleyCloudSlow {
+  0% { transform: translate3d(-150px, 0, 0); }
+  100% { transform: translate3d(1440px, 0, 0); }
+}
+
+@keyframes valleyTreeSway {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(2.2deg); }
+}
+
+.animate-story-van {
+  animation: storyVanMotion 26s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-story-wheel {
+  animation: storyWheelSpin 26s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.animate-plant-load {
+  animation: storyPlantLoad 26s ease-in-out infinite;
+  transform-origin: center;
+}
+
+.animate-plant-unload {
+  animation: storyPlantUnload 26s ease-in-out infinite;
+  transform-origin: bottom center;
+}
+
+.animate-birds-fly {
+  animation: birdsFlyAcross 24s linear infinite;
+  will-change: transform;
+}
+
+.animate-bird-flap {
+  animation: valleyBirdFlap 1.4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.animate-farmer-wave {
+  transform-origin: 9px 20px;
+  animation: farmerWave 1.4s ease-in-out infinite;
+}
+
+.animate-krishani-welcome {
+  animation: krishaniWelcome 1.8s ease-in-out infinite;
+}
+
+.animate-kid-hop {
+  animation: kidHop 0.9s ease-in-out infinite;
+}
+
+.animate-kite-soar {
+  transform-origin: center;
+  animation: kiteSoar 3.2s ease-in-out infinite;
+}
+
+.animate-sun-glow {
+  transform-origin: center;
+  animation: valleySunGlow 5s ease-in-out infinite;
+}
+
+.animate-cloud-slow {
+  animation: valleyCloudSlow 42s linear infinite;
+  will-change: transform;
+}
+
+.animate-tree-sway {
+  transform-origin: bottom center;
+  animation: valleyTreeSway 4.5s ease-in-out infinite;
+}

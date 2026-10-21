@@ -11,6 +11,7 @@ import { useLanguage } from '../../context/LanguageContext';
 import { useRouter } from '../../context/RouterContext';
 import { Button } from '../common/Button';
 import { useStoreSettings } from '../../services/settingsService';
+import { GardenValleyLandscape } from './GardenValleyLandscape';
 
 export const Footer: React.FC = () => {
   const { language, t } = useLanguage();
@@ -38,8 +39,8 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer id="contact" className="bg-[#174D35] text-stone-200 pt-16 pb-12 border-t border-[#174D35]/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <footer id="contact" className="bg-[#174D35] text-stone-200 border-t border-[#174D35]/30 relative overflow-hidden pt-14 sm:pt-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-10 pb-12 border-b border-white/10">
           {/* Brand & Signature & Description */}
           <div className="md:col-span-5 space-y-4">
@@ -156,6 +157,9 @@ export const Footer: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Animated Storytelling Botanical Valley Landscape at the absolute bottom */}
+      <GardenValleyLandscape />
 
       {/* Policy Modal */}
       {activePolicy && (
