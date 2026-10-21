@@ -40,8 +40,11 @@ import { loggerService } from './services/loggerService';
 import { AdminAuthProvider } from './context/AdminAuthContext';
 import { CustomerAuthProvider } from './context/CustomerAuthContext';
 import { WishlistProvider } from './context/WishlistContext';
+import { CompareProvider } from './context/CompareContext';
 import { CustomerAuthModal } from './components/customer/CustomerAuthModal';
 import { CustomerProfilePage } from './pages/CustomerProfilePage';
+import { PlantCompareModal } from './components/home/PlantCompareModal';
+import { OfflineIndicator } from './components/common/PWAInstallButton';
 import { AdminLayout } from './components/admin/AdminLayout';
 import { AdminLoginPage } from './pages/admin/AdminLoginPage';
 import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
@@ -52,6 +55,7 @@ import { AdminOrdersPage } from './pages/admin/AdminOrdersPage';
 import { AdminOrderDetailPage } from './pages/admin/AdminOrderDetailPage';
 import { AdminInventoryPage } from './pages/admin/AdminInventoryPage';
 import { AdminCustomersPage } from './pages/admin/AdminCustomersPage';
+import { AdminCouponsPage } from './pages/admin/AdminCouponsPage';
 import { AdminReportsPage } from './pages/admin/AdminReportsPage';
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
 import { AdminBannersPage } from './pages/admin/AdminBannersPage';
@@ -186,6 +190,9 @@ const MainShell: React.FC = () => {
       if (currentPath === '/admin/customers') {
         return <AdminCustomersPage />;
       }
+      if (currentPath === '/admin/coupons') {
+        return <AdminCouponsPage />;
+      }
       if (currentPath === '/admin/reports') {
         return <AdminReportsPage />;
       }
@@ -299,6 +306,8 @@ const MainShell: React.FC = () => {
       <CartDrawer />
       <FloatingWhatsAppWidget />
       <LivingTreeIndicator />
+      <PlantCompareModal />
+      <OfflineIndicator />
       <CustomerAuthModal />
     </div>
   );
@@ -310,11 +319,13 @@ export default function App() {
       <LanguageProvider>
         <CustomerAuthProvider>
           <WishlistProvider>
-            <CartProvider>
-              <RouterProvider>
-                <MainShell />
-              </RouterProvider>
-            </CartProvider>
+            <CompareProvider>
+              <CartProvider>
+                <RouterProvider>
+                  <MainShell />
+                </RouterProvider>
+              </CartProvider>
+            </CompareProvider>
           </WishlistProvider>
         </CustomerAuthProvider>
       </LanguageProvider>

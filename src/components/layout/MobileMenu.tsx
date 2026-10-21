@@ -15,6 +15,7 @@ import { useWishlist } from '../../context/WishlistContext';
 import { useStoreSettings } from '../../services/settingsService';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { ThemeToggle } from '../common/ThemeToggle';
+import { PWAInstallButton } from '../common/PWAInstallButton';
 import { MobileCategoryAccordion } from './MobileCategoryAccordion';
 
 interface MobileMenuProps {
@@ -147,6 +148,10 @@ export const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose }) => {
               )}
             </button>
           </nav>
+
+          <div className="pt-2">
+            <PWAInstallButton />
+          </div>
         </div>
 
         <div className="pt-4 border-t border-stone-200 text-xs text-stone-600 space-y-2 mt-4">

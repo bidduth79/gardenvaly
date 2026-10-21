@@ -9,6 +9,7 @@ import { BrandLogo } from './BrandLogo';
 import { Navigation } from './Navigation';
 import { LanguageSwitcher } from './LanguageSwitcher';
 import { ThemeToggle } from '../common/ThemeToggle';
+import { PWAInstallButton } from '../common/PWAInstallButton';
 import { MobileMenu } from './MobileMenu';
 import { AnnouncementBar } from './AnnouncementBar';
 import { MobileBottomNav } from './MobileBottomNav';
@@ -56,6 +57,11 @@ export const Header: React.FC = () => {
           {/* Language Switcher (Visible on desktop, inside mobile hamburger menu on mobile) */}
           <div className="hidden lg:flex items-center shrink-0">
             <LanguageSwitcher />
+          </div>
+
+          {/* In-App PWA Install Button (Desktop) */}
+          <div className="hidden xl:flex items-center shrink-0">
+            <PWAInstallButton compact />
           </div>
 
           {/* Search Trigger */}

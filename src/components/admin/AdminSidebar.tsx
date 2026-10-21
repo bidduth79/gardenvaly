@@ -31,6 +31,7 @@ import {
   Store,
   Layers,
   ArrowUpRight,
+  Ticket,
 } from 'lucide-react';
 import { useRouter } from '../../context/RouterContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -239,6 +240,12 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
             icon: Users,
             labelEn: 'Customer Records',
             labelBn: 'গ্রাহক রেকর্ড',
+          },
+          {
+            path: '/admin/coupons',
+            icon: Ticket,
+            labelEn: 'Promo Codes & Coupons',
+            labelBn: 'প্রোমো কোড ও কুপন',
           },
         ],
       },

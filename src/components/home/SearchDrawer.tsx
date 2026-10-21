@@ -1,14 +1,14 @@
 /**
  * @file SearchDrawer.tsx
- * @description Interactive search drawer for live plant and seed catalogue lookup.
+ * @description Interactive search drawer with Web Speech API voice search (Bengali/English),
+ * popular search tags, and live plant/seed catalogue lookup.
  */
 
 import React, { useState, useEffect } from 'react';
-import { Search, X, ArrowRight } from 'lucide-react';
+import { Search, X, ArrowRight, Mic, MicOff, Sparkles } from 'lucide-react';
 import { Product } from '../../types/product';
 import { productService } from '../../services/productService';
 import { useLanguage } from '../../context/LanguageContext';
-import { useCart } from '../../context/CartContext';
 import { formatPrice } from '../../utils/formatters';
 import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
 
@@ -18,16 +18,21 @@ interface SearchDrawerProps {
   onSelectProduct: (product: Product) => void;
 }
 
+const POPULAR_SEARCHES_BN = ['মনস্টেরা', 'হাসনাহেনা', 'গোলাপ', 'মানি প্ল্যান্ট', 'অর্গানিক বীজ', 'ভার্মিকম্পোস্ট'];
+const POPULAR_SEARCHES_EN = ['Monstera', 'Hasna Hena', 'Rose', 'Money Plant', 'Organic Seeds', 'Vermicompost'];
+
 export const SearchDrawer: React.FC<SearchDrawerProps> = ({
   isOpen,
   onClose,
   onSelectProduct,
 }) => {
   const { language, t } = useLanguage();
-  const { addToCart } = useCart();
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Product[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+
+  const isBn = language === 'bn';
 
   useEffect(() => {
     if (!query.trim()) {
@@ -67,7 +72,33 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
+  const handleVoiceSearch = () => {
+    if (typeof window === 'undefined') return;
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) return;
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = language === 'bn' ? 'bn-BD' : 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => setIsListening(true);
+    recognition.onend = () => setIsListening(false);
+    recognition.onerror = () => setIsListening(false);
+    recognition.onresult = (event: any) => {
+      const transcript = event.results?.[0]?.[0]?.transcript;
+      if (transcript) {
+        setQuery(transcript);
+      }
+    };
+
+    recognition.start();
+  };
+
   if (!isOpen) return null;
+
+  const popularTags = isBn ? POPULAR_SEARCHES_BN : POPULAR_SEARCHES_EN;
 
   return (
     <div
@@ -93,45 +124,87 @@ export const SearchDrawer: React.FC<SearchDrawerProps> = ({
           </button>
         </div>
 
-        <div className="p-4 border-b border-stone-100 bg-[#F7F5EC]/50">
-          <div className="relative">
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t('searchPlaceholder')}
-              autoFocus
-              className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-stone-300 bg-white text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#174D35]"
-            />
-            <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
-            {query && (
-              <button
-                onClick={() => setQuery('')}
-                className="w-8 h-8 flex items-center justify-center text-stone-400 hover:text-stone-700 absolute right-1.5 top-1.5 rounded-lg"
-                aria-label="Clear search input"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            )}
+        <div className="p-4 border-b border-stone-100 bg-[#F7F5EC]/50 space-y-2.5">
+          <div className="relative flex items-center gap-1.5">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t('searchPlaceholder')}
+                autoFocus
+                className="w-full pl-10 pr-10 py-2.5 rounded-xl border border-stone-300 bg-white text-base sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#174D35]"
+              />
+              <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-3.5" />
+              {query && (
+                <button
+                  onClick={() => setQuery('')}
+                  className="w-8 h-8 flex items-center justify-center text-stone-400 hover:text-stone-700 absolute right-1.5 top-1.5 rounded-lg"
+                  aria-label="Clear search input"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={handleVoiceSearch}
+              className={`w-10 h-10 rounded-xl flex items-center justify-center border transition-all cursor-pointer shrink-0 ${
+                isListening
+                  ? 'bg-rose-600 text-white border-rose-600 animate-pulse'
+                  : 'bg-white text-stone-600 hover:text-[#174D35] border-stone-300 hover:border-[#174D35]'
+              }`}
+              title={isBn ? 'ভয়েস সার্চ (মুখে বলে খুঁজুন)' : 'Voice Search'}
+              aria-label="Voice Search"
+            >
+              {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+            </button>
           </div>
+
+          {isListening && (
+            <p className="text-xs text-rose-600 font-semibold animate-pulse">
+              {isBn ? '🎙️ শুনছি... গাছ বা বীজের নাম বলুন' : '🎙️ Listening... Speak plant or seed name'}
+            </p>
+          )}
         </div>
 
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
           {query.trim() === '' ? (
-            <p className="text-sm text-stone-500 text-center py-10">
-              {language === 'bn' ? 'গাছ বা বীজের নাম লিখে খুঁজুন...' : 'Type plant or seed name to search...'}
-            </p>
+            <div className="space-y-4 py-4">
+              <div className="flex items-center gap-1.5 text-xs font-bold text-stone-500 uppercase tracking-wider">
+                <Sparkles className="w-3.5 h-3.5 text-[#C5A059]" />
+                <span>{isBn ? 'জনপ্রিয় অনুসন্ধান' : 'Popular Searches'}</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {popularTags.map((tag) => (
+                  <button
+                    key={tag}
+                    type="button"
+                    onClick={() => setQuery(tag)}
+                    className="px-3 py-1.5 rounded-xl bg-stone-100 hover:bg-[#174D35] text-stone-700 hover:text-white text-xs font-medium transition-colors cursor-pointer"
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+              <p className="text-xs text-stone-400 pt-4 text-center">
+                {isBn
+                  ? 'গাছ, বীজ বা বাগান সরঞ্জামের নাম লিখে অথবা ভয়েস বাটনে ট্যাপ করে খুঁজুন।'
+                  : 'Type or use voice search to find plants, seeds, and gardening supplies.'}
+              </p>
+            </div>
           ) : isSearching ? (
             <p className="text-sm text-stone-500 text-center py-10">
-              {language === 'bn' ? 'অনুসন্ধান করা হচ্ছে...' : 'Searching catalogue...'}
+              {isBn ? 'অনুসন্ধান করা হচ্ছে...' : 'Searching catalogue...'}
             </p>
           ) : results.length === 0 ? (
             <p className="text-sm text-stone-500 text-center py-10">
-              {language === 'bn' ? 'কোনো ফলাফল পাওয়া যায়নি।' : 'No botanical items found.'}
+              {isBn ? 'কোনো ফলাফল পাওয়া যায়নি।' : 'No botanical items found.'}
             </p>
           ) : (
             results.map((product) => {
-              const name = language === 'bn' ? product.nameBn : product.nameEn;
+              const name = isBn ? product.nameBn : product.nameEn;
               return (
                 <div
                   key={product.id}

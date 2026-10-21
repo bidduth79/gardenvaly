@@ -1755,12 +1755,12 @@
       "division": "Dhaka",
       "district": "Dhaka",
       "addressDetail": "Test Address 123",
-      "totalOrders": 70,
-      "totalSpent": 123200,
+      "totalOrders": 71,
+      "totalSpent": 124960,
       "firstOrderDate": "2026-10-13T14:10:27.454Z",
-      "lastOrderDate": "2026-10-17T14:48:51.750Z",
+      "lastOrderDate": "2026-10-17T15:26:05.582Z",
       "createdAt": "2026-10-13T14:10:27.454Z",
-      "updatedAt": "2026-10-17T14:48:51.750Z"
+      "updatedAt": "2026-10-17T15:26:05.582Z"
     },
     {
       "id": "cust-1792221728098",
@@ -1782,6 +1782,105 @@
     }
   ],
   "orders": [
+    {
+      "id": "ord-1792250765582",
+      "orderNumber": "GV-2026-5433",
+      "customer": {
+        "fullName": "Test Customer Nursery",
+        "mobileNumber": "01700000000",
+        "division": "Dhaka",
+        "district": "Dhaka",
+        "addressDetail": "Test Address 123"
+      },
+      "items": [
+        {
+          "productId": "plant-1",
+          "productName": "Monstera Deliciosa",
+          "quantity": 2,
+          "unitPrice": 850,
+          "lineSubtotal": 1700
+        }
+      ],
+      "subtotal": 1700,
+      "deliveryCharge": 60,
+      "discountAmount": 0,
+      "totalAmount": 1760,
+      "deliveryMethod": "home-delivery",
+      "paymentMethod": "cash-on-delivery",
+      "paymentStatus": "paid",
+      "status": "cancelled",
+      "statusHistory": [
+        {
+          "status": "pending",
+          "changedAt": "2026-10-17T15:26:05.582Z",
+          "note": "Order placed via API checkout",
+          "changedBy": "Customer (Online Checkout)"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T15:26:05.595Z",
+          "note": "Customer requested cancellation",
+          "changedBy": "Administrator"
+        },
+        {
+          "status": "cancelled",
+          "changedAt": "2026-10-17T15:26:05.598Z",
+          "note": "Duplicate cancel call",
+          "changedBy": "Administrator"
+        }
+      ],
+      "codExpectedAmount": 1760,
+      "codCollectedAmount": 1760,
+      "codOutstandingBalance": 0,
+      "codStatus": "collected",
+      "isStockRestored": true,
+      "auditTrail": [
+        {
+          "action": "ORDER_CREATED",
+          "performedBy": "Customer",
+          "timestamp": "2026-10-17T15:26:05.582Z",
+          "details": "Order created with 1 items. Total: ৳1760. Payment: cash-on-delivery"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T15:26:05.588Z",
+          "details": "Collected ৳100 out of expected ৳1760 by Delivery Agent. Outstanding: ৳1660"
+        },
+        {
+          "action": "COD_COLLECTION_RECORDED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T15:26:05.592Z",
+          "details": "Collected ৳1760 out of expected ৳1760 by Delivery Agent. Outstanding: ৳0"
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T15:26:05.595Z",
+          "previousValue": "pending",
+          "newValue": "cancelled",
+          "details": "Customer requested cancellation"
+        },
+        {
+          "action": "STOCK_RESTORED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T15:26:05.595Z",
+          "details": "All ordered item quantities restored to inventory safely without duplication."
+        },
+        {
+          "action": "STATUS_CHANGED",
+          "performedBy": "Administrator",
+          "timestamp": "2026-10-17T15:26:05.598Z",
+          "previousValue": "cancelled",
+          "newValue": "cancelled",
+          "details": "Duplicate cancel call"
+        }
+      ],
+      "createdAt": "2026-10-17T15:26:05.582Z",
+      "updatedAt": "2026-10-17T15:26:05.598Z",
+      "codCollectedAt": "2026-10-17T15:26:05.592Z",
+      "codCollectedByStaff": "Delivery Agent"
+    },
     {
       "id": "ord-1792248531749",
       "orderNumber": "GV-2026-6660",
@@ -9068,6 +9167,16 @@
     }
   ],
   "inventoryAdjustments": [
+    {
+      "id": "adj-1792250765595-plant-1",
+      "productId": "plant-1",
+      "productName": "Monstera Deliciosa",
+      "quantityChanged": 2,
+      "newQuantity": 24,
+      "reason": "Order cancelled (#GV-2026-5433) - stock returned",
+      "adminUserName": "Administrator",
+      "createdAt": "2026-10-17T15:26:05.595Z"
+    },
     {
       "id": "adj-1792248531757-plant-1",
       "productId": "plant-1",

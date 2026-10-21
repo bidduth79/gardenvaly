@@ -1,14 +1,15 @@
 /**
  * @file ProductCard.tsx
- * @description Product card with botanical badges, 1-click buy, stock counters, and quick view.
+ * @description Product card with botanical badges, 1-click buy, compare, stock counters, and quick view.
  */
 
 import React, { useState } from 'react';
-import { Star, ShoppingBag, Eye, Check, Heart, Zap } from 'lucide-react';
+import { Star, ShoppingBag, Eye, Check, Heart, Zap, GitCompareArrows } from 'lucide-react';
 import { Product } from '../../types/product';
 import { useLanguage } from '../../context/LanguageContext';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { useCompare } from '../../context/CompareContext';
 import { useRouter } from '../../context/RouterContext';
 import { formatPrice, formatNumeral, getProductSoldCount } from '../../utils/formatters';
 import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
@@ -26,6 +27,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
   const { language } = useLanguage();
   const { addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { isInCompare, toggleCompare } = useCompare();
   const { navigate } = useRouter();
   const [isJustAdded, setIsJustAdded] = useState(false);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
@@ -35,6 +37,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
   const isAvailable = product.inStock && product.stockQuantity > 0;
   const soldCount = getProductSoldCount(product);
   const isWishlisted = isInWishlist(product.id);
+  const isCompared = isInCompare(product.id);
 
   const handleCardClick = () => navigate(`/product/${product.slug}`);
 
@@ -119,7 +122,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
               </span>
             </div>
 
-            {/* Care Badges strictly in 1 line */}
             <ProductCardCareBadges product={product} />
           </div>
 
@@ -132,7 +134,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
               )}
             </div>
 
-            {/* Icon-Only Action Group */}
             <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
               {isAvailable && (
                 <button
@@ -145,6 +146,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
                   <Zap className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-current" />
                 </button>
               )}
+
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); toggleCompare(product); }}
+                className={`w-8 h-8 sm:w-8.5 sm:h-8.5 rounded-xl flex items-center justify-center transition-colors cursor-pointer ${
+                  isCompared ? 'bg-[#174D35] text-[#A3E635]' : 'text-stone-500 hover:text-[#174D35] hover:bg-stone-100'
+                }`}
+                title={language === 'bn' ? 'পাশাপাশি তুলনা করুন (Compare)' : 'Compare Plant'}
+                aria-label={`Compare ${name}`}
+              >
+                <GitCompareArrows className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </button>
 
               <button
                 type="button"

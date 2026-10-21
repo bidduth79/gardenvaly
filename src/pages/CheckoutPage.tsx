@@ -21,6 +21,7 @@ import { PhoneOrderButton } from '../components/checkout/PhoneOrderButton';
 import { Button } from '../components/common/Button';
 import { orderService } from '../services/orderService';
 import { integrationService } from '../services/integrationService';
+import { couponService, Coupon } from '../services/couponService';
 import { usePageSeo } from '../hooks/usePageSeo';
 import { analyticsService } from '../services/analyticsService';
 
@@ -40,6 +41,8 @@ export const CheckoutPage: React.FC = () => {
   const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethodId>('home-delivery');
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethodId>('cash-on-delivery');
   const [trxId, setTrxId] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<Coupon | null>(null);
+  const [discountAmount, setDiscountAmount] = useState<number>(0);
   const [formData, setFormData] = useState<CustomerInfo>({
     fullName: '',
     mobileNumber: '',
@@ -60,10 +63,11 @@ export const CheckoutPage: React.FC = () => {
     DELIVERY_CONFIG.options.find((o) => o.id === deliveryMethod) || DELIVERY_CONFIG.options[0];
   const deliveryCharge =
     cart.subtotal >= DELIVERY_CONFIG.freeDeliveryThreshold ? 0 : selectedDeliveryOption.rate;
+  const finalTotalAmount = Math.max(0, cart.subtotal + deliveryCharge - discountAmount);
 
   React.useEffect(() => {
     if (cart.items.length > 0) {
-      analyticsService.trackBeginCheckout(cart.items, cart.subtotal + deliveryCharge);
+      analyticsService.trackBeginCheckout(cart.items, finalTotalAmount);
     }
   }, []);
 
@@ -108,25 +112,33 @@ export const CheckoutPage: React.FC = () => {
         lineSubtotal: i.product.price * i.quantity,
       }));
 
-      const notes = (paymentMethod === 'bkash' || paymentMethod === 'nagad')
-        ? `Payment via ${paymentMethod.toUpperCase()} | TrxID: ${trxId.trim()}`
-        : 'Direct store checkout';
+      const couponNote = appliedCoupon
+        ? ` | Coupon: ${appliedCoupon.code} (-৳${discountAmount})`
+        : '';
+      const notes =
+        (paymentMethod === 'bkash' || paymentMethod === 'nagad'
+          ? `Payment via ${paymentMethod.toUpperCase()} | TrxID: ${trxId.trim()}`
+          : 'Direct store checkout') + couponNote;
 
       const createdOrder = await orderService.createOrder({
         customer: formData,
         items,
         subtotal: cart.subtotal,
         deliveryCharge,
-        totalAmount: cart.subtotal + deliveryCharge,
+        totalAmount: finalTotalAmount,
         deliveryMethod,
         paymentMethod,
         adminNotes: notes,
       });
 
+      if (appliedCoupon) {
+        couponService.recordUsage(appliedCoupon.code);
+      }
+
       // Track verified order purchase in GA4 (without customer PII)
       analyticsService.trackPurchase(
         createdOrder?.orderNumber || `GV-${Date.now()}`,
-        cart.subtotal + deliveryCharge,
+        finalTotalAmount,
         items
       );
 
@@ -202,7 +214,16 @@ export const CheckoutPage: React.FC = () => {
         </div>
 
         <div className="lg:col-span-5 space-y-6">
-          <OrderSummaryCard items={cart.items} deliveryCharge={deliveryCharge} />
+          <OrderSummaryCard
+            items={cart.items}
+            deliveryCharge={deliveryCharge}
+            appliedCoupon={appliedCoupon}
+            discountAmount={discountAmount}
+            onApplyCoupon={(c, amt) => {
+              setAppliedCoupon(c);
+              setDiscountAmount(amt);
+            }}
+          />
 
           {/* Checkout Actions */}
           <div className="bg-white rounded-2xl border border-stone-200/80 p-5 shadow-xs space-y-4">

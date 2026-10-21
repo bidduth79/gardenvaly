@@ -4,13 +4,14 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, ArrowLeft, Sun, Droplet, Check, Star, Flame, User, ThumbsUp, MessageSquare, Send, Heart, Zap } from 'lucide-react';
+import { ShoppingBag, ArrowLeft, Sun, Droplet, Check, Star, Flame, User, ThumbsUp, MessageSquare, Send, Heart, Zap, GitCompareArrows } from 'lucide-react';
 import { Product } from '../types/product';
 import { productService } from '../services/productService';
 import { useRouter } from '../context/RouterContext';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
+import { useCompare } from '../context/CompareContext';
 import { formatPrice, formatNumeral, getProductSoldCount } from '../utils/formatters';
 import { Breadcrumbs } from '../components/shop/Breadcrumbs';
 import { ProductGallery } from '../components/shop/ProductGallery';
@@ -29,12 +30,14 @@ export const ProductDetailPage: React.FC = () => {
   const { language, t } = useLanguage();
   const { addToCart, setIsCartOpen } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
+  const { isInCompare, toggleCompare } = useCompare();
 
   const [product, setProduct] = useState<Product | null>(() => {
     if (!params.slug) return null;
     return MOCK_PRODUCTS.find((p) => p.slug === params.slug || p.id === params.slug) || null;
   });
   const isWishlisted = product ? isInWishlist(product.id) : false;
+  const isCompared = product ? isInCompare(product.id) : false;
   const [quantity, setQuantity] = useState(1);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [justAdded, setJustAdded] = useState(false);
@@ -324,6 +327,21 @@ export const ProductDetailPage: React.FC = () => {
                 aria-label="Toggle Wishlist"
               >
                 <Heart className={`w-5 h-5 ${isWishlisted ? 'fill-rose-500 text-rose-500' : ''}`} />
+              </button>
+
+              {/* Compare Button */}
+              <button
+                type="button"
+                onClick={() => product && toggleCompare(product)}
+                className={`w-11 h-11 flex items-center justify-center rounded-xl border transition-colors cursor-pointer shrink-0 ${
+                  isCompared
+                    ? 'bg-[#174D35] border-[#174D35] text-[#A3E635]'
+                    : 'bg-white border-stone-200 text-stone-600 hover:text-[#174D35] hover:border-[#174D35]'
+                }`}
+                title={language === 'bn' ? 'পাশাপাশি তুলনা করুন (Compare)' : 'Compare Plant'}
+                aria-label="Toggle Compare"
+              >
+                <GitCompareArrows className="w-5 h-5" />
               </button>
             </div>
 
