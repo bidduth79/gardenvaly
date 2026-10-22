@@ -1,6 +1,6 @@
 /**
  * @file MobileCategoryAccordion.tsx
- * @description Mobile accordion tree for exploring hierarchical categories and subcategories.
+ * @description Sleek dark-charcoal accordion tree for exploring hierarchical categories and subcategories inside the Mobile Bottom Sheet Menu.
  */
 
 import React, { useState } from 'react';
@@ -29,13 +29,13 @@ export const MobileCategoryAccordion: React.FC<MobileCategoryAccordionProps> = (
   };
 
   return (
-    <div className="my-2 p-2.5 rounded-2xl bg-white/90 border border-stone-200/80 shadow-2xs">
-      <div className="flex items-center gap-2 px-2 py-1 mb-1 text-xs font-bold text-[#174D35] uppercase tracking-wider">
-        <Layers className="w-3.5 h-3.5" />
+    <div className="my-2.5 p-3 rounded-2xl bg-[#121418] border border-white/10 shadow-inner">
+      <div className="flex items-center gap-2 px-1.5 py-1 mb-1.5 text-xs font-bold text-zinc-300 uppercase tracking-wider">
+        <Layers className="w-3.5 h-3.5 text-zinc-400" />
         <span>{language === 'bn' ? 'ক্যাটাগরি ও সাব-ক্যাটাগরি' : 'Categories & Subcategories'}</span>
       </div>
 
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         {plantCategories.map((cat) => {
           const isExpanded = expandedCat === cat.slug;
           const hasSubs = Array.isArray(cat.subcategories) && cat.subcategories.length > 0;
@@ -45,22 +45,24 @@ export const MobileCategoryAccordion: React.FC<MobileCategoryAccordionProps> = (
               {/* Parent row */}
               <div
                 className={`flex items-center justify-between p-2 rounded-xl transition-colors ${
-                  isExpanded ? 'bg-[#174D35]/10 text-[#174D35]' : 'hover:bg-stone-100 text-stone-800'
+                  isExpanded
+                    ? 'bg-white/12 text-white border border-white/25'
+                    : 'bg-[#181A20] hover:bg-[#20232B] text-zinc-200 border border-white/6'
                 }`}
               >
                 <button
                   type="button"
                   onClick={() => onSelectCategory(cat.slug)}
-                  className="flex items-center gap-2 text-left flex-1 min-w-0 cursor-pointer"
+                  className="flex items-center gap-2.5 text-left flex-1 min-w-0 cursor-pointer"
                 >
                   <CategoryIcon
                     icon={cat.iconName}
-                    className={`w-4 h-4 shrink-0 ${isExpanded ? 'text-[#174D35]' : 'text-stone-500'}`}
+                    className={`w-4 h-4 shrink-0 ${isExpanded ? 'text-white' : 'text-zinc-400'}`}
                   />
                   <span className="text-xs font-bold truncate">
                     {language === 'bn' ? cat.nameBn : cat.nameEn}
                   </span>
-                  <span className="text-[10px] text-stone-400 font-mono">
+                  <span className="text-[10px] text-zinc-400 font-mono tabular-nums">
                     ({formatNumeral(cat.itemCount, language)})
                   </span>
                 </button>
@@ -70,7 +72,7 @@ export const MobileCategoryAccordion: React.FC<MobileCategoryAccordionProps> = (
                     type="button"
                     onClick={() => toggleExpand(cat.slug)}
                     aria-label={`Toggle ${cat.nameEn} subcategories`}
-                    className="p-1 rounded-md text-stone-500 hover:text-[#174D35] hover:bg-stone-200/50 transition-colors ml-1"
+                    className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors ml-1 cursor-pointer"
                   >
                     {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
                   </button>
@@ -79,16 +81,16 @@ export const MobileCategoryAccordion: React.FC<MobileCategoryAccordionProps> = (
 
               {/* Subcategories */}
               {hasSubs && isExpanded && (
-                <div className="pl-6 pr-2 py-1 space-y-1 bg-stone-50/60 rounded-b-xl border-l-2 border-[#174D35]/30 ml-3 my-1">
+                <div className="pl-5 pr-2 py-1.5 space-y-1 bg-[#0E1014] rounded-b-xl border-t border-white/8 mx-1 my-1">
                   {cat.subcategories!.map((sub) => (
                     <button
                       key={sub.slug}
                       type="button"
                       onClick={() => onSelectCategory(sub.slug)}
-                      className="w-full flex items-center justify-between py-1.5 px-2 text-left rounded-lg text-xs text-stone-600 hover:text-[#174D35] hover:bg-white transition-colors cursor-pointer"
+                      className="w-full flex items-center justify-between py-1.5 px-2.5 text-left rounded-lg text-xs text-zinc-300 hover:text-white hover:bg-white/8 transition-colors cursor-pointer"
                     >
                       <span className="truncate">{language === 'bn' ? sub.nameBn : sub.nameEn}</span>
-                      <span className="text-[10px] text-stone-400 font-mono shrink-0 ml-1">
+                      <span className="text-[10px] text-zinc-500 font-mono tabular-nums shrink-0 ml-1">
                         {formatNumeral(sub.itemCount, language)}
                       </span>
                     </button>

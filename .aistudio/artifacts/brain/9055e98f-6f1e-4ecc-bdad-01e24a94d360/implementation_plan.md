@@ -1,124 +1,104 @@
-# Gardenvaly Fullscreen Botanical Hero & Seamless Organic Background
+# মোবাইল নেভিগেশন ডক, বটম শিট মেনু এবং ফুটার রি-ডিজাইন প্ল্যান
 
-Transform the current split-column hero into a cinematic, full-width, edge-to-edge botanical slider with high-legibility typographic overlays, and craft a seamless organic transition underneath featuring an overlapping trust metric strip and natural curved wave divider.
+মোবাইল ব্যবহারকারীদের জন্য একটি প্রিমিয়াম, এক-হাতে ব্যবহারযোগ্য (Thumb-friendly) **ডিপ অবসিডিয়ান ডার্ক গ্রিন ফ্লোটিং পিল ডক ও বটম শিট মেনু** তৈরি করা হবে এবং মোবাইল ভিউতে ফুটার, ভ্যালি ইলাস্ট্রেশন ও ফ্লোটিং উইজেটগুলো আপনার নির্দেশনা অনুযায়ী সাজানো হবে।
 
 ---
 
-### User Review & Critical Decisions
+## User Review & Critical Decisions
 
 > [!IMPORTANT]
-> The questions regarding layout and transition style were dismissed, so we have synthesized the best architectural approach matching high-end botanical e-commerce standards:
-> - **Fullscreen Hero Presentation**: Full-width edge-to-edge carousel (`min-h-[580px] lg:h-[82vh]`) with left-aligned typographic content over an optical deep-forest botanical scrim gradient (`from-stone-950/92 via-stone-950/65 to-transparent`).
-> - **Background Underneath**: An overlapping floating botanical trust bar (-translate-y-1/2) bridging the bottom of the hero with the rest of the store, accompanied by a subtle organic SVG wave transition to the warm natural stone canvas (`#FBFBFA`).
-> - **Admin Banner Integration**: Seamlessly retains compatibility with existing slides stored in `localStorage` (`gardenvaly_hero_slides`) and the Admin Banners Page (`/admin/banners`).
+> আপনার নিশ্চিত করা পছন্দ অনুযায়ী নিচের সিদ্ধান্তগুলো চূড়ান্ত করা হয়েছে:
+
+- **রঙ ও থিম (সাদা নয়)**: মোবাইলের নিচের ফ্লোটিং ডক এবং পপ-আপ বটম শিট মেনু কখনোই সাদা হবে না; এটি **ডিপ অবসিডিয়ান ডার্ক গ্রিন (`#0C2018`)** ব্যাকগ্রাউন্ড এবং **উজ্জ্বল এমারেল্ড (`#34D399`) ও গোল্ডেন (`#C5A059`)** হাইলাইটে তৈরি হবে।
+- **মেনু ডিজাইন ও অবস্থান**: উপরের হেডার থেকে হ্যামবার্গার বাটন সরিয়ে সম্পূর্ণ মেনু ও ক্যাটাগরি সিস্টেম নিচের **ফ্লোটিং পিল ডক (Floating Pill Dock)** এবং **স্লাইড-আপ বটম শিট (Bottom Sheet Menu)**-এ নিয়ে আসা হবে।
+- **মোবাইল ভিউতে ফ্লোটিং উইজেট লুকানো**: শুধুমাত্র মোবাইল ভিউতে (`< 1024px`) ফ্লোটিং **WhatsApp আইকন** এবং **সুপ্ত বীজের (Living Tree) বার** লুকানো থাকবে, তবে ডেস্কটপ ভিউতে পূর্বের মতোই দৃশ্যমান থাকবে।
 
 ---
 
-### 1. Overview & Core Concept
+## 1. Overview & Core Concept
 
-- **What It Does**: Upgrades the storefront hero section from a constrained right-column box into a panoramic, immersive fullscreen experience that showcases Hasna Hena's lush plant and flower collections across the full browser width, while maintaining instant access to primary actions ("Browse Plants", "Order Seeds", "Reviews").
-- **Target Audience**: Home gardeners, terrace enthusiasts, plant lovers, and urban shoppers in Bangladesh looking for authentic, healthy greenery and seeds.
-- **Key Value**: First impressions jump from a standard boxed template to a premium, immersive horticultural brand experience, dramatically increasing visual impact without sacrificing text readability or mobile performance.
-
----
-
-### 2. User Experience & Visual Design
-
-#### A. Edge-to-Edge Panoramic Carousel Experience
-1. **Full-Bleed Visual Canvas**: Carousel slides expand to 100% viewport width with a responsive height (`h-[520px] sm:h-[600px] lg:h-[82vh] max-h-[780px]`).
-2. **Measured Contrast Scrim**: A multi-stop gradient scrim (`linear-gradient(to right, rgba(12,18,14,0.92) 0%, rgba(12,18,14,0.70) 50%, rgba(12,18,14,0.25) 100%)`) ensures text has WCAG AA contrast (ratio > 7:1) over any bright or variegated plant photo.
-3. **Typography & Hero Content**:
-   - **Signature Tag**: Elegant gold/green botanical brand tag (`#C5A059` & `#5C8D50`) indicating Hasna Hena's curation.
-   - **Display Headline**: Refined botanical serif typography (`text-3xl sm:text-5xl lg:text-6xl text-white font-bold tracking-tight text-balance leading-tight`).
-   - **Subtitle**: Crisp readable prose in Bengali / English explaining the curated collection.
-   - **Action CTAs**: Primary solid emerald button (`bg-[#174D35]` with hover lift) + secondary translucent frosted glass button (`bg-white/15 backdrop-blur-md hover:bg-white/25 text-white border-white/25`).
-   - **Social Proof**: 5-star customer ratings badge with customer avatars and live link jumping to customer reviews.
-
-#### B. Bottom Background & Section Transition Architecture
-1. **Floating Bridge Trust Bar**:
-   - Positioned directly at the bottom seam of the fullscreen hero, slightly overlapping the transition boundary.
-   - 3 value pillars: 100% Healthy Plant Guarantee, Tested Seed Strains, and Expert Advice from Hasna Hena.
-   - Rendered with warm off-white surface, subtle hairline border, and gentle drop shadow, grounding the viewer into the catalog.
-2. **Organic Wave Transition & Under-Hero Ambient Atmosphere**:
-   - Smooth botanical curve connecting the hero seamlessly to the "Shop by Category" section.
-   - Ambient warm stone canvas (`bg-[#FDFBF7]`) with soft diffused botanical glows (`bg-[#5C8D50]/8`) that eliminate abrupt color blocking.
-
-#### C. Micro-Interactions & Carousel Controls
-- Floating lateral arrow buttons (left/right) with backdrop blur and smooth hover reveal.
-- Minimalist bottom slider indicators with an active slide progress bar.
-- Pause/Play toggle to give full accessibility control to the user.
-- Interactive next-slide preview thumbnail at the bottom right.
-- Touch gesture support (swipe left/right) on mobile devices.
+- **কী পরিবর্তন হচ্ছে**:
+  1. **মোবাইল ফ্লোটিং উইজেট ক্লিনআপ**: মোবাইল স্ক্রিনে নিচের ডকের সাথে যাতে কোনো ওভারল্যাপ না হয়, সেজন্য ফ্লোটিং WhatsApp বাটন এবং বাম পাশের ‘সুপ্ত বীজ / ফলবান বৃক্ষ’ স্ক্রল বারটি মোবাইলে (`hidden lg:flex` / `hidden lg:block`) লুকিয়ে রাখা হবে।
+  2. **মোবাইল ফুটারে পূর্ণাঙ্গ ভ্যালি ইলাস্ট্রেশন**: বর্তমানে SVG-তে `preserveAspectRatio="xMidYMax slice"` থাকায় মোবাইলের সরু স্ক্রিনে দুই পাশের গার্ডেনভ্যালি শপ এবং গ্রামের দৃশ্য কেটে (crop হয়ে) শুধু মাঝের রাস্তা দেখা যাচ্ছিল। আমরা মোবাইলে রেসপনসিভ ভিউবক্স স্কেলিং (`xMidYMax meet` ও অপটিমাইজড ক্যানভাস অনুপাত) ব্যবহার করব যাতে বাম পাশের **গার্ডেনভ্যালি কটেজ**, মাঝখানের **চলন্ত ডেলিভারি ভ্যান**, এবং ডান পাশের **সবুজ গাঁ**—পুরো দৃশ্যটি মোবাইলে সম্পূর্ণ দেখা যায়।
+  3. **মোবাইল ফুটার লেআউট সংস্কার**:
+     - **সেন্টারড ব্র্যান্ড ও হোয়াটসঅ্যাপ**: গার্ডেনভ্যালি লোগো, আইকন, পরিচিতি লেখা, ট্যাগলাইন এবং WhatsApp বাটনটি মোবাইল ভিউতে মাঝখানে (Center aligned) থাকবে।
+     - **পাশাপাশি দ্রুত লিংকসমূহ ও যোগাযোগ**: মোবাইলে `দ্রুত লিংকসমূহ` এবং `যোগাযোগ` সেকশন দুটি নিচে নিচে না থেকে **পাশাপাশি ২-কলামে (`grid-cols-2`)** সুন্দরভাবে সাজানো থাকবে।
+  4. **আধুনিক ফ্লোটিং পিল ডক ও বটম শিট মেনু**:
+     - উপরের হেডারে শুধু লোগো, ডে/নাইট থিম টগল, সার্চ, উইশলিস্ট ও কার্ট আইকন থাকবে (হ্যামবার্গার বাটন থাকবে না)।
+     - স্ক্রিনের নিচে চারপাশে রাউন্ডেড **Floating Pill Dock** থাকবে যার মাঝখানে একটি আকর্ষণীয় হাইলাইটেড **মেনু ও ক্যাটাগরি (`মেনু`)** বাটন থাকবে।
+     - মাঝখানের বাটনে চাপ দিলে নিচ থেকে একটি আধুনিক **ডার্ক বোটানিক্যাল বটম শিট মেনু** স্লাইড করে উপরে উঠবে।
 
 ---
 
-### 3. Key Product Decisions & Trade-Offs
+## 2. User Experience & Visual Design
 
-- **Decision 1: Full-Width Scrim Overlay vs Centered Card**:
-  - *Chosen*: Left-aligned content container with horizontal directional scrim gradient.
-  - *Why*: Allows the lush plant imagery on the right side to remain unoccluded, while guaranteeing high contrast and legibility for Bengali and English typography on the left.
-- **Decision 2: Viewport Height Sizing (`82vh` vs `100vh`)**:
-  - *Chosen*: `82vh` (capped between 520px and 780px) instead of hard `100vh`.
-  - *Why*: A strict `100vh` completely hides the next section fold ("Shop by Category"), lowering product discovery. `82vh` provides full-screen grandeur while peeking the top of the next section and the floating trust bar, encouraging downward scrolling.
-- **Decision 3: Preserving Admin Panel Customization**:
-  - *Chosen*: Full backward and forward compatibility with the existing `gardenvaly_hero_slides` data schema and `/admin/banners` management view.
-  - *Why*: Admins can continue adding, reordering, and replacing hero slide URLs, titles, and subtitles without breaking layout.
+### ফুটারে কেন ইলাস্ট্রেশনটি পুরো দেখা যাচ্ছিল না? (সমাধানসহ)
+- **কারণ**: ইলাস্ট্রেশনটির প্রস্থ `1440px` এবং উচ্চতা `248px`। আগে `preserveAspectRatio="xMidYMax slice"` দেওয়া ছিল, যা মোবাইলের উচ্চতা ঠিক রাখতে গিয়ে বাম পাশের ৪০০ পিক্সেল (দোকান) এবং ডান পাশের ৪০০ পিক্সেল (গ্রাম) স্ক্রিনের বাইরে কেটে ফেলত।
+- **সমাধান**: মোবাইলের জন্য কন্টেইনারের উচ্চতা ও `preserveAspectRatio` এমনভাবে সমন্বয় করা হবে যাতে `0` থেকে `1440` পর্যন্ত পুরো ল্যান্ডস্কেপটি মোবাইলের প্রস্থের ভেতরে ফিট হয়ে সম্পূর্ণ দৃশ্যমান থাকে এবং আকাশ ও মাটির রঙের সাথে নিখুঁতভাবে মিশে যায়।
+
+### কালার প্যালেট ও থিম (Bottom Dock & Sheet)
+- **ডক ও শিট সারফেস**: ডিপ অবসিডিয়ান ডার্ক গ্রিন (`#0C2018` / `rgba(12, 32, 24, 0.96)`) সাথে গ্লাসমরফিজম ব্লার (`backdrop-blur-xl`) এবং সূক্ষ্ম এমারেল্ড বর্ডার (`border-emerald-500/25`)।
+- **অ্যাক্টিভ ও হাইলাইট কালার**: উজ্জ্বল এমারেল্ড (`#34D399`), ফরেস্ট গ্রিন (`#174D35`), এবং বোটানিক্যাল গোল্ড (`#C5A059`)।
+- **টেক্সট ও আইকন**: ইন-অ্যাক্টিভ আইটেমগুলোর জন্য স্নিগ্ধ মিন্ট-স্টোন (`#A7F3D0` / `#D6D3D1`) এবং অ্যাক্টিভ আইটেমের জন্য উজ্জ্বল সাদা ও এমারেল্ড গ্লো।
 
 ---
 
-### 4. Technical Architecture & Data Strategy
+## 3. Key Product Decisions & Trade-Offs
+
+- **সিদ্ধান্ত ১: ফ্লোটিং পিল ডকের ৫টি আইটেম ও সেন্ট্রাল মেনু বাটন**
+  - *Chosen Approach*: ডকের ৫টি ট্যাব হবে—`হোম` (Home), `গাছ ও বীজ` (Shop), মাঝখানে হাইলাইটেড **`মেনু / ক্যাটাগরি`** (Elevated Center Orb Button), `কার্ট` (Cart), এবং `পছন্দ/প্রোফাইল` (Wishlist/Account)।
+  - *Why*: ব্যবহারকারী এক হাতের বৃদ্ধাঙ্গুলি দিয়েই হোম, শপ, কার্ট এবং সম্পূর্ণ মেনু/ক্যাটাগরি শিট ওপেন করতে পারবেন; উপরের কোণায় হাত বাড়ানোর প্রয়োজন হবে না।
+- **সিদ্ধান্ত ২: ডার্ক বটম শিট মেনু (Slide-Up Bottom Sheet)**
+  - *Chosen Approach*: ডান পাশ থেকে আসা পুরনো সাদা/ক্রিম ড্রয়ারের বদলে নিচ থেকে উপরে ওঠা রাউন্ডেড (`rounded-t-3xl`) ডার্ক গ্রিন বটম শিট, যার উপরে একটি ড্র্যাগ হ্যান্ডেল বার, ভাষা ও থিম সুইচার, কুইক পেজ লিংক গ্রিড, ক্যাটাগরি অ্যাকর্ডিয়ন এবং অ্যাপ ইনস্টল (PWA) বাটন থাকবে।
+  - *Why*: এটি আধুনিক মোবাইল অ্যাপের অনুভূতি দেয় এবং আপনার নির্দেশনা অনুযায়ী সাদা রঙ সম্পূর্ণ পরিহার করে।
+
+---
+
+## 4. Technical Architecture & Layout Diagram
 
 ```
-┌────────────────────────────────────────────────────────────────────────┐
-│                        HeroSection (Full-Bleed)                        │
-│                                                                        │
-│ ┌────────────────────────────────────────────────────────────────────┐ │
-│ │ Background Image Slider (100% w, 82vh h, crossfade transition)     │ │
-│ │  - Active slide: scale-105 slow ken-burns zoom                     │ │
-│ │  - Directional botanical gradient scrim (dark on left, clear right)│ │
-│ └────────────────────────────────────────────────────────────────────┘ │
-│                                                                        │
-│ ┌────────────────────────────────────────────────────────────────────┐ │
-│ │ Content Container (max-w-7xl mx-auto, px-4 to px-8)                │ │
-│ │  ├── Brand Signature Kicker                                        │ │
-│ │  ├── Responsive Botanical Headline (text-balance)                  │ │
-│ │  ├── Subtitle Description (Bengali / English)                      │ │
-│ │  ├── Star Rating & Social Proof Link                               │ │
-│ │  └── Dual Storefront CTAs ("গাছ দেখুন" | "বীজ কিনুন")             │ │
-│ └────────────────────────────────────────────────────────────────────┘ │
-│                                                                        │
-│ ┌────────────────────────────────────────────────────────────────────┐ │
-│ │ Carousel Nav (Prev/Next, Slide Indicators, Play/Pause, Next Thumb) │ │
-│ └────────────────────────────────────────────────────────────────────┘ │
-└───────────────────────────────────┬────────────────────────────────────┘
-                                    │
-    ┌───────────────────────────────┴───────────────────────────────┐
-    │  Floating Botanical Trust Bar (Overlapping Hero Boundary)     │
-    │  [100% সুস্থ গাছ]   ·   [পরীক্ষিত অর্গানিক বীজ]   ·   [হাসনাহেনার পরামর্শ] │
-    └───────────────────────────────┬───────────────────────────────┘
-                                    │
-    ┌───────────────────────────────┴───────────────────────────────┐
-    │  Organic Wave SVG Divider & Ambient Stone Canvas (#FDFBF7)    │
-    │  Smooth entry into CategoryShowcase & FeaturedPlants          │
-    └───────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│ 1. MOBILE TOP HEADER (Sticky)                               │
+│ [🌱 গার্ডেনভ্যালি]              [🌙 থিম] [🔍] [❤️] [🛍️ কার্ট] │
+│ (মোবাইলে উপরের হ্যামবার্গার মেনু বাটন সরানো হয়েছে)            │
+└─────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 2. MOBILE FOOTER RE-DESIGN (#174D35)                        │
+│                                                             │
+│          [🌱 গার্ডেনভ্যালি - হাসনা হেনা কর্তৃক পরিচালিত]        │
+│        "প্রিমিয়াম বোটানিক্যাল নার্সারি..." (সেন্টারড)         │
+│                   "সবুজে সাজুক জীবন"                        │
+│            [ 💬 WhatsApp: +880 1829300000 ]                 │
+│                                                             │
+│   ┌─────────────────────────┬───────────────────────────┐   │
+│   │ দ্রুত লিংকসমূহ           │ যোগাযোগ                   │   │
+│   │ • গাছপালা ও চারা        │ 📍 ঢাকা, বাংলাদেশ          │   │
+│   │ • অর্গানিক বীজ          │ 📞 +880 1829300000        │   │
+│   │ • ক্যাটাগরি তালিকা      │ ✉️ contact@gardenvaly.com │   │
+│   │ • পরিচর্যা গাইড         │ FB · IG · YT              │   │
+│   │ • অর্ডার ট্র্যাক করুন    │                           │   │
+│   └─────────────────────────┴───────────────────────────┘   │
+│                                                             │
+│   [🏡 শপ] ────── 🚚 চলন্ত ভ্যান ────── [🌴 সবুজ গাঁ]        │
+│   (মোবাইলে সম্পূর্ণ ১৪৪০px ভ্যালি ইলাস্ট্রেশন দৃশ্যমান)      │
+└─────────────────────────────────────────────────────────────┘
+                               │
+                               ▼
+┌─────────────────────────────────────────────────────────────┐
+│ 3. FLOATING PILL DOCK (#0C2018 Dark Green + #34D399)        │
+│  ╭───────────────────────────────────────────────────────╮  │
+│  │  [🏠 হোম]   [🌿 শপ]   (( ☰ মেনু ))   [🛍️ কার্ট]  [❤️ পছন্দ] │  │
+│  ╰───────────────────────────────────────────────────────╯  │
+│              │ (মাঝের বাটনে ট্যাপ করলে)                      │
+│              ▼                                              │
+│  ╭───────────────────────────────────────────────────────╮  │
+│  │               ━━━ (Bottom Sheet Handle)               │  │
+│  │  [বাংলা/EN]                         [☀️/🌙 থিম টগল]   │  │
+│  │  • সকল ক্যাটাগরি ও সাব-ক্যাটাগরি (Dark Accordion)     │  │
+│  │  • নেভিগেশন লিংক (গাছপালা, বীজ, কৃষি উপকরণ, গাইড)      │  │
+│  │  • অর্ডার ট্র্যাকিং, প্রোফাইল ও PWA অ্যাপ ইনস্টল       │  │
+│  ╰───────────────────────────────────────────────────────╯  │
+└─────────────────────────────────────────────────────────────┘
 ```
-
-#### Files to be Modified
-- `src/components/home/HeroSection.tsx`: Re-architect geometry from 2-column grid (`lg:grid-cols-12`) to full-bleed container with left-scrim content overlay, interactive navigation, and overlapping bottom trust strip.
-- `src/components/home/CategoryShowcase.tsx`: Adjust top spacing and background coordination to align with the organic wave transition from the hero.
-
----
-
-### 5. Verification Plan
-
-1. **Visual Testing across Devices**:
-   - Desktop (1440px): Verify full-width edge-to-edge images, left-aligned typography readability against the gradient scrim, and smooth slide transitions.
-   - Tablet (768px - 1024px): Verify responsive typography scaling and indicator controls.
-   - Mobile (360px - 414px): Verify touch swipe, no text overflow, clean button stacking, and no horizontal scrollbars.
-2. **Accessibility & Contrast**:
-   - Check text contrast against all 5 default hero slide backgrounds using the gradient scrim.
-   - Test keyboard navigation for Previous/Next slide and Play/Pause buttons.
-3. **Admin Banner Sync**:
-   - Verify that changes made in the Admin Banners Page (`/admin/banners`) immediately reflect in the fullscreen hero slider.
-4. **Build & Compilation**:
-   - Run `compile_applet` to confirm clean TypeScript compilation.

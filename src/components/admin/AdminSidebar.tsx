@@ -32,6 +32,8 @@ import {
   Layers,
   ArrowUpRight,
   Ticket,
+  BookOpen,
+  Gift,
 } from 'lucide-react';
 import { useRouter } from '../../context/RouterContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -39,6 +41,8 @@ import { useAdminAuth } from '../../context/AdminAuthContext';
 import { adminService } from '../../services/adminService';
 import { orderService } from '../../services/orderService';
 import { reviewService, REVIEWS_UPDATED_EVENT } from '../../services/reviewService';
+import { guideService, GUIDES_UPDATED_EVENT } from '../../services/guideService';
+import { comboService, COMBOS_UPDATED_EVENT } from '../../services/comboService';
 
 interface AdminSidebarProps {
   isCollapsed: boolean;
@@ -72,7 +76,9 @@ interface MenuCounts {
   pendingOrders: number;
   totalOrders: number;
   totalReviews: number;
+  totalGuides: number;
   totalCategories: number;
+  totalCombos: number;
 }
 
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({
@@ -94,7 +100,9 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
     pendingOrders: 0,
     totalOrders: 0,
     totalReviews: 8,
+    totalGuides: 4,
     totalCategories: 6,
+    totalCombos: 4,
   });
 
   // State to track expanded accordion groups
@@ -112,10 +120,11 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
 
     const loadCounts = async () => {
       try {
-        const [products, orders, reviews] = await Promise.all([
+        const [products, orders, reviews, guides] = await Promise.all([
           adminService.getAllProducts().catch(() => []),
           orderService.getOrders().catch(() => []),
           Promise.resolve(reviewService.getReviews()),
+          Promise.resolve(guideService.getGuides()),
         ]);
 
         if (!mounted) return;
@@ -134,7 +143,9 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
           pendingOrders: pending,
           totalOrders: orders.length,
           totalReviews: reviews.length,
+          totalGuides: guides.length,
           totalCategories: categories || 6,
+          totalCombos: comboService.getAllCombos().length,
         });
       } catch (err) {
         // Fallback silently
@@ -150,12 +161,30 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
       } catch {}
     };
 
+    const handleGuidesUpdated = () => {
+      try {
+        const gds = guideService.getGuides();
+        setCounts((prev) => ({ ...prev, totalGuides: gds.length }));
+      } catch {}
+    };
+
+    const handleCombosUpdated = () => {
+      try {
+        const cmbs = comboService.getAllCombos();
+        setCounts((prev) => ({ ...prev, totalCombos: cmbs.length }));
+      } catch {}
+    };
+
     window.addEventListener(REVIEWS_UPDATED_EVENT, handleReviewsUpdated);
+    window.addEventListener(GUIDES_UPDATED_EVENT, handleGuidesUpdated);
+    window.addEventListener(COMBOS_UPDATED_EVENT, handleCombosUpdated);
     window.addEventListener('storage', loadCounts);
 
     return () => {
       mounted = false;
       window.removeEventListener(REVIEWS_UPDATED_EVENT, handleReviewsUpdated);
+      window.removeEventListener(GUIDES_UPDATED_EVENT, handleGuidesUpdated);
+      window.removeEventListener(COMBOS_UPDATED_EVENT, handleCombosUpdated);
       window.removeEventListener('storage', loadCounts);
     };
   }, []);
@@ -212,6 +241,14 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
             getBadgeValue: (c) => c.totalCategories,
           },
           {
+            path: '/admin/combos',
+            icon: Gift,
+            labelEn: 'Combo Packs & Bundles',
+            labelBn: 'কম্বো প্যাক ও বান্ডেল',
+            badgeType: 'count',
+            getBadgeValue: (c) => c.totalCombos,
+          },
+          {
             path: '/admin/inventory',
             icon: Boxes,
             labelEn: 'Stock & Inventory',
@@ -260,6 +297,14 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({
             icon: Sparkles,
             labelEn: 'Hero Banners',
             labelBn: 'হিরো ব্যানার ও ছবি',
+          },
+          {
+            path: '/admin/guides',
+            icon: BookOpen,
+            labelEn: 'Gardening Guides',
+            labelBn: 'বাগান নির্দেশিকা',
+            badgeType: 'count',
+            getBadgeValue: (c) => c.totalGuides,
           },
           {
             path: '/admin/reviews',

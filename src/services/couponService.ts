@@ -212,6 +212,14 @@ class CouponService {
     this.saveCoupons(updated);
     return updated;
   }
+
+  public recordUsage(code: string): void {
+    const cleanCode = code.trim().toUpperCase();
+    const updated = this.getCoupons().map((c) =>
+      c.code.toUpperCase() === cleanCode ? { ...c, usageCount: (c.usageCount || 0) + 1 } : c
+    );
+    this.saveCoupons(updated);
+  }
 }
 
 export const couponService = new CouponService();

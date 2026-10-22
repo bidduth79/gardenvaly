@@ -19,6 +19,7 @@ import { ProductCard } from '../components/home/ProductCard';
 import { Button } from '../components/common/Button';
 import { PlantCareGuideModal } from '../components/home/PlantCareGuideModal';
 import { InstantBuyNowModal } from '../components/shop/InstantBuyNowModal';
+import { FrequentlyBoughtTogether } from '../components/shop/FrequentlyBoughtTogether';
 import { reviewService, REVIEWS_UPDATED_EVENT } from '../services/reviewService';
 import { MOCK_PRODUCTS } from '../data/mockProducts';
 
@@ -359,6 +360,9 @@ export const ProductDetailPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Frequently Bought Together Bundle Widget */}
+      <FrequentlyBoughtTogether currentProduct={product} />
 
       {/* Customer Reviews Section */}
       <section id="reviews" className="pt-10 border-t border-stone-200 scroll-mt-24 space-y-8">

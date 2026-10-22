@@ -29,26 +29,28 @@ export const GardenDeliveryVan: React.FC<GardenDeliveryVanProps> = ({
         opacity={isDark ? 0.8 : 0.45}
       />
 
-      {/* Cargo Bed Content: Fresh Potted Plants that load at Shop and unload at Village */}
-      <g id="van-cargo" transform="translate(18, -4)" className="animate-plant-load">
-        {/* Terracotta Plant Pot 1 with Monstera */}
-        <rect x="15" y="32" width="22" height="18" rx="2" fill="#C26A3E" stroke="#7C2D12" strokeWidth="1" />
-        <path d="M 26 28 C 22 18 10 16 8 8 C 16 10 24 18 26 28 Z" fill="#2D6A4F" />
-        <path d="M 26 28 C 28 16 38 12 42 6 C 38 12 32 20 26 28 Z" fill="#40916C" />
-        <path d="M 26 28 C 24 12 26 6 27 2 C 28 8 28 18 26 28 Z" fill="#52B788" />
+      {/* Cargo Bed Content: Fresh Potted Plants that load from the Shop onto the van bed and unload at the Village */}
+      <g id="van-cargo" transform="translate(18, -4)">
+        <g className="animate-plant-load">
+          {/* Terracotta Plant Pot 1 with Monstera */}
+          <rect x="15" y="32" width="22" height="18" rx="2" fill="#C26A3E" stroke="#7C2D12" strokeWidth="1" />
+          <path d="M 26 28 C 22 18 10 16 8 8 C 16 10 24 18 26 28 Z" fill="#2D6A4F" />
+          <path d="M 26 28 C 28 16 38 12 42 6 C 38 12 32 20 26 28 Z" fill="#40916C" />
+          <path d="M 26 28 C 24 12 26 6 27 2 C 28 8 28 18 26 28 Z" fill="#52B788" />
 
-        {/* Terracotta Plant Pot 2 with Blooming Sunflower */}
-        <rect x="42" y="30" width="20" height="20" rx="2" fill="#B45309" stroke="#78350F" strokeWidth="1" />
-        <circle cx="54" cy="8" r="4.5" fill="#78350F" />
-        <circle cx="50" cy="8" r="2.5" fill="#F59E0B" />
-        <circle cx="58" cy="8" r="2.5" fill="#F59E0B" />
-        <circle cx="54" cy="4" r="2.5" fill="#FBBF24" />
-        <circle cx="54" cy="12" r="2.5" fill="#F59E0B" />
+          {/* Terracotta Plant Pot 2 with Blooming Sunflower */}
+          <rect x="42" y="30" width="20" height="20" rx="2" fill="#B45309" stroke="#78350F" strokeWidth="1" />
+          <circle cx="54" cy="8" r="4.5" fill="#78350F" />
+          <circle cx="50" cy="8" r="2.5" fill="#F59E0B" />
+          <circle cx="58" cy="8" r="2.5" fill="#F59E0B" />
+          <circle cx="54" cy="4" r="2.5" fill="#FBBF24" />
+          <circle cx="54" cy="12" r="2.5" fill="#F59E0B" />
 
-        {/* Seedling Sprout in Wooden Crate */}
-        <rect x="66" y="34" width="22" height="16" rx="1.5" fill="#854D0E" stroke="#58310C" strokeWidth="1" />
-        <ellipse cx="69" cy="17" rx="4" ry="2.5" transform="rotate(-30 69 17)" fill="#4ADE80" />
-        <ellipse cx="78" cy="22" rx="3.5" ry="2" transform="rotate(25 78 22)" fill="#86EFAC" />
+          {/* Seedling Sprout in Wooden Crate */}
+          <rect x="66" y="34" width="22" height="16" rx="1.5" fill="#854D0E" stroke="#58310C" strokeWidth="1" />
+          <ellipse cx="69" cy="17" rx="4" ry="2.5" transform="rotate(-30 69 17)" fill="#4ADE80" />
+          <ellipse cx="78" cy="22" rx="3.5" ry="2" transform="rotate(25 78 22)" fill="#86EFAC" />
+        </g>
       </g>
 
       {/* Cargo Bed Side Rails (Wooden Planks) */}

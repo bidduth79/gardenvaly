@@ -28,10 +28,10 @@ export const ProductCardCareBadges: React.FC<ProductCardCareBadgesProps> = ({ pr
   const isIndoor = product.indoorOutdoor === 'indoor' || product.tagsBn?.some((t) => t.includes('ইনডোর'));
 
   return (
-    <div className="mt-1.5 sm:mt-2 flex items-center gap-1 sm:gap-1.5 text-[9.5px] sm:text-[10px] whitespace-nowrap overflow-hidden">
+    <div className="mt-1.5 sm:mt-2 flex items-center gap-1 sm:gap-1.5 text-[9px] sm:text-[10px] whitespace-nowrap overflow-hidden w-full">
       {sunlight && (
         <span
-          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-200/60 shrink-0 max-w-[88px] sm:max-w-[102px] truncate"
+          className="inline-flex items-center gap-0.5 sm:gap-1 px-1 sm:px-1.5 py-0.5 rounded-md bg-amber-50 text-amber-900 border border-amber-200/60 min-w-0 flex-1 sm:flex-initial sm:shrink-0 sm:max-w-[102px] truncate"
           title={sunlight}
         >
           <Sun className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-amber-500 shrink-0" />
@@ -40,7 +40,7 @@ export const ProductCardCareBadges: React.FC<ProductCardCareBadgesProps> = ({ pr
       )}
       {water && (
         <span
-          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-cyan-50 text-cyan-900 border border-cyan-200/60 shrink-0 max-w-[88px] sm:max-w-[102px] truncate"
+          className="inline-flex items-center gap-0.5 sm:gap-1 px-1 sm:px-1.5 py-0.5 rounded-md bg-cyan-50 text-cyan-900 border border-cyan-200/60 min-w-0 flex-1 sm:flex-initial sm:shrink-0 sm:max-w-[102px] truncate"
           title={water}
         >
           <Droplet className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-cyan-600 shrink-0" />
@@ -49,10 +49,10 @@ export const ProductCardCareBadges: React.FC<ProductCardCareBadgesProps> = ({ pr
       )}
       {isIndoor && (
         <span
-          className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-900 border border-emerald-200/60 shrink-0"
+          className="hidden sm:inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-50 text-emerald-900 border border-emerald-200/60 shrink-0"
           title={language === 'bn' ? 'ইনডোর উপযোগী' : 'Indoor Suitable'}
         >
-          <Home className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-emerald-600 shrink-0" />
+          <Home className="w-3 h-3 text-emerald-600 shrink-0" />
           <span>{language === 'bn' ? 'ইনডোর' : 'Indoor'}</span>
         </span>
       )}

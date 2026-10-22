@@ -1,17 +1,21 @@
 /**
  * @file SeedGrowthVisual.tsx
- * @description Dynamic SVG illustrations representing the 3 stages of botanical growth: Seed, Sprout, and Fruiting Tree.
+ * @description Dynamic SVG illustrations representing the 4 stages of botanical growth:
+ * - Stage 0 (খাঁটি): Dormant Heirloom Seed in Fertile Soil
+ * - Stage 1 (কচি): Sprouting Shoot with First Emerald Leaves
+ * - Stage 2 (ফুল): Blooming Tree with Fragrant Golden-White Flowers
+ * - Stage 3 (ফল গাছ): Mature Fruiting Tree with Sweet Ruby & Golden Fruits
  */
 
 import React from 'react';
 
 interface SeedGrowthVisualProps {
-  stage: number; // 0: Seed, 1: Sprout, 2: Mature Tree
+  stage: number; // 0: Seed (খাঁটি), 1: Sprout (কচি), 2: Bloom (ফুল), 3: Fruiting Tree (ফল গাছ)
 }
 
 export const SeedGrowthVisual: React.FC<SeedGrowthVisualProps> = ({ stage }) => {
   return (
-    <div className="relative w-full max-w-sm sm:max-w-md aspect-square mx-auto flex items-center justify-center p-4 select-none">
+    <div className="relative w-full max-w-[220px] sm:max-w-[270px] lg:max-w-[300px] aspect-square mx-auto flex items-center justify-center p-2 sm:p-3 select-none">
       {/* Background Soft Glow */}
       <div
         className={`absolute inset-4 rounded-full transition-all duration-700 blur-2xl ${
@@ -19,13 +23,15 @@ export const SeedGrowthVisual: React.FC<SeedGrowthVisualProps> = ({ stage }) => 
             ? 'bg-amber-600/15'
             : stage === 1
             ? 'bg-emerald-600/20'
+            : stage === 2
+            ? 'bg-yellow-500/20'
             : 'bg-emerald-700/25'
         }`}
       />
 
-      {/* Stage 0: The Dormant Heirloom Seed in Soil */}
+      {/* Stage 0: খাঁটি — The Dormant Heirloom Seed in Soil */}
       <div
-        className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 ease-out ${
+        className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 ease-out transform-gpu will-change-[transform,opacity] ${
           stage === 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-75 pointer-events-none'
         }`}
       >
@@ -51,9 +57,9 @@ export const SeedGrowthVisual: React.FC<SeedGrowthVisualProps> = ({ stage }) => 
         </svg>
       </div>
 
-      {/* Stage 1: The Sprouting Shoot with First Emerald Leaves */}
+      {/* Stage 1: কচি — The Sprouting Shoot with First Emerald Leaves */}
       <div
-        className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 ease-out ${
+        className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 ease-out transform-gpu will-change-[transform,opacity] ${
           stage === 1 ? 'opacity-100 scale-100' : 'opacity-0 scale-75 pointer-events-none'
         }`}
       >
@@ -81,10 +87,53 @@ export const SeedGrowthVisual: React.FC<SeedGrowthVisualProps> = ({ stage }) => 
         </svg>
       </div>
 
-      {/* Stage 2: The Magnificent Tree with Blooming Flowers & Fruits */}
+      {/* Stage 2: ফুল — The Blooming Tree Crowned with Fragrant Blossoms */}
       <div
-        className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 ease-out ${
+        className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 ease-out transform-gpu will-change-[transform,opacity] ${
           stage === 2 ? 'opacity-100 scale-100' : 'opacity-0 scale-75 pointer-events-none'
+        }`}
+      >
+        <svg viewBox="0 0 200 200" className="w-60 h-60 sm:w-72 sm:h-72 drop-shadow-2xl" aria-hidden="true">
+          <defs>
+            <g id="journeyBlossom">
+              <circle cx="0" cy="-5" r="3.6" fill="#FEF9C3" />
+              <circle cx="-4.8" cy="-1.5" r="3.6" fill="#FEF08A" />
+              <circle cx="-3" cy="4" r="3.6" fill="#FEF9C3" />
+              <circle cx="3" cy="4" r="3.6" fill="#FEF08A" />
+              <circle cx="4.8" cy="-1.5" r="3.6" fill="#FEF9C3" />
+              <circle cx="0" cy="0" r="2.4" fill="#F59E0B" />
+            </g>
+          </defs>
+          {/* Shaded Grass Ground */}
+          <ellipse cx="100" cy="168" rx="80" ry="16" fill="#174D35" opacity="0.28" />
+          {/* Young Branched Tree Trunk */}
+          <path d="M93 165 C93 142 90 122 82 104 L118 104 C110 122 107 142 107 165 Z" fill="#6E421C" />
+          <path d="M93 126 Q72 108 58 96 L64 91 Q82 102 96 116 Z" fill="#5A3414" />
+          <path d="M107 122 Q128 104 142 94 L137 88 Q120 98 104 114 Z" fill="#5A3414" />
+          {/* Fresh Spring Canopy Foliage */}
+          <circle cx="100" cy="70" r="40" fill="#1E5C41" />
+          <circle cx="72" cy="75" r="30" fill="#246A4B" />
+          <circle cx="128" cy="75" r="30" fill="#2E7E59" />
+          <circle cx="100" cy="48" r="30" fill="#3D8F67" />
+          <circle cx="82" cy="55" r="24" fill="#52B788" />
+          <circle cx="118" cy="55" r="24" fill="#40916C" />
+          {/* Abundant Fragrant Blossoms Across the Crown */}
+          <use href="#journeyBlossom" transform="translate(100, 38) scale(1.15)" />
+          <use href="#journeyBlossom" transform="translate(74, 52) scale(1.05)" />
+          <use href="#journeyBlossom" transform="translate(126, 54) scale(1.1)" />
+          <use href="#journeyBlossom" transform="translate(58, 76) scale(1.0)" />
+          <use href="#journeyBlossom" transform="translate(140, 74) scale(1.0)" />
+          <use href="#journeyBlossom" transform="translate(88, 72) scale(1.1)" />
+          <use href="#journeyBlossom" transform="translate(114, 78) scale(1.05)" />
+          <use href="#journeyBlossom" transform="translate(76, 92) scale(0.9)" />
+          <use href="#journeyBlossom" transform="translate(122, 92) scale(0.95)" />
+        </svg>
+      </div>
+
+      {/* Stage 3: ফল গাছ — The Magnificent Mature Tree with Sweet Fruits */}
+      <div
+        className={`absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 ease-out transform-gpu will-change-[transform,opacity] ${
+          stage === 3 ? 'opacity-100 scale-100' : 'opacity-0 scale-75 pointer-events-none'
         }`}
       >
         <svg viewBox="0 0 200 200" className="w-60 h-60 sm:w-72 sm:h-72 drop-shadow-2xl" aria-hidden="true">
@@ -102,18 +151,18 @@ export const SeedGrowthVisual: React.FC<SeedGrowthVisualProps> = ({ stage }) => 
           <circle cx="82" cy="52" r="26" fill="#3D8F67" />
           <circle cx="118" cy="52" r="26" fill="#3D8F67" />
           {/* Hanging Sweet Fruits (Citrus / Pomegranate Red & Orange) */}
-          <circle cx="65" cy="75" r="7" fill="#E11D48" />
-          <circle cx="66" cy="74" r="2" fill="#F43F5E" />
-          <circle cx="135" cy="72" r="7" fill="#E11D48" />
-          <circle cx="136" cy="71" r="2" fill="#F43F5E" />
-          <circle cx="100" cy="50" r="7.5" fill="#F97316" />
+          <circle cx="65" cy="75" r="7.5" fill="#E11D48" />
+          <circle cx="66" cy="74" r="2.2" fill="#FDA4AF" />
+          <circle cx="135" cy="72" r="7.5" fill="#E11D48" />
+          <circle cx="136" cy="71" r="2.2" fill="#FDA4AF" />
+          <circle cx="100" cy="50" r="8" fill="#F97316" />
           <circle cx="101" cy="49" r="2.5" fill="#FDBA74" />
-          <circle cx="82" cy="88" r="6" fill="#F97316" />
-          <circle cx="118" cy="85" r="6.5" fill="#E11D48" />
-          {/* Delicate Blossoms */}
-          <circle cx="95" cy="30" r="3.5" fill="#FEF08A" />
-          <circle cx="120" cy="38" r="3" fill="#FEF08A" />
-          <circle cx="55" cy="58" r="3.5" fill="#FEF08A" />
+          <circle cx="82" cy="88" r="6.5" fill="#F97316" />
+          <circle cx="83" cy="87" r="2" fill="#FDBA74" />
+          <circle cx="118" cy="85" r="7" fill="#E11D48" />
+          <circle cx="119" cy="84" r="2" fill="#FDA4AF" />
+          <circle cx="102" cy="74" r="6.5" fill="#F59E0B" />
+          <circle cx="103" cy="73" r="2" fill="#FEF08A" />
         </svg>
       </div>
     </div>

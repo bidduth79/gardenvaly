@@ -26,14 +26,14 @@ export const FeaturedSeeds: React.FC<FeaturedSeedsProps> = ({ products, onQuickV
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#C5A059] mb-2">
+            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#C5A059] mb-2 animate-fade-up-1">
               <Sparkles className="w-4 h-4" />
               <span>Heirloom & Organic</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif-botanical font-bold text-stone-900">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-serif-botanical font-bold text-stone-900 animate-fade-up-2">
               {t('featuredSeedsTitle')}
             </h2>
-            <p className="text-sm sm:text-base text-stone-600 mt-2 max-w-xl">
+            <p className="text-sm sm:text-base text-stone-600 mt-2 max-w-xl animate-fade-up-3">
               {t('featuredSeedsSubtitle')}
             </p>
           </div>

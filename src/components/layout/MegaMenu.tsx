@@ -1,10 +1,12 @@
 /**
  * @file MegaMenu.tsx
- * @description Premium desktop botanical mega menu with multi-column hierarchical categories.
+ * @description DesignMingle-inspired 2-column botanical dropdown menu (.dd-panel)
+ * featuring a warm spotlight launch card (.dd-launch) on the left and interactive
+ * icon-animated category items (.dm-dd-item / .dm-dd-ico) on the right.
  */
 
 import React from 'react';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import { Category } from '../../types/product';
 import { CategoryIcon } from '../common/CategoryIcon';
 import { useLanguage } from '../../context/LanguageContext';
@@ -28,8 +30,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
 }) => {
   const { language } = useLanguage();
   const { navigate } = useRouter();
-
-  if (!isOpen) return null;
+  const isBn = language === 'bn';
 
   const plantCategories = categories.filter((c) => c.type === 'plant' || !c.type);
 
@@ -41,106 +42,95 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
   return (
     <div
       role="menu"
-      aria-label={language === 'bn' ? 'গাছপালার মেগা মেনু' : 'Plants Mega Menu'}
+      aria-label={isBn ? 'গাছপালার মেনু' : 'Plants Menu'}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
-      className="absolute top-full left-1/2 -translate-x-1/2 w-[94vw] max-w-6xl mt-2 p-6 bg-[#FCFAF7] dark:bg-[#0C2018] backdrop-blur-xl border border-[#174D35]/15 dark:border-[#1B3B2E] shadow-2xl rounded-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200"
+      className={`absolute top-full left-1/2 -translate-x-1/2 pt-3.5 z-50 transition-all duration-250 ease-[cubic-bezier(0.2,0.7,0.2,1)] ${
+        isOpen
+          ? 'opacity-100 visible translate-y-0 pointer-events-auto'
+          : 'opacity-0 invisible translate-y-2 pointer-events-none'
+      }`}
     >
-      <div className="grid grid-cols-12 gap-6">
-        {/* Hierarchical Categories Columns (9 cols) */}
-        <div className="col-span-9 grid grid-cols-3 gap-6 border-r border-[#174D35]/10 dark:border-[#1B3B2E] pr-6">
-          {plantCategories.slice(0, 3).map((cat) => (
-            <div key={cat.id} className="space-y-3">
-              {/* Category Header */}
-              <button
-                type="button"
-                onClick={() => handleCategoryClick(cat.slug)}
-                className="w-full flex items-center gap-2 group text-left cursor-pointer focus-visible:ring-2 focus-visible:ring-[#174D35] rounded-lg p-1 -ml-1 transition-colors"
-              >
-                <div className="w-7 h-7 rounded-lg bg-[#174D35]/10 dark:bg-[#1B3B2E] text-[#174D35] dark:text-[#34D399] flex items-center justify-center shrink-0 group-hover:bg-[#174D35] group-hover:text-white transition-colors">
-                  <CategoryIcon icon={cat.iconName} className="w-3.5 h-3.5" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-bold text-stone-900 dark:text-white group-hover:text-[#174D35] dark:group-hover:text-[#34D399] transition-colors leading-tight">
-                    {language === 'bn' ? cat.nameBn : cat.nameEn}
-                  </h4>
-                  <span className="text-[11px] font-medium text-stone-500 dark:text-[#9CB5A7]">
-                    {formatNumeral(cat.itemCount, language)} {language === 'bn' ? 'টি চারা' : 'plants'}
-                  </span>
-                </div>
-              </button>
+      <div className="w-[92vw] max-w-[740px] bg-white dark:bg-[#0C2018] border border-stone-200/80 dark:border-[#1B3B2E] rounded-[26px] p-3.5 shadow-[0_30px_60px_-24px_rgba(18,17,17,0.28)] grid grid-cols-12 gap-2.5">
+        {/* Left Spotlight Column (.dd-launch style from DesignMingle) */}
+        <div className="col-span-5 bg-[#FFF5CC] dark:bg-[#112A1F] rounded-[18px] p-3 flex flex-col justify-between">
+          <span className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-[#6B5A1E] dark:text-[#FDE047] px-2 pt-1 pb-2">
+            {isBn ? 'আপনার সবুজ বাগান সাজান' : 'Launch Your Green Sanctuary'}
+          </span>
 
-              {/* Subcategories list */}
-              {Array.isArray(cat.subcategories) && cat.subcategories.length > 0 && (
-                <ul className="space-y-1.5 pl-2 border-l border-stone-200/80 dark:border-[#1B3B2E]">
-                  {cat.subcategories.map((sub) => (
-                    <li key={sub.slug}>
-                      <button
-                        type="button"
-                        onClick={() => handleCategoryClick(sub.slug)}
-                        className="w-full flex items-center justify-between text-left text-xs py-1.5 px-2 rounded-md font-medium text-stone-700 hover:text-[#174D35] hover:bg-[#174D35]/5 dark:text-[#E2E8F0] dark:hover:text-[#34D399] dark:hover:bg-[#174D35]/20 transition-colors cursor-pointer group"
-                      >
-                        <span className="truncate">{language === 'bn' ? sub.nameBn : sub.nameEn}</span>
-                        <span className="text-[10px] text-stone-500 dark:text-[#8FA89B] group-hover:text-[#174D35] dark:group-hover:text-[#34D399] font-mono shrink-0 ml-1">
-                          {formatNumeral(sub.itemCount, language)}
-                        </span>
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              )}
+          <button
+            type="button"
+            onClick={() => {
+              onClose();
+              navigate('/plants');
+            }}
+            className="group w-full flex flex-col gap-3 text-left cursor-pointer focus:outline-none"
+          >
+            <div className="w-full h-[215px] rounded-[16px] overflow-hidden bg-white dark:bg-[#091812] shadow-[0_14px_30px_-18px_rgba(107,90,30,0.45)]">
+              <img
+                src="https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?auto=format&fit=crop&w=900&q=80"
+                alt={isBn ? 'গার্ডেনভ্যালি চারা কালেকশন' : 'Gardenvaly Botanical Collection'}
+                className="w-full h-full object-cover object-center transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.04]"
+                loading="lazy"
+              />
             </div>
-          ))}
+
+            {/* DesignMingle .ov-btn Pill CTA */}
+            <span className="w-full h-12 pl-4 pr-1.5 rounded-full bg-[#121111] dark:bg-[#174D35] group-hover:bg-[#174D35] dark:group-hover:bg-[#22C55E] text-white dark:group-hover:text-[#061810] flex items-center justify-between gap-2 text-[13.5px] font-medium transition-all duration-300">
+              <span className="truncate">
+                {isBn ? 'সব গাছপালা ও চারা দেখুন' : 'Complete Plant Collection'}
+              </span>
+              <span className="w-9 h-9 rounded-full bg-white/15 dark:group-hover:bg-[#061810]/15 grid place-items-center shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+                <ArrowUpRight className="w-4 h-4" />
+              </span>
+            </span>
+          </button>
         </div>
 
-        {/* Featured Promo & Spices/Medicinal Column (3 cols) */}
-        <div className="col-span-3 flex flex-col justify-between space-y-4">
-          {/* Medicinal & Spices Quick Links */}
-          <div className="space-y-2">
-            <h5 className="text-xs font-bold uppercase tracking-wider text-stone-600 dark:text-[#8FA89B]">
-              {language === 'bn' ? 'ভেষজ ও মশলা' : 'Herbal & Spices'}
-            </h5>
-            {plantCategories.slice(3, 5).map((cat) => (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => handleCategoryClick(cat.slug)}
-                className="w-full flex items-center justify-between p-2 rounded-xl bg-stone-50 hover:bg-[#174D35]/10 text-stone-800 hover:text-[#174D35] dark:bg-[#10261E] dark:hover:bg-[#174D35]/30 dark:text-[#E2E8F0] dark:hover:text-[#34D399] transition-colors text-xs font-medium cursor-pointer"
-              >
-                <div className="flex items-center gap-2">
-                  <CategoryIcon icon={cat.iconName} className="w-3.5 h-3.5 text-stone-600 dark:text-[#34D399]" />
-                  <span>{language === 'bn' ? cat.nameBn : cat.nameEn}</span>
-                </div>
-                <span className="text-[10px] text-stone-500 dark:text-[#8FA89B] font-mono">
-                  {formatNumeral(cat.itemCount, language)}
-                </span>
-              </button>
-            ))}
-          </div>
+        {/* Right Individual Categories Column (.dd-col style from DesignMingle) */}
+        <div className="col-span-7 flex flex-col justify-between py-0.5">
+          <div>
+            <span className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-stone-400 dark:text-[#8FA89B] px-3 pt-1.5 pb-1.5">
+              {isBn ? 'বিভাগ অনুযায়ী গাছপালা' : 'Individual Plant Categories'}
+            </span>
 
-          {/* Featured Nursery Spotlight Card */}
-          <div className="p-3.5 rounded-xl bg-gradient-to-br from-[#174D35] to-[#256B4D] text-white shadow-md relative overflow-hidden">
-            <div className="flex items-center gap-1.5 text-[#C5A059] text-[11px] font-bold uppercase tracking-wider mb-1">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>{language === 'bn' ? 'সেরা চারা অফার' : 'Top Plant Deal'}</span>
+            <div className="flex flex-col gap-0.5">
+              {plantCategories.slice(0, 5).map((cat) => {
+                const subNames = Array.isArray(cat.subcategories)
+                  ? cat.subcategories
+                      .slice(0, 3)
+                      .map((s) => (isBn ? s.nameBn : s.nameEn))
+                      .join(' • ')
+                  : '';
+
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => handleCategoryClick(cat.slug)}
+                    className="dm-dd-item w-full flex items-start gap-3 px-3 py-2.5 rounded-[12px] hover:bg-stone-100/85 dark:hover:bg-[#132E22] transition-colors text-left cursor-pointer group"
+                  >
+                    <span className="dm-dd-ico w-[34px] h-[34px] rounded-[10px] bg-[#F2F1F3] dark:bg-[#153427] text-[#3A3540] dark:text-[#34D399] grid place-items-center shrink-0 mt-0.5">
+                      <CategoryIcon icon={cat.iconName} className="w-[17px] h-[17px]" />
+                    </span>
+
+                    <span className="flex-1 min-w-0">
+                      <span className="flex items-center justify-between gap-2">
+                        <b className="block text-[14px] font-semibold text-stone-900 dark:text-white leading-snug truncate">
+                          {isBn ? cat.nameBn : cat.nameEn}
+                        </b>
+                        <span className="text-[11px] font-medium text-stone-400 dark:text-[#8FA89B] group-hover:text-[#174D35] dark:group-hover:text-[#34D399] shrink-0">
+                          {formatNumeral(cat.itemCount, language)} {isBn ? 'টি' : 'items'}
+                        </span>
+                      </span>
+                      <small className="block text-[12.5px] text-stone-500 dark:text-[#9CB5A7] leading-snug mt-0.5 truncate">
+                        {subNames || (isBn ? cat.descriptionBn : cat.descriptionEn)}
+                      </small>
+                    </span>
+                  </button>
+                );
+              })}
             </div>
-            <h5 className="text-xs font-bold text-white leading-snug mb-1">
-              {language === 'bn' ? 'বারোমাসি কলম চারা সংগ্রহ' : 'Grafted Fruit Varieties'}
-            </h5>
-            <p className="text-[11px] text-emerald-100/90 leading-relaxed mb-3">
-              {language === 'bn' ? 'ছাদবাগান ও বারান্দার উপযোগী সেরা চারা।' : 'Ideal for rooftops & balconies.'}
-            </p>
-            <button
-              type="button"
-              onClick={() => {
-                onClose();
-                navigate('/plants');
-              }}
-              className="w-full inline-flex items-center justify-center gap-1.5 px-3 py-1.5 bg-white text-[#174D35] hover:bg-stone-100 rounded-lg text-xs font-bold transition-all shadow-xs cursor-pointer"
-            >
-              <span>{language === 'bn' ? 'সব গাছপালা দেখুন' : 'Browse All Plants'}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </button>
           </div>
         </div>
       </div>

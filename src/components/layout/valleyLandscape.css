@@ -1,43 +1,64 @@
 /**
  * @file valleyLandscape.css
- * @description Smooth 26s storytelling animations for GardenValy plant delivery cycle.
+ * @description Smooth 26s storytelling animations for GardenValy plant delivery cycle and atmospheric day/night details.
  */
 
 @keyframes storyVanMotion {
-  0% { transform: translate3d(-240px, 170px, 0); }
-  12%, 30% { transform: translate3d(140px, 170px, 0); }
-  56%, 84% { transform: translate3d(780px, 170px, 0); }
-  96% { transform: translate3d(1520px, 170px, 0); }
-  97%, 100% { transform: translate3d(-240px, 170px, 0); }
+  0% {
+    transform: translate3d(-320px, 174px, 0);
+    opacity: 1;
+  }
+  12%, 28% {
+    transform: translate3d(138px, 174px, 0);
+    opacity: 1;
+  }
+  42% {
+    transform: translate3d(510px, 171px, 0);
+    opacity: 1;
+  }
+  56%, 80% {
+    transform: translate3d(872px, 174px, 0);
+    opacity: 1;
+  }
+  95% {
+    transform: translate3d(1680px, 174px, 0);
+    opacity: 1;
+  }
+  95.1%, 99.8% {
+    transform: translate3d(-320px, 174px, 0);
+    opacity: 0;
+  }
+  100% {
+    transform: translate3d(-320px, 174px, 0);
+    opacity: 1;
+  }
 }
 
 @keyframes storyWheelSpin {
   0% { transform: rotate(0deg); }
-  12% { transform: rotate(1080deg); }
-  30% { transform: rotate(1080deg); }
-  56% { transform: rotate(3240deg); }
-  84% { transform: rotate(3240deg); }
-  96% { transform: rotate(4320deg); }
-  100% { transform: rotate(4320deg); }
+  12%, 28% { transform: rotate(1080deg); }
+  56%, 80% { transform: rotate(3240deg); }
+  95%, 100% { transform: rotate(4680deg); }
 }
 
 @keyframes storyPlantLoad {
-  0%, 14% { opacity: 0; transform: scale(0.5); }
-  20%, 62% { opacity: 1; transform: scale(1); }
-  66%, 100% { opacity: 0; transform: scale(0.7); }
+  0%, 100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 
 @keyframes storyPlantUnload {
-  0%, 58% { opacity: 0; transform: scale(0.6); }
-  64% { opacity: 1; transform: scale(1.05); }
-  68%, 84% { opacity: 1; transform: scale(1); }
-  88%, 100% { opacity: 0; transform: scale(0.85); }
+  0%, 100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
 }
 
 @keyframes birdsFlyAcross {
-  0% { transform: translate3d(-160px, 15px, 0); }
-  50% { transform: translate3d(700px, -15px, 0); }
-  100% { transform: translate3d(1580px, 5px, 0); }
+  0% { transform: translate3d(-220px, 10px, 0); }
+  50% { transform: translate3d(700px, -12px, 0); }
+  100% { transform: translate3d(1680px, 4px, 0); }
 }
 
 @keyframes valleyBirdFlap {
@@ -62,18 +83,18 @@
 
 @keyframes kiteSoar {
   0%, 100% { transform: translate3d(0, 0, 0) rotate(10deg); }
-  35% { transform: translate3d(8px, -12px, 0) rotate(22deg); }
-  70% { transform: translate3d(-5px, -4px, 0) rotate(5deg); }
+  35% { transform: translate3d(8px, -10px, 0) rotate(20deg); }
+  70% { transform: translate3d(-4px, -3px, 0) rotate(5deg); }
 }
 
 @keyframes valleySunGlow {
-  0%, 100% { opacity: 0.88; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.06); }
+  0%, 100% { opacity: 0.9; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
 }
 
 @keyframes valleyCloudSlow {
-  0% { transform: translate3d(-150px, 0, 0); }
-  100% { transform: translate3d(1440px, 0, 0); }
+  0%, 100% { transform: translate3d(-40px, 0, 0); }
+  50% { transform: translate3d(120px, 0, 0); }
 }
 
 @keyframes valleyTreeSway {
@@ -81,25 +102,43 @@
   50% { transform: rotate(2.2deg); }
 }
 
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.55; transform: scale(0.95); }
+  50% { opacity: 0.95; transform: scale(1.1); }
+}
+
+@keyframes fireflyFloat {
+  0%, 100% {
+    opacity: 0.55;
+    transform: translate3d(0, 0, 0) scale(0.95);
+  }
+  50% {
+    opacity: 0.95;
+    transform: translate3d(6px, -6px, 0) scale(1.15);
+  }
+}
+
 .animate-story-van {
-  animation: storyVanMotion 26s ease-in-out infinite;
-  will-change: transform;
+  animation: storyVanMotion 22s ease-in-out infinite;
+  will-change: transform, opacity;
 }
 
 .animate-story-wheel {
-  animation: storyWheelSpin 26s ease-in-out infinite;
+  animation: storyWheelSpin 22s ease-in-out infinite;
   transform-origin: center;
   transform-box: fill-box;
 }
 
 .animate-plant-load {
-  animation: storyPlantLoad 26s ease-in-out infinite;
-  transform-origin: center;
+  animation: storyPlantLoad 22s ease-in-out infinite;
+  transform-origin: bottom left;
+  transform-box: fill-box;
 }
 
 .animate-plant-unload {
-  animation: storyPlantUnload 26s ease-in-out infinite;
+  animation: storyPlantUnload 22s ease-in-out infinite;
   transform-origin: bottom center;
+  transform-box: fill-box;
 }
 
 .animate-birds-fly {
@@ -109,11 +148,13 @@
 
 .animate-bird-flap {
   animation: valleyBirdFlap 1.4s ease-in-out infinite;
-  will-change: transform;
+  transform-origin: center;
+  transform-box: fill-box;
 }
 
 .animate-farmer-wave {
-  transform-origin: 9px 20px;
+  transform-origin: bottom right;
+  transform-box: fill-box;
   animation: farmerWave 1.4s ease-in-out infinite;
 }
 
@@ -127,11 +168,13 @@
 
 .animate-kite-soar {
   transform-origin: center;
+  transform-box: fill-box;
   animation: kiteSoar 3.2s ease-in-out infinite;
 }
 
 .animate-sun-glow {
   transform-origin: center;
+  transform-box: fill-box;
   animation: valleySunGlow 5s ease-in-out infinite;
 }
 
@@ -142,5 +185,30 @@
 
 .animate-tree-sway {
   transform-origin: bottom center;
+  transform-box: fill-box;
   animation: valleyTreeSway 4.5s ease-in-out infinite;
+}
+
+.animate-star-twinkle {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: starTwinkle 2.8s ease-in-out infinite;
+}
+
+.animate-star-twinkle-delayed {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: starTwinkle 3.4s ease-in-out 1.2s infinite;
+}
+
+.animate-firefly-float {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: fireflyFloat 3.6s ease-in-out infinite;
+}
+
+.animate-firefly-float-delayed {
+  transform-origin: center;
+  transform-box: fill-box;
+  animation: fireflyFloat 4.2s ease-in-out 1.5s infinite;
 }

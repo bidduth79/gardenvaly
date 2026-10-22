@@ -27,6 +27,12 @@ import { useRouter } from '../../context/RouterContext';
 import { HeroImageEditorModal, HeroSlide } from '../../components/home/HeroImageEditorModal';
 import { isVideoSlide, getYouTubeEmbedUrl } from '../../utils/videoUtils';
 import { DEFAULT_FALLBACK_IMAGE, handleImageError } from '../../utils/imageFallback';
+import {
+  HeroGardenVillageIllustration,
+  HeroDisplayMode,
+  getStoredHeroDisplayMode,
+  setStoredHeroDisplayMode,
+} from '../../components/home/HeroGardenVillageIllustration';
 
 const DEFAULT_HERO_SLIDES: HeroSlide[] = [
   {
@@ -83,6 +89,7 @@ export const AdminBannersPage: React.FC = () => {
   const { navigate } = useRouter();
   const isBn = language === 'bn';
 
+  const [displayMode, setDisplayMode] = useState<HeroDisplayMode>(() => getStoredHeroDisplayMode());
   const [slides, setSlides] = useState<HeroSlide[]>(() => {
     if (typeof window !== 'undefined') {
       try {
@@ -90,7 +97,6 @@ export const AdminBannersPage: React.FC = () => {
         if (saved) {
           const parsed = JSON.parse(saved);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            // Migrate any cached slide containing the old broken 404 Unsplash image
             return parsed.map((s: HeroSlide) => {
               if (s.imageUrl && s.imageUrl.includes('photo-1508873696983-2df57046475b')) {
                 return {
@@ -112,6 +118,13 @@ export const AdminBannersPage: React.FC = () => {
   const [isEditorOpen, setIsEditorOpen] = useState(false);
   const [saveSuccessNotice, setSaveSuccessNotice] = useState(false);
   const [previewSlideIdx, setPreviewSlideIdx] = useState(0);
+
+  const handleModeChange = (mode: HeroDisplayMode) => {
+    setDisplayMode(mode);
+    setStoredHeroDisplayMode(mode);
+    setSaveSuccessNotice(true);
+    setTimeout(() => setSaveSuccessNotice(false), 3500);
+  };
 
   const saveSlides = (newSlides: HeroSlide[]) => {
     setSlides(newSlides);
@@ -166,16 +179,20 @@ export const AdminBannersPage: React.FC = () => {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-serif-botanical font-bold text-stone-900">
-              {isBn ? 'হিরো ব্যানার ও স্লাইডার ম্যানেজমেন্ট' : 'Hero Banners & Carousel Management'}
+              {isBn ? 'হিরো ব্যানার ও ইলাস্ট্রেশন ম্যানেজমেন্ট' : 'Hero Banners & Illustration Management'}
             </h1>
             <span className="px-2.5 py-0.5 rounded-full bg-[#174D35]/10 text-[#174D35] text-xs font-semibold">
-              {slides.length} {isBn ? 'টি সক্রিয় ছবি' : 'Slides Active'}
+              {displayMode === 'illustration'
+                ? isBn
+                  ? 'বাগান ও গ্রামের ইলাস্ট্রেশন সক্রিয়'
+                  : 'Illustration Active'
+                : `${slides.length} ${isBn ? 'টি সক্রিয় ছবি' : 'Slides Active'}`}
             </span>
           </div>
           <p className="text-xs sm:text-sm text-stone-500 mt-1">
             {isBn
-              ? 'ডিভাইস থেকে নতুন ছবি আপলোড করুন, ক্রপ ও কালার কারেকশন করুন এবং স্টোরফ্রন্টের স্লাইডার পরিবর্তন করুন।'
-              : 'Upload photos directly from your device, crop, apply color grading, remove backgrounds and sync live with storefront.'}
+              ? 'হিরো সেকশনে ছবির স্লাইডার অথবা বাগান ও গ্রামের অ্যানিমেটেড ইলাস্ট্রেশন—যেটিতে টিক দেবেন শুধুমাত্র সেটিই হোমপেজে শো করবে।'
+              : 'Choose between the Photo/Video Carousel or the Botanical Garden & Village Illustration. Only the ticked option will appear on the homepage.'}
           </p>
         </div>
 
@@ -201,14 +218,104 @@ export const AdminBannersPage: React.FC = () => {
         </div>
       </div>
 
+      {/* ─── EXCLUSIVE HERO DISPLAY MODE TICK SELECTOR ───────────────────── */}
+      <div className="bg-white rounded-3xl p-5 sm:p-6 border border-stone-200 shadow-xs space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+          <div>
+            <h2 className="text-sm sm:text-base font-bold text-stone-900">
+              {isBn
+                ? 'হিরো সেকশন ডিসপ্লে মোড নির্বাচন করুন (শুধু যেটিতে টিক দেবেন সেটিই শো করবে)'
+                : 'Select Hero Section Display Mode (Only the ticked option will be shown)'}
+            </h2>
+            <p className="text-xs text-stone-500 mt-0.5">
+              {isBn
+                ? 'যেকোনো একটিতে টিক (✓) দিলে সাথে সাথে স্টোরফ্রন্টের হিরো সেকশনে সেটি চালু হয়ে যাবে।'
+                : 'Tick either option below to immediately switch the live storefront hero display.'}
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Option 1: Photo/Video Carousel */}
+          <label
+            onClick={() => handleModeChange('carousel')}
+            className={`flex items-start gap-3.5 p-4 rounded-2xl border-2 transition-all cursor-pointer select-none ${
+              displayMode === 'carousel'
+                ? 'border-[#174D35] bg-emerald-50/50 shadow-sm'
+                : 'border-stone-200 bg-stone-50/60 hover:border-stone-300'
+            }`}
+          >
+            <input
+              type="checkbox"
+              checked={displayMode === 'carousel'}
+              onChange={() => handleModeChange('carousel')}
+              className="mt-1 w-5 h-5 accent-[#174D35] rounded cursor-pointer shrink-0"
+            />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-bold text-stone-900">
+                  {isBn ? 'ছবি ও ভিডিও স্লাইডার (বর্তমান ফিচার)' : 'Photo & Video Carousel (Default)'}
+                </span>
+                {displayMode === 'carousel' && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#174D35] text-white text-[10px] font-bold">
+                    {isBn ? '✓ টিক দেওয়া আছে' : '✓ Active'}
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-stone-600 mt-1 leading-relaxed">
+                {isBn
+                  ? 'হিরো সেকশনে অটো-জুম ছবি ও ভিডিও স্লাইডার এবং নিচে স্লাইড পরিবর্তনের কন্ট্রোল দেখাবে।'
+                  : 'Displays fullscreen auto-zooming botanical photography and slide navigation controls.'}
+              </p>
+            </div>
+          </label>
+
+          {/* Option 2: Botanical Garden & Bengal Village Illustration */}
+          <label
+            onClick={() => handleModeChange('illustration')}
+            className={`flex items-start gap-3.5 p-4 rounded-2xl border-2 transition-all cursor-pointer select-none ${
+              displayMode === 'illustration'
+                ? 'border-[#174D35] bg-emerald-50/50 shadow-sm'
+                : 'border-stone-200 bg-stone-50/60 hover:border-stone-300'
+            }`}
+          >
+            <input
+              type="checkbox"
+              checked={displayMode === 'illustration'}
+              onChange={() => handleModeChange('illustration')}
+              className="mt-1 w-5 h-5 accent-[#174D35] rounded cursor-pointer shrink-0"
+            />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-sm font-bold text-stone-900">
+                  {isBn
+                    ? 'সুন্দর বাগান ও গ্রামের দৃশ্য (ইলাস্ট্রেশন)'
+                    : 'Botanical Garden & Village Illustration'}
+                </span>
+                {displayMode === 'illustration' && (
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#174D35] text-white text-[10px] font-bold">
+                    {isBn ? '✓ টিক দেওয়া আছে' : '✓ Active'}
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-stone-600 mt-1 leading-relaxed">
+                {isBn
+                  ? 'ছবির বদলে ফুটারের মতো সূর্যমুখী-গোলাপের বাগান, গ্রীনহাউস, নদী, পালতোলা নৌকা ও বাংলার গ্রামের অ্যানিমেটেড দৃশ্য দেখাবে।'
+                  : 'Displays an animated SVG illustration of a blooming botanical flower garden, greenhouse, river sailboat, and serene Bengal village.'}
+              </p>
+            </div>
+          </label>
+        </div>
+      </div>
+
       {/* Success Notification Alert */}
       {saveSuccessNotice && (
         <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-2xl flex items-center gap-2 text-emerald-800 text-xs font-semibold animate-in fade-in">
           <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
           <span>
             {isBn
-              ? 'সফলভাবে হিরো স্লাইডার ছবিগুলো আপডেট ও সেভ করা হয়েছে!'
-              : 'Hero banner slides successfully updated and synced with live storefront!'}
+              ? 'হিরো সেকশনের সেটিংস সফলভাবে আপডেট ও হোমপেজে সিঙ্ক করা হয়েছে!'
+              : 'Hero section settings updated and synced with the live storefront!'}
           </span>
         </div>
       )}
@@ -221,71 +328,104 @@ export const AdminBannersPage: React.FC = () => {
             <div className="flex items-center gap-2">
               <Eye className="w-4 h-4 text-[#174D35]" />
               <h2 className="text-sm font-bold text-stone-900 uppercase tracking-wider">
-                {isBn ? 'লাইভ স্লাইডার প্রিভিউ' : 'Live Storefront Preview'}
+                {displayMode === 'illustration'
+                  ? isBn
+                    ? 'লাইভ ইলাস্ট্রেশন প্রিভিউ (বাগান ও গ্রাম)'
+                    : 'Live Illustration Preview (Garden & Village)'
+                  : isBn
+                  ? 'লাইভ স্লাইডার প্রিভিউ'
+                  : 'Live Storefront Preview'}
               </h2>
             </div>
             <div className="flex items-center gap-1.5 text-xs text-stone-500">
-              <span>{previewSlideIdx + 1} / {slides.length}</span>
+              {displayMode === 'illustration' ? (
+                <span className="font-semibold text-[#174D35]">
+                  {isBn ? 'ইলাস্ট্রেশন মোড' : 'Illustration Mode'}
+                </span>
+              ) : (
+                <span>
+                  {previewSlideIdx + 1} / {slides.length}
+                </span>
+              )}
             </div>
           </div>
 
           {/* Simulated Hero Banner Screen */}
           <div className="relative rounded-2xl overflow-hidden aspect-video bg-stone-900 shadow-lg border border-stone-200 group">
-            {activeSlide && (
+            {displayMode === 'illustration' ? (
               <>
-                {isVideoSlide(activeSlide) && getYouTubeEmbedUrl(activeSlide.videoUrl) ? (
-                  <iframe
-                    src={getYouTubeEmbedUrl(activeSlide.videoUrl)!}
-                    className="w-full h-full object-cover"
-                    allow="autoplay; encrypted-media"
-                    title={activeSlide.altText}
-                  />
-                ) : isVideoSlide(activeSlide) && activeSlide.videoUrl ? (
-                  <video
-                    src={activeSlide.videoUrl}
-                    autoPlay
-                    loop
-                    muted
-                    playsInline
-                    poster={activeSlide.imageUrl}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <img
-                    src={activeSlide.imageUrl}
-                    alt={activeSlide.altText}
-                    onError={(e) => handleImageError(e, DEFAULT_FALLBACK_IMAGE)}
-                    className="w-full h-full object-cover transition-transform duration-700"
-                  />
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-900/30 to-black/10 pointer-events-none" />
-
+                <HeroGardenVillageIllustration compactPreview />
+                <div className="absolute inset-0 bg-gradient-to-t from-stone-950/80 via-transparent to-black/10 pointer-events-none" />
                 <div className="absolute bottom-6 left-6 right-6 text-white">
                   <span className="inline-block px-2.5 py-0.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-[#C5A059] text-[11px] font-semibold uppercase mb-1">
-                    {isBn ? activeSlide.subtitleBn : activeSlide.subtitleEn}
+                    {isBn ? 'সবুজ বাগান ও বাংলার গ্রাম' : 'Botanical Garden & Bengal Village'}
                   </span>
                   <h3 className="font-serif-botanical text-xl sm:text-2xl font-bold">
-                    {isBn ? activeSlide.titleBn : activeSlide.titleEn}
+                    {isBn
+                      ? 'সবুজে সাজুক আপনার আঙিনা ও প্রিয় গৃহকোণ'
+                      : 'Nurturing Botanical Elegance for Modern Living'}
                   </h3>
                 </div>
               </>
+            ) : (
+              activeSlide && (
+                <>
+                  {isVideoSlide(activeSlide) && getYouTubeEmbedUrl(activeSlide.videoUrl) ? (
+                    <iframe
+                      src={getYouTubeEmbedUrl(activeSlide.videoUrl)!}
+                      className="w-full h-full object-cover"
+                      allow="autoplay; encrypted-media"
+                      title={activeSlide.altText}
+                    />
+                  ) : isVideoSlide(activeSlide) && activeSlide.videoUrl ? (
+                    <video
+                      src={activeSlide.videoUrl}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      poster={activeSlide.imageUrl}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <img
+                      src={activeSlide.imageUrl}
+                      alt={activeSlide.altText}
+                      onError={(e) => handleImageError(e, DEFAULT_FALLBACK_IMAGE)}
+                      className="w-full h-full object-cover transition-transform duration-700"
+                    />
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-stone-950/85 via-stone-900/30 to-black/10 pointer-events-none" />
+
+                  <div className="absolute bottom-6 left-6 right-6 text-white">
+                    <span className="inline-block px-2.5 py-0.5 rounded-full bg-black/40 backdrop-blur-md border border-white/20 text-[#C5A059] text-[11px] font-semibold uppercase mb-1">
+                      {isBn ? activeSlide.subtitleBn : activeSlide.subtitleEn}
+                    </span>
+                    <h3 className="font-serif-botanical text-xl sm:text-2xl font-bold">
+                      {isBn ? activeSlide.titleBn : activeSlide.titleEn}
+                    </h3>
+                  </div>
+                </>
+              )
             )}
           </div>
 
-          {/* Preview Navigation Dots */}
-          <div className="flex items-center justify-center gap-2 pt-2">
-            {slides.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => setPreviewSlideIdx(idx)}
-                className={`h-2 rounded-full transition-all cursor-pointer ${
-                  previewSlideIdx === idx ? 'w-6 bg-[#174D35]' : 'w-2 bg-stone-300 hover:bg-stone-400'
-                }`}
-                title={`Slide ${idx + 1}`}
-              />
-            ))}
-          </div>
+          {/* Preview Navigation Dots (only in carousel mode) */}
+          {displayMode === 'carousel' && (
+            <div className="flex items-center justify-center gap-2 pt-2">
+              {slides.map((_, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => setPreviewSlideIdx(idx)}
+                  className={`h-2 rounded-full transition-all cursor-pointer ${
+                    previewSlideIdx === idx ? 'w-6 bg-[#174D35]' : 'w-2 bg-stone-300 hover:bg-stone-400'
+                  }`}
+                  title={`Slide ${idx + 1}`}
+                />
+              ))}
+            </div>
+          )}
 
           {/* Quick Info & Action Hint */}
           <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200 text-xs text-stone-600 flex items-start gap-3">

@@ -12,9 +12,10 @@ import { useStoreSettings } from '../../services/settingsService';
 interface BrandLogoProps {
   variant?: 'light' | 'dark';
   size?: 'normal' | 'large';
+  className?: string;
 }
 
-export const BrandLogo: React.FC<BrandLogoProps> = ({ variant = 'dark', size = 'normal' }) => {
+export const BrandLogo: React.FC<BrandLogoProps> = ({ variant = 'dark', size = 'normal', className = '' }) => {
   const { navigate } = useRouter();
   const { language } = useLanguage();
   const { settings } = useStoreSettings();
@@ -34,7 +35,7 @@ export const BrandLogo: React.FC<BrandLogoProps> = ({ variant = 'dark', size = '
         navigate('/');
       }}
       aria-label={`${storeName} ${signature} - Home`}
-      className="group flex items-center gap-2 sm:gap-2.5 select-none text-left cursor-pointer shrink-0"
+      className={`group flex items-center gap-2 sm:gap-2.5 select-none text-left cursor-pointer shrink-0 ${className}`}
     >
       <div
         className={`flex items-center justify-center rounded-xl transition-transform duration-300 group-hover:scale-105 shrink-0 ${

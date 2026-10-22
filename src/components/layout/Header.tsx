@@ -3,8 +3,8 @@
  * @description Main sticky header with brand identity, search, cart, and bilingual toggle.
  */
 
-import React, { useState } from 'react';
-import { Search, ShoppingBag, Menu, Heart, User } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Search, ShoppingBag, Heart, User } from 'lucide-react';
 import { BrandLogo } from './BrandLogo';
 import { Navigation } from './Navigation';
 import { LanguageSwitcher } from './LanguageSwitcher';
@@ -27,6 +27,16 @@ export const Header: React.FC = () => {
   const { wishlistCount } = useWishlist();
   const { navigate } = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => {
+      setIsScrolled(window.scrollY > 8);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   const handleAccountClick = () => {
     if (isAuthenticated) {
@@ -37,12 +47,18 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-[#F7F5EC]/95 backdrop-blur-md border-b border-[#174D35]/10 shadow-xs">
+    <header
+      className={`sticky top-0 z-40 w-full bg-white/88 dark:bg-[#06120D]/88 backdrop-blur-xl backdrop-saturate-180 border-b transition-colors duration-300 ${
+        isScrolled
+          ? 'border-black/8 dark:border-[#1B3B2E] shadow-xs'
+          : 'border-transparent'
+      }`}
+    >
       {/* Configurable Slim Announcement Bar */}
       <AnnouncementBar />
 
       {/* Main Navbar */}
-      <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-1 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-1 sm:gap-4">
         {/* Brand Name & Signature */}
         <BrandLogo variant="dark" size="normal" />
 
@@ -50,7 +66,7 @@ export const Header: React.FC = () => {
         <Navigation />
 
         {/* Action Controls */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
           {/* Day / Night Mode Switcher */}
           <ThemeToggle />
 
@@ -67,7 +83,7 @@ export const Header: React.FC = () => {
           {/* Search Trigger */}
           <button
             onClick={() => setIsSearchOpen(true)}
-            className="w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-xl text-stone-700 hover:text-[#174D35] hover:bg-stone-200/60 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#174D35] shrink-0"
+            className="w-10 h-10 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-stone-700 hover:text-[#121111] hover:bg-[#EFEDEE] dark:text-stone-300 dark:hover:bg-[#153427] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#174D35] shrink-0"
             aria-label="Open search catalogue"
           >
             <Search className="w-5 h-5" />
@@ -79,13 +95,13 @@ export const Header: React.FC = () => {
               if (isAuthenticated) navigate('/profile?tab=wishlist');
               else navigate('/profile?tab=wishlist');
             }}
-            className="relative w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-xl text-stone-700 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-rose-500 shrink-0"
+            className="relative w-10 h-10 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-stone-700 hover:text-rose-600 hover:bg-[#EFEDEE] dark:text-stone-300 dark:hover:bg-[#153427] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-rose-500 shrink-0"
             title={language === 'bn' ? `পছন্দের তালিকা (${wishlistCount})` : `Wishlist (${wishlistCount})`}
             aria-label={`Wishlist, ${wishlistCount} items`}
           >
-            <Heart className="w-5 h-5 text-stone-700 hover:text-rose-600" />
+            <Heart className="w-5 h-5 text-stone-700 hover:text-rose-600 dark:text-stone-300" />
             {wishlistCount > 0 && (
-              <span className="absolute top-1 right-1 w-5 h-5 bg-rose-600 text-white text-[11px] font-bold rounded-full flex items-center justify-center shadow-xs">
+              <span className="absolute top-0.5 right-0.5 w-4.5 h-4.5 bg-rose-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-xs">
                 {formatNumeral(wishlistCount, language)}
               </span>
             )}
@@ -94,10 +110,10 @@ export const Header: React.FC = () => {
           {/* Customer Profile / Login Trigger */}
           <button
             onClick={handleAccountClick}
-            className={`flex items-center gap-1.5 px-2.5 py-1.5 sm:py-2 rounded-xl transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#174D35] shrink-0 ${
+            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full transition-all cursor-pointer focus-visible:ring-2 focus-visible:ring-[#174D35] shrink-0 ${
               isAuthenticated
                 ? 'bg-[#174D35]/10 text-[#174D35] hover:bg-[#174D35]/20 font-semibold'
-                : 'text-stone-700 hover:text-[#174D35] hover:bg-stone-200/60'
+                : 'text-stone-700 hover:text-[#121111] hover:bg-[#EFEDEE] dark:text-stone-300 dark:hover:bg-[#153427]'
             }`}
             title={
               isAuthenticated
@@ -106,13 +122,13 @@ export const Header: React.FC = () => {
             }
             aria-label={isAuthenticated ? 'Customer Profile' : 'Sign In'}
           >
-            <User className="w-5 h-5" />
+            <User className="w-4.5 h-4.5" />
             {isAuthenticated ? (
               <span className="hidden xl:inline text-xs font-bold max-w-[100px] truncate">
                 {customer?.fullName.split(' ')[0]}
               </span>
             ) : (
-              <span className="hidden md:inline text-xs font-semibold">
+              <span className="hidden md:inline text-[13px] font-medium">
                 {language === 'bn' ? 'লগইন' : 'Sign In'}
               </span>
             )}
@@ -121,38 +137,30 @@ export const Header: React.FC = () => {
           {/* Shopping Cart Trigger with Dynamic Badge */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className="relative w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-xl text-stone-700 hover:text-[#174D35] hover:bg-stone-200/60 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#174D35] shrink-0"
+            className="relative w-10 h-10 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-stone-700 hover:text-[#121111] hover:bg-[#EFEDEE] dark:text-stone-300 dark:hover:bg-[#153427] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#174D35] shrink-0"
             aria-label={`Open cart drawer, ${cart.totalQuantity} items`}
           >
             <ShoppingBag className="w-5 h-5" />
             {cart.totalQuantity > 0 && (
-              <span className="absolute top-1 right-1 w-5 h-5 bg-[#174D35] text-white text-[11px] font-bold rounded-full flex items-center justify-center shadow-xs">
+              <span className="absolute top-0.5 right-0.5 w-4.5 h-4.5 bg-[#174D35] text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-xs">
                 {formatNumeral(cart.totalQuantity, language)}
               </span>
             )}
           </button>
-
-          {/* Mobile Menu Trigger */}
-          <button
-            onClick={() => setIsMobileMenuOpen(true)}
-            className="lg:hidden w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center rounded-xl bg-stone-200/70 hover:bg-[#174D35] text-stone-800 hover:text-white border border-stone-300/80 transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#174D35] shrink-0"
-            aria-label="Open navigation menu"
-            aria-expanded={isMobileMenuOpen}
-          >
-            <Menu className="w-5 h-5 sm:w-6 sm:h-6" />
-          </button>
         </div>
       </div>
 
-      {/* Responsive Mobile Drawer */}
+      {/* Responsive Mobile Bottom Sheet Menu */}
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       />
 
-      {/* Floating App-like Mobile Bottom Navigation Dock */}
+      {/* Floating App-like Mobile Bottom Pill Navigation Dock */}
       <MobileBottomNav
-        onOpenCategories={() => setIsMobileMenuOpen(true)}
+        isMenuOpen={isMobileMenuOpen}
+        onCloseMenu={() => setIsMobileMenuOpen(false)}
+        onOpenCategories={() => setIsMobileMenuOpen((prev) => !prev)}
       />
     </header>
   );

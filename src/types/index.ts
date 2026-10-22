@@ -25,6 +25,12 @@ export interface GardenTip {
   categoryBn: string;
   imageUrl: string;
   publishedDate: string;
+  contentEn?: string;
+  contentBn?: string;
+  stepsEn?: string[];
+  stepsBn?: string[];
+  proTipEn?: string;
+  proTipBn?: string;
 }
 
 export interface ReviewItem {

@@ -1,11 +1,10 @@
 /**
  * @file FloatingWhatsAppWidget.tsx
- * @description Floating botanical WhatsApp concierge widget with quick topic selection and cart context sharing.
+ * @description Floating botanical WhatsApp concierge widget that automatically hides when the user reaches the footer.
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MessageCircle, X, Send, Sparkles, ShoppingBag } from 'lucide-react';
-import { BRAND_CONFIG } from '../../config/constants';
 import { useLanguage } from '../../context/LanguageContext';
 import { useCart } from '../../context/CartContext';
 import { useStoreSettings } from '../../services/settingsService';
@@ -15,7 +14,47 @@ export const FloatingWhatsAppWidget: React.FC = () => {
   const { cart } = useCart();
   const { settings } = useStoreSettings();
   const [isOpen, setIsOpen] = useState(false);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
   const isBn = language === 'bn';
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const checkVisibility = () => {
+      const heroEl = document.getElementById('home');
+      if (heroEl) {
+        const heroRect = heroEl.getBoundingClientRect();
+        // Keep hidden while the Hero section occupies the viewport
+        const heroInView = heroRect.bottom > 120;
+        setIsHeroVisible(heroInView);
+        if (heroInView) {
+          setIsOpen(false);
+        }
+      } else {
+        setIsHeroVisible(false);
+      }
+
+      const footerEl = document.getElementById('contact');
+      if (footerEl) {
+        const footerRect = footerEl.getBoundingClientRect();
+        const footerInView = footerRect.top < window.innerHeight * 0.92;
+        setIsFooterVisible(footerInView);
+        if (footerInView) {
+          setIsOpen(false);
+        }
+      }
+    };
+
+    checkVisibility();
+    window.addEventListener('scroll', checkVisibility, { passive: true });
+    window.addEventListener('resize', checkVisibility, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', checkVisibility);
+      window.removeEventListener('resize', checkVisibility);
+    };
+  }, []);
 
   const rawDigits = (settings.officialWhatsapp || '').replace(/\D/g, '') || '8801712345678';
   const cleanPhone = rawDigits.startsWith('88') ? rawDigits : `88${rawDigits}`;
@@ -31,10 +70,19 @@ export const FloatingWhatsAppWidget: React.FC = () => {
     setIsOpen(false);
   };
 
+  const isHidden = isHeroVisible || isFooterVisible;
+
   return (
-    <div className="fixed bottom-20 lg:bottom-6 right-4 sm:right-6 z-40 flex flex-col items-end">
+    <div
+      aria-hidden={isHidden}
+      className={`fixed bottom-20 lg:bottom-6 right-4 sm:right-6 z-40 hidden lg:flex flex-col items-end transition-all duration-300 ${
+        isHidden
+          ? 'opacity-0 translate-y-4 pointer-events-none'
+          : 'opacity-100 translate-y-0'
+      }`}
+    >
       {/* Expanded Botanical Help Card */}
-      {isOpen && (
+      {isOpen && !isHidden && (
         <div className="mb-3 w-80 sm:w-88 bg-white rounded-2xl shadow-2xl border border-stone-200 overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200">
           {/* Header */}
           <div className="bg-[#174D35] p-4 text-white flex items-center justify-between">

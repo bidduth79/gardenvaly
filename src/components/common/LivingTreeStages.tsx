@@ -1,184 +1,374 @@
 /**
  * @file LivingTreeStages.tsx
- * @description Master realistic vector art for the 4 botanical lifecycle stages.
- * Features organic textured boughs, botanically shaped small foliage sprigs,
- * and delicate fruits hanging tastefully across the full-width overarching top canopy.
+ * @description Classic Adobe Illustrator vector tree art across 4 lifecycle stages,
+ * modeled directly after the reference illustration:
+ * - Solid sculpted woody-brown trunk with bark grain lines, side spur, and multi-forked branches
+ * - 4-tone scalloped bushy foliage clusters (deep forest, rich green, apple green, sunlit lime)
+ * - Organic leaf dapple spots inside each foliage cluster
+ * - Zero background light circles, zero sunbeams, and zero X-ray overlapping translucency
  */
 
 import React from 'react';
 
 const BotanicalDefs: React.FC = () => (
   <defs>
+    {/* Solid Woody Trunk Base Gradient */}
     <linearGradient id="barkGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stopColor="#122B10" />
-      <stop offset="50%" stopColor="#1E4419" />
-      <stop offset="100%" stopColor="#143212" />
+      <stop offset="0%" stopColor="#6E421C" />
+      <stop offset="55%" stopColor="#8C5828" />
+      <stop offset="100%" stopColor="#5A3414" />
     </linearGradient>
+
+    {/* Warm Sunlit Bark Highlight Gradient */}
+    <linearGradient id="barkHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stopColor="#B57C42" />
+      <stop offset="100%" stopColor="#8C5828" />
+    </linearGradient>
+
+    {/* Crisp Ruby Fruit Gradient */}
     <radialGradient id="rubyGrad" cx="35%" cy="30%" r="65%">
       <stop offset="0%" stopColor="#FDA4AF" />
-      <stop offset="35%" stopColor="#E11D48" />
-      <stop offset="85%" stopColor="#9F1239" />
-      <stop offset="100%" stopColor="#881337" />
+      <stop offset="40%" stopColor="#E11D48" />
+      <stop offset="100%" stopColor="#9F1239" />
     </radialGradient>
+
+    {/* Crisp Golden Citrus Fruit Gradient */}
     <radialGradient id="goldGrad" cx="35%" cy="30%" r="65%">
       <stop offset="0%" stopColor="#FEF08A" />
-      <stop offset="40%" stopColor="#F59E0B" />
-      <stop offset="85%" stopColor="#B45309" />
-      <stop offset="100%" stopColor="#78350F" />
+      <stop offset="45%" stopColor="#F59E0B" />
+      <stop offset="100%" stopColor="#D97706" />
     </radialGradient>
-    {/* Scaled-down delicate ruby pomegranate */}
-    <g id="realFruitPom">
-      <path d="M0 -10 Q-2 -4 0 0" fill="none" stroke="#166534" strokeWidth="2" />
-      <path d="M-1 -5 C-5 -8 -7 -3 -2 -2 Z" fill="#4ADE80" />
-      <circle cx="0" cy="13" r="13" fill="url(#rubyGrad)" />
-      <ellipse cx="-3" cy="9" rx="3.5" ry="2" fill="#FDA4AF" opacity="0.8" />
-      <path d="M-4 26 L-2.5 30 L0 27 L2.5 30 L4 26 Z" fill="#881337" />
+
+    {/* 1. Deep Forest Green Scalloped Bush Cluster (Back/Shadow Layer) */}
+    <g id="bushDeepGreen">
+      <path
+        d="M-75 10 C-88 -5 -82 -28 -64 -34 C-66 -54 -44 -68 -24 -58 C-12 -74 16 -74 28 -58 C48 -68 70 -52 66 -32 C84 -24 88 -2 72 12 C80 28 64 44 46 40 C34 54 6 54 -6 42 C-26 52 -52 46 -58 28 C-74 30 -82 18 -75 10 Z"
+        fill="#1E6B24"
+      />
+      {/* Organic Dapple Spots */}
+      <circle cx="-42" cy="-18" r="6" fill="#2B842E" />
+      <circle cx="-26" cy="-32" r="4.5" fill="#2B842E" />
+      <circle cx="18" cy="-24" r="7" fill="#16531B" />
+      <circle cx="42" cy="-6" r="5" fill="#2B842E" />
+      <circle cx="-15" cy="14" r="6.5" fill="#16531B" />
+      <circle cx="24" cy="16" r="4" fill="#2B842E" />
     </g>
-    {/* Scaled-down delicate golden citrus */}
-    <g id="realFruitCitrus">
-      <path d="M0 -10 Q2 -4 0 0" fill="none" stroke="#166534" strokeWidth="2" />
-      <path d="M1 -5 C5 -8 7 -3 2 -2 Z" fill="#22C55E" />
-      <path d="M0 0 C10 5 14 19 6 28 C-1 37 -12 30 -12 16 C-12 6 -5 1 0 0 Z" fill="url(#goldGrad)" />
-      <ellipse cx="-2" cy="14" rx="3.5" ry="2" fill="#FEF08A" opacity="0.85" />
+
+    {/* 2. Medium Rich Green Scalloped Bush Cluster (Mid-Back Layer) */}
+    <g id="bushMidGreen">
+      {/* Subtle Layer Drop Shadow */}
+      <path
+        d="M-82 16 C-96 0 -88 -26 -68 -34 C-70 -56 -46 -72 -24 -60 C-10 -78 20 -78 32 -60 C54 -70 76 -52 72 -30 C90 -22 94 2 76 16 C84 34 66 50 48 44 C34 58 6 58 -8 46 C-30 56 -56 50 -64 32 C-80 34 -88 24 -82 16 Z"
+        fill="#154D1A"
+        opacity="0.35"
+        transform="translate(4, 7)"
+      />
+      <path
+        d="M-82 16 C-96 0 -88 -26 -68 -34 C-70 -56 -46 -72 -24 -60 C-10 -78 20 -78 32 -60 C54 -70 76 -52 72 -30 C90 -22 94 2 76 16 C84 34 66 50 48 44 C34 58 6 58 -8 46 C-30 56 -56 50 -64 32 C-80 34 -88 24 -82 16 Z"
+        fill="#3B9C29"
+      />
+      {/* Organic Dapple Spots */}
+      <circle cx="-48" cy="-14" r="7" fill="#52B634" />
+      <circle cx="-30" cy="-34" r="5" fill="#52B634" />
+      <circle cx="-8" cy="-42" r="8" fill="#2A7B1E" />
+      <circle cx="22" cy="-28" r="6.5" fill="#52B634" />
+      <circle cx="48" cy="-10" r="5.5" fill="#2A7B1E" />
+      <circle cx="-22" cy="18" r="7.5" fill="#2A7B1E" />
+      <circle cx="14" cy="20" r="6" fill="#52B634" />
+      <circle cx="38" cy="18" r="4.5" fill="#52B634" />
     </g>
-    {/* Delicate small botanical flower */}
+
+    {/* 3. Vibrant Apple-Lime Green Scalloped Bush Cluster (Mid-Front Layer) */}
+    <g id="bushBrightGreen">
+      {/* Subtle Layer Drop Shadow */}
+      <path
+        d="M-70 12 C-84 -4 -76 -26 -58 -32 C-60 -52 -38 -66 -18 -56 C-6 -72 20 -72 30 -54 C50 -64 70 -48 66 -28 C82 -20 86 2 70 14 C76 30 60 44 42 40 C30 52 4 52 -8 40 C-26 50 -50 44 -56 26 C-70 28 -76 18 -70 12 Z"
+        fill="#246A1D"
+        opacity="0.3"
+        transform="translate(3, 6)"
+      />
+      <path
+        d="M-70 12 C-84 -4 -76 -26 -58 -32 C-60 -52 -38 -66 -18 -56 C-6 -72 20 -72 30 -54 C50 -64 70 -48 66 -28 C82 -20 86 2 70 14 C76 30 60 44 42 40 C30 52 4 52 -8 40 C-26 50 -50 44 -56 26 C-70 28 -76 18 -70 12 Z"
+        fill="#72C130"
+      />
+      {/* Organic Dapple Spots */}
+      <circle cx="-38" cy="-16" r="6.5" fill="#92D642" />
+      <circle cx="-18" cy="-34" r="5" fill="#92D642" />
+      <circle cx="12" cy="-36" r="7" fill="#54A222" />
+      <circle cx="36" cy="-16" r="6" fill="#92D642" />
+      <circle cx="-14" cy="12" r="7.5" fill="#54A222" />
+      <circle cx="20" cy="14" r="5.5" fill="#92D642" />
+      <circle cx="44" cy="8" r="4" fill="#54A222" />
+    </g>
+
+    {/* 4. Sunlit Yellow-Green Crown Highlight Cluster (Top-Front Layer) */}
+    <g id="bushSunlitLime">
+      {/* Subtle Layer Drop Shadow */}
+      <path
+        d="M-64 10 C-76 -4 -70 -24 -52 -30 C-54 -48 -34 -62 -16 -52 C-4 -66 18 -66 28 -50 C46 -58 64 -44 60 -26 C74 -18 78 2 62 12 C68 26 54 40 38 36 C26 48 4 48 -6 36 C-24 46 -46 40 -50 24 C-64 26 -70 16 -64 10 Z"
+        fill="#488E1E"
+        opacity="0.3"
+        transform="translate(3, 5)"
+      />
+      <path
+        d="M-64 10 C-76 -4 -70 -24 -52 -30 C-54 -48 -34 -62 -16 -52 C-4 -66 18 -66 28 -50 C46 -58 64 -44 60 -26 C74 -18 78 2 62 12 C68 26 54 40 38 36 C26 48 4 48 -6 36 C-24 46 -46 40 -50 24 C-64 26 -70 16 -64 10 Z"
+        fill="#B4E046"
+      />
+      {/* Bright Yellow-Lime Dapple Spots */}
+      <circle cx="-32" cy="-14" r="6" fill="#D2F266" />
+      <circle cx="-12" cy="-30" r="7.5" fill="#D2F266" />
+      <circle cx="16" cy="-26" r="5.5" fill="#94C632" />
+      <circle cx="34" cy="-10" r="6.5" fill="#D2F266" />
+      <circle cx="-10" cy="10" r="6" fill="#94C632" />
+      <circle cx="18" cy="12" r="7" fill="#D2F266" />
+    </g>
+
+    {/* Crisp Botanical Blossom (No Glow Halo) */}
     <g id="realFlower">
-      <circle cx="0" cy="-6" r="4" fill="#FEF08A" opacity="0.95" />
-      <circle cx="-5" cy="-2" r="4" fill="#FEF08A" opacity="0.95" />
-      <circle cx="-3" cy="5" r="4" fill="#FEF08A" opacity="0.95" />
-      <circle cx="3" cy="5" r="4" fill="#FEF08A" opacity="0.95" />
-      <circle cx="5" cy="-2" r="4" fill="#FEF08A" opacity="0.95" />
-      <circle cx="0" cy="0" r="2.5" fill="#F59E0B" />
+      <circle cx="0" cy="-6" r="4" fill="#FEF08A" />
+      <circle cx="-5.5" cy="-2" r="4" fill="#FEF08A" />
+      <circle cx="-3.5" cy="5" r="4" fill="#FEF08A" />
+      <circle cx="3.5" cy="5" r="4" fill="#FEF08A" />
+      <circle cx="5.5" cy="-2" r="4" fill="#FEF08A" />
+      <circle cx="0" cy="0" r="2.8" fill="#D97706" />
     </g>
-    {/* Delicate small botanical leaf sprig */}
-    <g id="smallLeafSprig">
-      <path d="M0 0 Q6 16 12 32" fill="none" stroke="#166534" strokeWidth="1.5" />
-      <path d="M2 6 C-7 4 -9 10 -3 13 C2 11 4 8 2 6 Z" fill="#22C55E" />
-      <path d="M5 12 C13 10 15 16 9 19 C5 17 3 14 5 12 Z" fill="#15803D" />
-      <path d="M8 20 C0 18 -2 24 4 27 C8 25 10 22 8 20 Z" fill="#4ADE80" />
-      <path d="M10 27 C17 25 19 31 13 34 C9 32 8 29 10 27 Z" fill="#16A34A" />
-      <path d="M12 32 C13 38 10 41 8 38 C7 35 9 33 12 32 Z" fill="#84CC16" />
+
+    {/* Crisp Ruby Pomegranate Fruit */}
+    <g id="realFruitPom">
+      <path d="M0 -10 Q-2 -4 0 0" fill="none" stroke="#4A2A10" strokeWidth="1.8" />
+      <circle cx="0" cy="10" r="10.5" fill="url(#rubyGrad)" />
+      <ellipse cx="-3" cy="6.5" rx="2.8" ry="1.6" fill="#FFE4E6" />
+      <path d="M-3.5 20 L-2 23.5 L0 21 L2 23.5 L3.5 20 Z" fill="#881337" />
     </g>
-    {/* Delicate small leaf cluster rosette */}
-    <g id="smallLeafCluster">
-      <path d="M0 0 C-10 -4 -13 -14 -3 -15 C5 -13 6 -6 0 0 Z" fill="#15803D" />
-      <path d="M0 0 C-14 2 -16 11 -8 14 C-2 14 -1 6 0 0 Z" fill="#166534" />
-      <path d="M0 0 C9 -6 16 -3 14 5 C11 10 3 6 0 0 Z" fill="#22C55E" />
-      <path d="M0 0 C5 8 13 13 14 5 C12 -2 5 2 0 0 Z" fill="#4ADE80" />
-      <path d="M0 0 C-4 10 2 16 7 11 C8 6 3 2 0 0 Z" fill="#14532D" />
+
+    {/* Crisp Golden Citrus Fruit */}
+    <g id="realFruitCitrus">
+      <path d="M0 -10 Q2 -4 0 0" fill="none" stroke="#4A2A10" strokeWidth="1.8" />
+      <path d="M0 0 C8 4 11 15 4.5 22 C-1 28 -9.5 23 -9.5 13 C-9.5 5 -3.5 1 0 0 Z" fill="url(#goldGrad)" />
+      <ellipse cx="-2" cy="10" rx="2.5" ry="1.5" fill="#FEF9C3" />
     </g>
   </defs>
 );
 
+/**
+ * Reusable Master Woody Trunk & Multi-Forked Branches (modeled after image_92e48c27.png)
+ */
+const IllustratedWoodyTrunk: React.FC = () => (
+  <g>
+    {/* Ground Base Root Flare */}
+    <path
+      d="M148 865 C154 820 152 765 148 715 C144 670 154 630 164 595 C172 565 162 515 148 465 L162 465 C178 515 186 560 180 598 C196 565 218 538 238 515 L258 518 C232 550 202 585 188 632 C178 665 178 705 182 740 C190 718 202 698 214 682 C206 708 196 732 190 755 C192 795 204 835 218 865 C208 868 198 862 192 866 C184 862 176 868 168 864 C160 868 154 862 148 865 Z"
+      fill="url(#barkGrad)"
+    />
+
+    {/* Far-Left Curving Branch (Supports Left Canopy) */}
+    <path
+      d="M150 472 C132 415 112 365 78 320 C58 295 36 282 14 275 L22 264 C48 272 72 288 94 316 C126 358 146 410 162 468 Z"
+      fill="url(#barkGrad)"
+    />
+
+    {/* Center-Left Forking Branch */}
+    <path
+      d="M235 522 C212 482 195 435 178 372 C168 335 154 300 136 272 L148 266 C168 295 182 332 194 370 C204 405 216 442 232 472 C230 438 238 402 254 372 L266 378 C250 408 244 445 248 485 Z"
+      fill="url(#barkGrad)"
+    />
+
+    {/* Center-Right S-Curve Branch with Y-Fork */}
+    <path
+      d="M236 520 C248 488 232 455 244 425 C256 395 282 378 296 342 C306 315 308 282 316 252 L330 255 C322 282 320 312 312 338 C332 315 352 285 368 252 L382 256 C362 295 338 330 308 358 C292 388 268 405 258 432 C250 456 266 485 254 522 Z"
+      fill="url(#barkGrad)"
+    />
+
+    {/* Long Sweeping Rightward Main Bough (Signature Feature of Reference Image) */}
+    <path
+      d="M242 525 C295 492 342 442 388 378 C422 330 452 295 495 275 C535 258 582 255 628 282 L620 294 C578 270 535 272 498 290 C458 310 430 345 398 392 C352 458 302 512 248 545 Z"
+      fill="url(#barkGrad)"
+    />
+
+    {/* Upper-Right Peeking Branch Fork (Visible inside Right Canopy) */}
+    <path
+      d="M510 245 C542 228 575 202 602 175 L612 182 C588 206 562 226 538 240 C568 242 598 244 626 238 L628 248 C592 256 552 255 512 252 Z"
+      fill="url(#barkHighlight)"
+    />
+
+    {/* Warm Sunlit Inner Bark Highlight Strips */}
+    <path
+      d="M170 845 C172 780 166 710 176 645 C186 590 218 548 248 518 C302 482 350 430 392 372 C424 328 455 294 492 276"
+      fill="none"
+      stroke="url(#barkHighlight)"
+      strokeWidth="5"
+      strokeLinecap="round"
+    />
+
+    {/* Crisp Dark Brown Illustrator Wood-Grain Texture Lines */}
+    <path
+      d="M160 855 C164 795 158 730 160 675 M176 858 C178 805 174 750 180 700 M194 855 C188 810 184 765 196 720 M168 625 C176 580 198 545 228 515 M265 512 C312 475 355 425 394 370 M248 495 C240 460 248 430 272 402 M156 460 C138 408 118 360 88 320"
+      fill="none"
+      stroke="#4A2A10"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+    />
+  </g>
+);
+
+/**
+ * Stage 1 (0% - 25%): Clean Left-Side Sculpted Soil Mound, Seed & First Bushy Sprout
+ * (Zero background lights or floating dots)
+ */
 export const SeedInSoilStage: React.FC = () => (
-  <svg viewBox="0 0 1600 900" className="w-full h-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
-    <path d="M0 720 Q400 680 800 730 T1600 710 L1600 900 L0 900 Z" fill="#382415" opacity="0.45" />
-    <path d="M0 770 Q450 740 900 780 T1600 760 L1600 900 L0 900 Z" fill="#24160B" opacity="0.6" />
-    <g transform="translate(180, 720)">
-      <circle cx="0" cy="0" r="65" fill="#A3E635" opacity="0.2" />
-      <path d="M0 -42 C-28 -16 -34 22 -16 45 C-2 64 34 56 40 30 C46 8 28 -14 0 -42 Z" fill="#9A7B38" opacity="0.95" />
-      <path d="M-2 -38 C-22 -16 -26 18 -12 38 C-2 52 24 46 30 26 C36 8 22 -10 -2 -38 Z" fill="#C5A059" opacity="0.95" />
-      <path d="M0 -22 C-10 0 -10 22 0 30" stroke="#5C4214" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
-      <path d="M5 45 Q-15 90 -35 140 M18 40 Q38 95 30 145" fill="none" stroke="#855B28" strokeWidth="3" opacity="0.75" />
-      <path d="M0 -42 Q-25 -85 -55 -115 Q-15 -110 0 -42 Z" fill="#A3E635" opacity="0.95" />
-      <path d="M0 -42 Q25 -90 50 -125 Q20 -115 0 -42 Z" fill="#BEF264" opacity="0.95" />
-      <circle cx="-55" cy="-115" r="4.5" fill="#DCFCE7" opacity="0.9" />
+  <svg viewBox="0 0 1600 900" className="w-full h-full opacity-90 dark:opacity-75" preserveAspectRatio="xMinYMid slice" aria-hidden="true">
+    <BotanicalDefs />
+    <g transform="translate(30, 20)">
+      {/* Clean Sculpted Earth Mound at Bottom Left */}
+      <path
+        d="M60 865 C105 832 195 832 245 865 Z"
+        fill="#6E421C"
+      />
+      <path
+        d="M82 865 C120 842 185 842 222 865 Z"
+        fill="#8C5828"
+      />
+
+      {/* Germinating Seed & Short Woody Stem */}
+      <ellipse cx="152" cy="838" rx="16" ry="11" fill="url(#goldGrad)" stroke="#5A3414" strokeWidth="2" />
+      <path
+        d="M152 830 C150 795 154 760 158 730"
+        fill="none"
+        stroke="#6E421C"
+        strokeWidth="6"
+        strokeLinecap="round"
+      />
+
+      {/* First Small Scalloped Bushy Leaf Clusters */}
+      <use href="#bushMidGreen" transform="translate(138, 725) scale(0.38)" />
+      <use href="#bushBrightGreen" transform="translate(168, 718) scale(0.36)" />
+      <use href="#bushSunlitLime" transform="translate(154, 704) scale(0.32)" />
     </g>
-    <circle cx="120" cy="520" r="5" fill="#A3E635" opacity="0.7" />
-    <circle cx="240" cy="380" r="6" fill="#84CC16" opacity="0.75" />
-    <circle cx="680" cy="560" r="5" fill="#C5A059" opacity="0.65" />
-    <circle cx="1080" cy="480" r="5.5" fill="#A3E635" opacity="0.7" />
-    <circle cx="1480" cy="520" r="5.5" fill="#84CC16" opacity="0.7" />
   </svg>
 );
 
+/**
+ * Stage 2 (25% - 50%): Young Woody Sapling with Forked Branches & Scalloped Green Bushes
+ */
 export const SproutStemStage: React.FC = () => (
-  <svg viewBox="0 0 1600 900" className="w-full h-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <svg viewBox="0 0 1600 900" className="w-full h-full opacity-90 dark:opacity-75" preserveAspectRatio="xMinYMid slice" aria-hidden="true">
     <BotanicalDefs />
-    <path d="M180 730 Q140 810 90 890 M180 730 Q200 820 180 895 M800 760 Q760 820 720 890 M1420 740 Q1380 810 1350 895" fill="none" stroke="#785925" strokeWidth="3.5" opacity="0.7" />
-    {/* Left Side: Climbing Botanical Stem with Small Dainty Leaf Pairs */}
-    <g transform="translate(160, 750)">
-      <path d="M-6 0 Q-30 -180 -10 -380 Q10 -510 -20 -630 Q-12 -510 -16 -380 Q-38 -180 6 0 Z" fill="#254B1E" opacity="0.9" />
-      <path d="M-12 -140 C-45 -155 -60 -130 -35 -115 C-20 -100 -12 -125 -12 -140 Z" fill="#4ADE80" opacity="0.95" />
-      <path d="M-12 -140 C25 -155 40 -130 20 -115 C5 -100 -5 -125 -12 -140 Z" fill="#22C55E" opacity="0.9" />
-      <path d="M-14 -240 C-50 -260 -65 -235 -38 -220 C-22 -205 -14 -225 -14 -240 Z" fill="#22C55E" opacity="0.95" />
-      <path d="M-14 -240 C28 -260 42 -235 22 -220 C7 -205 -5 -225 -14 -240 Z" fill="#16A34A" opacity="0.9" />
-      <path d="M-8 -360 C-46 -380 -60 -355 -34 -340 C-18 -325 -8 -345 -8 -360 Z" fill="#4ADE80" opacity="0.95" />
-      <path d="M-8 -360 C30 -380 44 -355 24 -340 C8 -325 -1 -345 -8 -360 Z" fill="#22C55E" opacity="0.9" />
-      <path d="M5 -480 C-35 -500 -48 -475 -24 -460 C-10 -445 2 -465 5 -480 Z" fill="#84CC16" opacity="0.95" />
-      <path d="M5 -480 C40 -500 52 -475 32 -460 C16 -445 5 -465 5 -480 Z" fill="#4ADE80" opacity="0.9" />
-      <path d="M-20 -630 C-50 -648 -62 -625 -42 -612 C-26 -598 -18 -618 -20 -630 Z" fill="#BEF264" opacity="0.95" />
-      <circle cx="-42" cy="-612" r="4.5" fill="#BAE6FD" opacity="0.9" />
+    <g transform="translate(20, 10)">
+      {/* Young Sapling Woody Trunk & 3 Forks */}
+      <path
+        d="M145 865 C152 795 150 720 158 650 C164 605 182 565 208 530 L220 534 C196 570 180 610 174 655 C168 720 172 795 184 865 Z"
+        fill="url(#barkGrad)"
+      />
+      <path
+        d="M164 645 C144 605 122 575 96 552 L104 544 C132 568 154 598 172 638 Z"
+        fill="url(#barkGrad)"
+      />
+      <path
+        d="M184 585 C215 562 248 542 282 528 L288 536 C254 552 222 572 190 596 Z"
+        fill="url(#barkGrad)"
+      />
+      <path
+        d="M162 855 C164 785 160 715 168 650 C174 605 192 568 214 532"
+        fill="none"
+        stroke="#4A2A10"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+
+      {/* Layered Scalloped Bushy Sapling Crown */}
+      <use href="#bushDeepGreen" transform="translate(95, 535) scale(0.62)" />
+      <use href="#bushDeepGreen" transform="translate(285, 525) scale(0.6)" />
+      <use href="#bushMidGreen" transform="translate(155, 515) scale(0.75)" />
+      <use href="#bushBrightGreen" transform="translate(235, 505) scale(0.72)" />
+      <use href="#bushSunlitLime" transform="translate(190, 475) scale(0.68)" />
     </g>
-    <circle cx="500" cy="380" r="5" fill="#4ADE80" opacity="0.6" />
-    <circle cx="950" cy="420" r="5.5" fill="#84CC16" opacity="0.65" />
-    <circle cx="1380" cy="360" r="6" fill="#22C55E" opacity="0.65" />
   </svg>
 );
 
+/**
+ * Stage 3 (50% - 75%): Sculpted Multi-Forked Illustrator Tree (Reference Image Structure)
+ */
 export const BranchingTreeStage: React.FC = () => (
-  <svg viewBox="0 0 1600 900" className="w-full h-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <svg viewBox="0 0 1600 900" className="w-full h-full opacity-90 dark:opacity-75" preserveAspectRatio="xMinYMid slice" aria-hidden="true">
     <BotanicalDefs />
-    <path d="M120 820 Q90 520 160 300 Q150 260 170 200 L195 200 Q175 260 180 300 Q145 550 160 820 Z" fill="url(#barkGrad)" opacity="0.92" />
-    <path d="M165 240 Q400 130 750 110 T1450 150 Q1100 80 750 85 T175 220 Z" fill="url(#barkGrad)" opacity="0.88" />
-    <path d="M750 110 Q950 170 1200 180 Q1050 145 765 110 Z" fill="url(#barkGrad)" opacity="0.85" />
-    {/* Dense Canopy Silhouette */}
-    <path d="M100 210 Q200 140 320 150 Q460 90 620 110 Q780 70 940 90 Q1120 70 1280 100 Q1440 80 1560 130 L1560 0 L100 0 Z" fill="#15803D" opacity="0.75" />
-    <path d="M140 180 Q250 110 380 120 Q520 70 680 90 Q850 50 1020 75 Q1180 50 1360 85 Q1480 75 1580 110 L1580 0 L140 0 Z" fill="#166534" opacity="0.85" />
-    {/* Small Leaf Sprigs & Clusters along the ceiling */}
-    <use href="#smallLeafCluster" transform="translate(240, 150)" />
-    <use href="#smallLeafSprig" transform="translate(340, 160)" />
-    <use href="#smallLeafCluster" transform="translate(480, 125)" />
-    <use href="#smallLeafSprig" transform="translate(620, 130)" />
-    <use href="#smallLeafCluster" transform="translate(760, 115)" />
-    <use href="#smallLeafSprig" transform="translate(900, 120)" />
-    <use href="#smallLeafCluster" transform="translate(1050, 110)" />
-    <use href="#smallLeafSprig" transform="translate(1200, 130)" />
-    <use href="#smallLeafCluster" transform="translate(1360, 125)" />
-    <use href="#smallLeafSprig" transform="translate(1480, 140)" />
-    <use href="#realFlower" transform="translate(390, 150)" />
-    <use href="#realFlower" transform="translate(710, 125)" />
-    <use href="#realFlower" transform="translate(1120, 120)" />
-    <use href="#realFlower" transform="translate(1420, 140)" />
+    <g transform="translate(-15, 25) scale(0.88)">
+      {/* 1. Back Deep Forest Green Foliage Clusters */}
+      <use href="#bushDeepGreen" transform="translate(75, 285) scale(1.15)" />
+      <use href="#bushDeepGreen" transform="translate(215, 295) scale(1.1)" />
+      <use href="#bushDeepGreen" transform="translate(615, 275) scale(1.15)" />
+
+      {/* 2. Mid-Layer Rich Green Foliage Clusters */}
+      <use href="#bushMidGreen" transform="translate(155, 225) scale(1.25)" />
+      <use href="#bushMidGreen" transform="translate(335, 245) scale(1.3)" />
+      <use href="#bushMidGreen" transform="translate(495, 195) scale(1.25)" />
+
+      {/* 3. Sculpted Woody Trunk & Sweeping Branches (Visible Under & Between Canopy) */}
+      <IllustratedWoodyTrunk />
+
+      {/* 4. Front Vibrant Apple-Green & Sunlit Lime Crown Clusters */}
+      <use href="#bushBrightGreen" transform="translate(125, 195) scale(1.05)" />
+      <use href="#bushBrightGreen" transform="translate(445, 225) scale(1.2)" />
+      <use href="#bushBrightGreen" transform="translate(565, 245) scale(1.05)" />
+      <use href="#bushSunlitLime" transform="translate(245, 145) scale(1.25)" />
+      <use href="#bushSunlitLime" transform="translate(375, 135) scale(1.15)" />
+    </g>
   </svg>
 );
 
+/**
+ * Stage 4 (75% - 100%): Full Majestic Reference Illustrator Tree with Lush Layered Canopy & Fruits
+ */
 export const MatureFruitingTreeStage: React.FC = () => (
-  <svg viewBox="0 0 1600 900" className="w-full h-full" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <svg viewBox="0 0 1600 900" className="w-full h-full opacity-90 dark:opacity-75" preserveAspectRatio="xMinYMid slice" aria-hidden="true">
     <BotanicalDefs />
-    <path d="M110 820 Q80 500 150 260 Q140 220 160 160 L195 160 Q175 220 180 260 Q145 520 165 820 Z" fill="url(#barkGrad)" opacity="0.95" />
-    {/* Overarching Canopy with Gentle Wind Sway */}
-    <g className="animate-bough-sway">
-      <path d="M155 200 Q400 90 800 80 T1500 120 Q1150 50 800 55 T165 180 Z" fill="url(#barkGrad)" opacity="0.92" />
-      <path d="M480 95 Q700 150 950 140 Q750 115 495 95 Z" fill="url(#barkGrad)" opacity="0.88" />
-      <path d="M950 140 Q1180 180 1420 170 Q1220 145 960 135 Z" fill="url(#barkGrad)" opacity="0.88" />
-      {/* Canopy Base Layers */}
-      <path d="M80 220 Q180 130 310 145 Q470 70 640 85 Q820 50 1000 75 Q1180 50 1360 90 Q1480 80 1600 130 L1600 0 L80 0 Z" fill="#064E3B" opacity="0.9" />
-      <path d="M120 190 Q240 105 380 115 Q540 55 720 70 Q910 40 1100 65 Q1290 45 1470 85 L1470 0 L120 0 Z" fill="#052E16" opacity="0.93" />
-      <path d="M160 175 Q290 90 450 100 Q630 45 810 55 Q1000 35 1190 55 Q1370 40 1540 75 L1540 0 L160 0 Z" fill="#14532D" opacity="0.88" />
-      {/* Small Dainty Botanical Leaves along the branches */}
-      <use href="#smallLeafCluster" transform="translate(200, 170)" />
-      <use href="#smallLeafSprig" transform="translate(270, 180)" />
-      <use href="#smallLeafCluster" transform="translate(360, 150)" />
-      <use href="#smallLeafSprig" transform="translate(490, 140)" />
-      <use href="#smallLeafCluster" transform="translate(580, 125)" />
-      <use href="#smallLeafSprig" transform="translate(680, 130)" />
-      <use href="#smallLeafCluster" transform="translate(850, 115)" />
-      <use href="#smallLeafSprig" transform="translate(960, 125)" />
-      <use href="#smallLeafCluster" transform="translate(1060, 120)" />
-      <use href="#smallLeafSprig" transform="translate(1220, 135)" />
-      <use href="#smallLeafCluster" transform="translate(1330, 130)" />
-      <use href="#smallLeafSprig" transform="translate(1470, 145)" />
-      {/* Tastefully Reduced Fruits: Only 4 delicate fruits total across ceiling */}
-      <g className="animate-fruit-sway"><use href="#realFruitPom" transform="translate(420, 140)" /></g>
-      <g className="animate-fruit-sway-delayed"><use href="#realFruitCitrus" transform="translate(780, 125)" /></g>
-      <g className="animate-fruit-sway"><use href="#realFruitPom" transform="translate(1140, 135)" /></g>
-      <g className="animate-fruit-sway-delayed"><use href="#realFruitCitrus" transform="translate(1410, 155)" /></g>
-      {/* Delicate Blossoms */}
-      <use href="#realFlower" transform="translate(290, 160)" />
-      <use href="#realFlower" transform="translate(630, 120)" />
-      <use href="#realFlower" transform="translate(990, 110)" />
-      <use href="#realFlower" transform="translate(1280, 130)" />
+    <g transform="translate(-10, 5) scale(0.95)">
+      <g className="animate-bough-sway">
+        {/* Layer 1: Deep Forest Green Outer & Under-Canopy Clusters (Matches Left, Bottom & Far-Right of Reference Image) */}
+        <use href="#bushDeepGreen" transform="translate(68, 290) scale(1.25)" />
+        <use href="#bushDeepGreen" transform="translate(95, 220) scale(1.1)" />
+        <use href="#bushDeepGreen" transform="translate(220, 305) scale(1.15)" />
+        <use href="#bushDeepGreen" transform="translate(545, 295) scale(1.1)" />
+        <use href="#bushDeepGreen" transform="translate(655, 275) scale(1.25)" />
+
+        {/* Layer 2: Medium Rich Leaf Green Body Clusters */}
+        <use href="#bushMidGreen" transform="translate(165, 235) scale(1.3)" />
+        <use href="#bushMidGreen" transform="translate(295, 255) scale(1.35)" />
+        <use href="#bushMidGreen" transform="translate(445, 135) scale(1.3)" />
+        <use href="#bushMidGreen" transform="translate(525, 225) scale(1.25)" />
+
+        {/* Layer 3: Sculpted Woody Brown Trunk & Multi-Forked Branches */}
+        <IllustratedWoodyTrunk />
+
+        {/* Layer 4: Vibrant Apple-Green Mid-Front Canopy Clusters */}
+        <use href="#bushBrightGreen" transform="translate(125, 205) scale(1.1)" />
+        <use href="#bushBrightGreen" transform="translate(215, 125) scale(1.2)" />
+        <use href="#bushBrightGreen" transform="translate(435, 235) scale(1.3)" />
+        <use href="#bushBrightGreen" transform="translate(555, 165) scale(1.15)" />
+        <use href="#bushBrightGreen" transform="translate(595, 255) scale(1.1)" />
+
+        {/* Layer 5: Sunlit Yellow-Green Top Crown Clusters (Matches Upper-Center & Right Highlights of Reference) */}
+        <use href="#bushSunlitLime" transform="translate(285, 135) scale(1.35)" />
+        <use href="#bushSunlitLime" transform="translate(385, 125) scale(1.2)" />
+        <use href="#bushSunlitLime" transform="translate(425, 240) scale(1.05)" />
+
+        {/* Delicate Hanging Fruits & Blossoms Nestled Naturally Under the Canopy Boughs */}
+        <g className="animate-fruit-sway">
+          <use href="#realFruitPom" transform="translate(155, 315)" />
+        </g>
+        <g className="animate-fruit-sway-delayed">
+          <use href="#realFruitCitrus" transform="translate(325, 310)" />
+        </g>
+        <g className="animate-fruit-sway">
+          <use href="#realFruitPom" transform="translate(485, 295)" />
+        </g>
+        <g className="animate-fruit-sway-delayed">
+          <use href="#realFruitCitrus" transform="translate(595, 310)" />
+        </g>
+
+        <use href="#realFlower" transform="translate(195, 245)" />
+        <use href="#realFlower" transform="translate(345, 195)" />
+        <use href="#realFlower" transform="translate(495, 215)" />
+      </g>
     </g>
   </svg>
 );

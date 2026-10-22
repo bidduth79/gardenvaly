@@ -17,14 +17,9 @@ export const GardenShopCottage: React.FC<GardenShopCottageProps> = ({
   return (
     <g
       id="shop-cottage-group"
-      transform="translate(25, 114)"
+      transform="translate(5, 114)"
       className={`select-none ${className}`}
     >
-      {/* Soft Ambient Shop Glow in Dark Mode */}
-      {isDark && (
-        <circle cx="110" cy="90" r="80" fill="#F59E0B" opacity="0.12" />
-      )}
-
       {/* Foundation & Stone Base (Rests on road line at y: 154) */}
       <rect x="25" y="144" width="170" height="10" rx="2" fill="#292524" />
       <rect x="28" y="146" width="164" height="6" rx="1" fill="#44403C" />

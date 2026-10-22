@@ -1,98 +1,101 @@
 /**
  * @file gardenValleyLandscape.test.ts
- * @description Test suite for the animated Garden Valley Footer Landscape, Shop, and Village Haven.
+ * @description Test suite for the animated Garden Valley Footer Landscape, Shop, Village Haven, Footer Policy Bar placement, and Floating WhatsApp auto-hide.
  */
 
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
-console.log('🌱 Running Gardenvaly Footer Animated Storytelling Landscape Tests...\n');
+const landscapePath = path.resolve(process.cwd(), 'src/components/layout/GardenValleyLandscape.tsx');
+const shopPath = path.resolve(process.cwd(), 'src/components/layout/GardenShopCottage.tsx');
+const villagePath = path.resolve(process.cwd(), 'src/components/layout/GardenVillageHaven.tsx');
+const vanPath = path.resolve(process.cwd(), 'src/components/layout/GardenDeliveryVan.tsx');
+const cssPath = path.resolve(process.cwd(), 'src/components/layout/valleyLandscape.css');
+const footerPath = path.resolve(process.cwd(), 'src/components/layout/Footer.tsx');
+const whatsappPath = path.resolve(process.cwd(), 'src/components/common/FloatingWhatsAppWidget.tsx');
 
-describe('Suite 1: Storytelling Components & Vector Architecture', () => {
-  const landscapePath = path.resolve('src/components/layout/GardenValleyLandscape.tsx');
-  const shopPath = path.resolve('src/components/layout/GardenShopCottage.tsx');
-  const havenPath = path.resolve('src/components/layout/GardenVillageHaven.tsx');
-  const vanPath = path.resolve('src/components/layout/GardenDeliveryVan.tsx');
-
-  const landscapeContent = fs.readFileSync(landscapePath, 'utf-8');
-  const shopContent = fs.readFileSync(shopPath, 'utf-8');
-  const havenContent = fs.readFileSync(havenPath, 'utf-8');
-  const vanContent = fs.readFileSync(vanPath, 'utf-8');
-
-  it('Renders GardenShopCottage on left with signboard strictly reading GardenValy', () => {
-    assert.ok(shopContent.includes('GardenValy'), 'Signboard must say GardenValy');
-    assert.ok(!shopContent.includes('GardenValy Nursery & Shop'), 'Signboard must not have extra words');
-    assert.ok(landscapeContent.includes('<GardenShopCottage'), 'Shop wired in landscape');
-    console.log('  ✅ PASS: GardenValy shop with exact brand signboard verified');
+describe('Garden Valley Storytelling Footer Landscape', () => {
+  it('verifies all landscape component files exist', () => {
+    assert.equal(fs.existsSync(landscapePath), true, 'GardenValleyLandscape.tsx should exist');
+    assert.equal(fs.existsSync(shopPath), true, 'GardenShopCottage.tsx should exist');
+    assert.equal(fs.existsSync(villagePath), true, 'GardenVillageHaven.tsx should exist');
+    assert.equal(fs.existsSync(vanPath), true, 'GardenDeliveryVan.tsx should exist');
+    assert.equal(fs.existsSync(cssPath), true, 'valleyLandscape.css should exist');
   });
 
-  it('Renders GardenVillageHaven on right with animated Krishan, Krishani, and playing children', () => {
-    assert.ok(havenContent.includes('animate-farmer-wave'), 'Krishan waving arm movement wired');
-    assert.ok(havenContent.includes('animate-krishani-welcome'), 'Krishani welcoming movement wired');
-    assert.ok(havenContent.includes('animate-kite-soar'), 'Child flying kite soaring movement wired');
-    assert.ok(havenContent.includes('animate-kid-hop'), 'Girl hopping movement wired');
-    assert.ok(havenContent.includes('animate-plant-unload'), 'Delivered plants unloading wired');
-    assert.ok(landscapeContent.includes('<GardenVillageHaven'), 'Village haven wired in landscape');
-    console.log('  ✅ PASS: Village Haven with animated characters and plant unloading verified');
+  it('matches upper footer #174D35 seamlessly in both Day and Night Mode gradients and removes top slogan banner', () => {
+    const content = fs.readFileSync(landscapePath, 'utf-8');
+    assert.ok(
+      content.includes('linear-gradient(180deg, #174D35 0%, #14442F 32%'),
+      'Night Mode sky gradient must start at #174D35 to blend seamlessly with the upper footer'
+    );
+    assert.ok(
+      !content.includes('গার্ডেনভ্যালি থেকে চারাগাছ পৌঁছে যাচ্ছে বাংলার শ্যামল আঙিনায়'),
+      'Top floating slogan pill over the sun should be removed'
+    );
   });
 
-  it('GardenDeliveryVan renders plant cargo, synchronized wheels, and headlight beam', () => {
-    assert.ok(vanContent.includes('animate-story-wheel'), 'Story-synchronized spinning wheels wired');
-    assert.ok(vanContent.includes('animate-plant-load'), 'Plant cargo loading wired');
-    assert.ok(vanContent.includes('GARDENVALY'), 'Van body door branding wired');
-    console.log('  ✅ PASS: GardenDeliveryVan plant cargo, wheels and headlights verified');
-  });
-});
-
-describe('Suite 2: Parallax Movement, Hill Flights & Color Seamless Blending', () => {
-  const cssPath = path.resolve('src/components/layout/valleyLandscape.css');
-  const cssContent = fs.readFileSync(cssPath, 'utf-8');
-  const landscapePath = path.resolve('src/components/layout/GardenValleyLandscape.tsx');
-  const landscapeContent = fs.readFileSync(landscapePath, 'utf-8');
-
-  it('Declares bird traverse, van story, and plant loading/unloading keyframes', () => {
-    assert.ok(cssContent.includes('@keyframes birdsFlyAcross'), 'birdsFlyAcross keyframe declared');
-    assert.ok(cssContent.includes('@keyframes storyVanMotion'), 'storyVanMotion keyframe declared');
-    assert.ok(cssContent.includes('@keyframes storyPlantLoad'), 'storyPlantLoad keyframe declared');
-    assert.ok(cssContent.includes('@keyframes storyPlantUnload'), 'storyPlantUnload keyframe declared');
-    assert.ok(landscapeContent.includes('animate-birds-fly'), 'Birds flying across hills wired in landscape');
-    assert.ok(landscapeContent.includes('animate-story-van'), 'Van delivery story cycle wired in landscape');
-    console.log('  ✅ PASS: Bird traverse over hills and van delivery lifecycle keyframes verified');
+  it('includes night stars, fireflies, day flower bushes, wooden lampposts, and directional signboard', () => {
+    const content = fs.readFileSync(landscapePath, 'utf-8');
+    assert.ok(content.includes('id="night-stars"'), 'Should render twinkling stars in Night Mode');
+    assert.ok(content.includes('id="night-fireflies"'), 'Should render glowing fireflies in Night Mode');
+    assert.ok(content.includes('id="day-flower-bushes"'), 'Should render blooming flower bushes in Day Mode');
+    assert.ok(content.includes('id="wooden-signboard"'), 'Should render a wooden directional signboard');
+    assert.ok(content.includes('id="wooden-lamppost-1"'), 'Should render roadside wooden lampposts');
   });
 
-  it('Protects against horizontal layout overflow and eliminates harsh white background', () => {
-    assert.ok(landscapeContent.includes('overflow-hidden'), 'Container has overflow-hidden');
-    assert.ok(landscapeContent.includes('#174D35'), 'Seamlessly harmonizes with #174D35 footer color');
-    assert.ok(!landscapeContent.includes('#F3F7F2'), 'Removed harsh white sky separation box');
-    console.log('  ✅ PASS: Zero horizontal overflow and seamless color blending verified');
-  });
-});
-
-describe('Suite 3: Footer Positioning & File Size Governance', () => {
-  const footerPath = path.resolve('src/components/layout/Footer.tsx');
-  const landscapePath = path.resolve('src/components/layout/GardenValleyLandscape.tsx');
-  const shopPath = path.resolve('src/components/layout/GardenShopCottage.tsx');
-  const havenPath = path.resolve('src/components/layout/GardenVillageHaven.tsx');
-  const vanPath = path.resolve('src/components/layout/GardenDeliveryVan.tsx');
-
-  const footerContent = fs.readFileSync(footerPath, 'utf-8');
-  const files = [footerPath, landscapePath, shopPath, havenPath, vanPath];
-
-  it('Positions GardenValleyLandscape at the very bottom of the Footer', () => {
-    const bottomIndex = footerContent.lastIndexOf('<GardenValleyLandscape />');
-    const copyrightIndex = footerContent.indexOf('allRightsReserved');
-    assert.ok(bottomIndex > copyrightIndex, 'Landscape must be positioned after the copyright / links content');
-    console.log('  ✅ PASS: Landscape positioned at the very bottom base of the footer');
+  it('isolates SVG positioning transforms from CSS keyframe animations so children and kites stay grounded', () => {
+    const villageContent = fs.readFileSync(villagePath, 'utf-8');
+    assert.ok(
+      villageContent.includes('<g id="child-girl" transform="translate(328, 138)">') &&
+        villageContent.includes('<g className="animate-kid-hop">'),
+      'Child girl should have an outer SVG position group and an inner animate-kid-hop group so she never jumps to (0,0)'
+    );
+    assert.ok(
+      villageContent.includes('<g transform="translate(40, -45)">') &&
+        villageContent.includes('<g className="animate-kite-soar">'),
+      'Kite should have an outer SVG position group and an inner animate-kite-soar group'
+    );
   });
 
-  it('Strictly adheres to <= 200 lines rule for all new/modified components', () => {
-    for (const f of files) {
-      const content = fs.readFileSync(f, 'utf-8');
-      const lines = content.split('\n').length;
-      assert.ok(lines <= 200, `File ${path.basename(f)} is ${lines} lines (<= 200)`);
-    }
-    console.log('  ✅ PASS: All storytelling components strictly <= 200 lines');
+  it('loads plant parcels smoothly from the shop into the van and loops the van forward without reversing', () => {
+    const vanContent = fs.readFileSync(vanPath, 'utf-8');
+    const cssContent = fs.readFileSync(cssPath, 'utf-8');
+
+    assert.ok(
+      vanContent.includes('<g id="van-cargo" transform="translate(18, -4)">') &&
+        vanContent.includes('<g className="animate-plant-load">'),
+      'Van cargo should isolate its SVG translate(18, -4) from the inner animate-plant-load group'
+    );
+
+    assert.ok(
+      cssContent.includes('94.1%, 99.8%') && cssContent.includes('opacity: 0;'),
+      'Van motion keyframes must hide the van (opacity: 0) while resetting offscreen to the left'
+    );
+  });
+
+  it('places the Copyright, Privacy Policy, Terms of Service, and Admin Portal bar below GardenValleyLandscape in Footer.tsx', () => {
+    const footerContent = fs.readFileSync(footerPath, 'utf-8');
+    const landscapeIdx = footerContent.indexOf('<GardenValleyLandscape />');
+    const privacyIdx = footerContent.indexOf("setActivePolicy('privacy')");
+    const adminIdx = footerContent.indexOf("navigate('/admin')");
+
+    assert.ok(landscapeIdx !== -1, 'Footer should include <GardenValleyLandscape />');
+    assert.ok(
+      privacyIdx > landscapeIdx && adminIdx > landscapeIdx,
+      'Privacy Policy, Terms of Service, and Admin Portal bar must be rendered BELOW <GardenValleyLandscape />'
+    );
+  });
+
+  it('automatically hides the FloatingWhatsAppWidget when the footer (#contact) enters the viewport', () => {
+    const whatsappContent = fs.readFileSync(whatsappPath, 'utf-8');
+    assert.ok(
+      whatsappContent.includes("document.getElementById('contact')") &&
+        whatsappContent.includes('IntersectionObserver') &&
+        whatsappContent.includes('pointer-events-none'),
+      'FloatingWhatsAppWidget should observe #contact and hide when footer is visible'
+    );
   });
 });

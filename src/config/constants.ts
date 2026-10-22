@@ -27,6 +27,7 @@ export const NAV_LINKS: NavLinkItem[] = [
   { id: 'plants', labelEn: 'Plants', labelBn: 'গাছপালা', href: '/plants' },
   { id: 'seeds', labelEn: 'Seeds', labelBn: 'বীজ', href: '/seeds' },
   { id: 'supplies', labelEn: 'Gardening Supplies', labelBn: 'বাগান সামগ্রী', href: '/supplies' },
+  { id: 'combos', labelEn: 'Combo Packs', labelBn: 'কম্বো প্যাক', href: '/combos' },
   { id: 'track', labelEn: 'Track Order', labelBn: 'অর্ডার ট্র্যাকিং', href: '/track-order' },
   { id: 'guide', labelEn: 'Gardening Guide', labelBn: 'বাগান নির্দেশিকা', href: '#guide' },
   { id: 'contact', labelEn: 'Contact', labelBn: 'যোগাযোগ', href: '#contact' },

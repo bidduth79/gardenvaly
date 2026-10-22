@@ -5,6 +5,7 @@
  */
 
 import express from 'express';
+import http from 'http';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -22,6 +23,7 @@ const __dirname = path.dirname(__filename);
 
 async function startServer() {
   const app = express();
+  const httpServer = http.createServer(app);
   const PORT = ENV.PORT || 3000;
 
   // 1. Trust proxy for Cloud Run and reverse proxies (essential for accurate IP rate limiting)
@@ -82,7 +84,12 @@ async function startServer() {
     // Development: Vite middleware integration with dynamic HTML head transform
     const { createServer } = await import('vite');
     const vite = await createServer({
-      server: { middlewareMode: true },
+      server: {
+        middlewareMode: true,
+        hmr: {
+          server: httpServer,
+        },
+      },
       appType: 'custom',
     });
     app.use(vite.middlewares);
@@ -93,7 +100,7 @@ async function startServer() {
         req.path.startsWith('/api') ||
         req.path.startsWith('/@') ||
         req.path.startsWith('/node_modules') ||
-        /\.(js|mjs|ts|tsx|css|json|ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot)$/i.test(req.path)
+        /\.(js|mjs|ts|tsx|css|json|webmanifest|ico|png|jpg|jpeg|gif|svg|webp|woff|woff2|ttf|eot)$/i.test(req.path)
       ) {
         return next();
       }
@@ -146,7 +153,7 @@ async function startServer() {
   // 9. Centralized Error Handling
   app.use(errorHandler);
 
-  app.listen(PORT, '0.0.0.0', () => {
+  httpServer.listen(PORT, '0.0.0.0', () => {
     console.log(`🌿 Gardenvaly Server active on http://0.0.0.0:${PORT}`);
     console.log(`📡 REST API mounted at http://0.0.0.0:${PORT}/api`);
   });

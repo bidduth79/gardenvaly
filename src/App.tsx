@@ -17,20 +17,24 @@ import { ShopByCategory } from './components/home/ShopByCategory';
 import { FeaturedPlants } from './components/home/FeaturedPlants';
 import { FeaturedSeeds } from './components/home/FeaturedSeeds';
 import { FeaturedSupplies } from './components/home/FeaturedSupplies';
+import { ComboPacksSection } from './components/home/ComboPacksSection';
 import { PromotionalBanner } from './components/home/PromotionalBanner';
 import { WhyChooseUs } from './components/home/WhyChooseUs';
+import { HowToOrderSection } from './components/home/HowToOrderSection';
 import { GardeningTips } from './components/home/GardeningTips';
 import { CustomerReviews } from './components/home/CustomerReviews';
-import { NewsletterSection } from './components/home/NewsletterSection';
+import { FaqSection } from './components/home/FaqSection';
 import { SearchDrawer } from './components/home/SearchDrawer';
 import { CartDrawer } from './components/home/CartDrawer';
 import { ShopPage } from './pages/ShopPage';
+import { ComboPacksPage } from './pages/ComboPacksPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { CartPage } from './pages/CartPage';
 import { CheckoutPage } from './pages/CheckoutPage';
 import { OrderTrackingPage } from './pages/OrderTrackingPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { FloatingWhatsAppWidget } from './components/common/FloatingWhatsAppWidget';
+import { CustomCursor } from './components/common/CustomCursor';
 import { LivingTreeBackground } from './components/common/LivingTreeBackground';
 import { LivingTreeIndicator } from './components/common/LivingTreeIndicator';
 import { SeedToTreeJourney } from './components/home/SeedToTreeJourney';
@@ -60,6 +64,8 @@ import { AdminReportsPage } from './pages/admin/AdminReportsPage';
 import { AdminSettingsPage } from './pages/admin/AdminSettingsPage';
 import { AdminBannersPage } from './pages/admin/AdminBannersPage';
 import { AdminReviewsPage } from './pages/admin/AdminReviewsPage';
+import { AdminGuidesPage } from './pages/admin/AdminGuidesPage';
+import { AdminCombosPage } from './pages/admin/AdminCombosPage';
 
 import { useLanguage } from './context/LanguageContext';
 import { usePageSeo } from './hooks/usePageSeo';
@@ -178,6 +184,9 @@ const MainShell: React.FC = () => {
       if (currentPath === '/admin/categories') {
         return <AdminCategoriesPage />;
       }
+      if (currentPath === '/admin/combos') {
+        return <AdminCombosPage />;
+      }
       if (currentPath.match(/^\/admin\/orders\/[^/]+$/)) {
         return <AdminOrderDetailPage />;
       }
@@ -198,6 +207,9 @@ const MainShell: React.FC = () => {
       }
       if (currentPath === '/admin/banners') {
         return <AdminBannersPage />;
+      }
+      if (currentPath === '/admin/guides') {
+        return <AdminGuidesPage />;
       }
       if (currentPath === '/admin/reviews') {
         return <AdminReviewsPage />;
@@ -227,11 +239,20 @@ const MainShell: React.FC = () => {
           <FeaturedSeeds products={products} />
           <SeedToTreeJourney />
           <FeaturedSupplies products={products} />
+          <ComboPacksSection products={products} />
           <PromotionalBanner />
+          <HowToOrderSection />
           <WhyChooseUs />
           <GardeningTips />
           <CustomerReviews />
-          <NewsletterSection />
+          <FaqSection />
+        </main>
+      );
+    }
+    if (currentPath === '/combos') {
+      return (
+        <main className="flex-1">
+          <ComboPacksPage products={products} />
         </main>
       );
     }
@@ -292,7 +313,7 @@ const MainShell: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex flex-col text-stone-800 overflow-x-hidden pb-16 lg:pb-0">
+    <div className="relative min-h-screen flex flex-col text-stone-800 overflow-x-clip">
       <LivingTreeBackground />
       <Header />
       {renderContent()}
@@ -322,6 +343,7 @@ export default function App() {
             <CompareProvider>
               <CartProvider>
                 <RouterProvider>
+                  <CustomCursor />
                   <MainShell />
                 </RouterProvider>
               </CartProvider>
