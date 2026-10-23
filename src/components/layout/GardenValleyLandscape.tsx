@@ -27,18 +27,14 @@ export const GardenValleyLandscape: React.FC = () => {
     <div
       role="region"
       aria-label="GardenValy Storytelling Botanical Landscape"
-      className="relative w-full aspect-[1440/214] max-h-[195px] min-h-[76px] overflow-hidden select-none transition-colors duration-500"
-      style={{
-        background: isDark
-          ? 'linear-gradient(180deg, #174D35 0%, #14442F 32%, #0F3524 68%, #0B271B 100%)'
-          : 'linear-gradient(180deg, #174D35 0%, #1B583D 25%, #25704E 50%, #1E5C40 80%, #14432E 100%)',
-      }}
+      className="relative w-full aspect-[1440/175] min-h-[76px] overflow-x-clip overflow-y-visible select-none pointer-events-auto"
     >
-      {/* Unified Master SVG: Full 1440px width spans edge-to-edge across all viewports */}
+      {/* Unified Master SVG: Full 1440px width spans edge-to-edge across all viewports without clipping top roofs/trees */}
       <svg
-        viewBox="0 72 1440 214"
-        preserveAspectRatio="xMidYMax slice"
-        className="absolute inset-0 w-full h-full"
+        viewBox="0 55 1440 231"
+        preserveAspectRatio="xMidYMax meet"
+        overflow="visible"
+        className="w-full h-full overflow-visible block"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
