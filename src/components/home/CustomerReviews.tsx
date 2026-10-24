@@ -5,7 +5,7 @@
  * and the full review cards grid.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Star, MessageSquareQuote, Info, Quote } from 'lucide-react';
 import { reviewService, REVIEWS_UPDATED_EVENT } from '../../services/reviewService';
 import { useLanguage } from '../../context/LanguageContext';
@@ -15,6 +15,8 @@ export const CustomerReviews: React.FC = () => {
   const [reviews, setReviews] = useState(() => reviewService.getReviews());
   const [activeIndex, setActiveIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isSectionInView, setIsSectionInView] = useState(false);
+  const sectionRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const handleSync = () => {
@@ -28,20 +30,44 @@ export const CustomerReviews: React.FC = () => {
     };
   }, []);
 
-  // DesignMingle 6s Auto-Rotating Testimonial Spotlight
+  // Observe whether CustomerReviews is in the viewport so off-screen timers never mutate DOM or shift scroll
   useEffect(() => {
-    if (isPaused || reviews.length <= 1) return;
+    const el = sectionRef.current;
+    if (!el || typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+      setIsSectionInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsSectionInView(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // DesignMingle 6s Auto-Rotating Testimonial Spotlight (Only runs when section is in view)
+  useEffect(() => {
+    if (isPaused || !isSectionInView || reviews.length <= 1) return;
     const timer = setInterval(() => {
       setActiveIndex((prev) => (prev + 1) % reviews.length);
     }, 6000);
     return () => clearInterval(timer);
-  }, [isPaused, reviews.length]);
+  }, [isPaused, isSectionInView, reviews.length]);
 
   const safeActiveIdx = activeIndex < reviews.length ? activeIndex : 0;
   const activeReview = reviews[safeActiveIdx];
 
   return (
-    <section id="reviews" className="scroll-mt-20 pt-16 pb-6 sm:pt-20 sm:pb-8 bg-transparent">
+    <section
+      ref={sectionRef}
+      id="reviews"
+      className="scroll-mt-20 pt-16 pb-6 sm:pt-20 sm:pb-8 bg-transparent"
+      style={{ overflowAnchor: 'none' }}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="ov-rv text-center max-w-2xl mx-auto mb-5 sm:mb-6">
           <div className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#C5A059] mb-1">
@@ -108,9 +134,11 @@ export const CustomerReviews: React.FC = () => {
                 ))}
               </div>
 
-              <blockquote className="text-sm sm:text-base font-serif-botanical font-semibold text-stone-900 dark:text-white leading-snug italic">
-                "{language === 'bn' ? activeReview.commentBn : activeReview.commentEn}"
-              </blockquote>
+              <div className="min-h-[3.5rem] sm:min-h-[3.25rem] flex items-center justify-center">
+                <blockquote className="text-sm sm:text-base font-serif-botanical font-semibold text-stone-900 dark:text-white leading-snug italic">
+                  "{language === 'bn' ? activeReview.commentBn : activeReview.commentEn}"
+                </blockquote>
+              </div>
 
               <div className="mt-2.5">
                 <p className="text-xs sm:text-sm font-bold text-[#174D35] dark:text-[#4ADE80]">

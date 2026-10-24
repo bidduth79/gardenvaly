@@ -46,29 +46,41 @@ export const CustomCursor: React.FC = () => {
       revealObserver = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (entry.isIntersecting) {
-              const el = entry.target as HTMLElement;
+            const el = entry.target as HTMLElement;
+            if (entry.isIntersecting && (entry.intersectionRatio >= 0.05 || entry.boundingClientRect.top < window.innerHeight * 0.92)) {
               el.classList.add('in');
               el.setAttribute('data-ov-in', 'true');
-              revealObserver?.unobserve(el);
+            } else if (!entry.isIntersecting && entry.boundingClientRect.top >= window.innerHeight - 4) {
+              // Reset only when element has completely exited below the bottom of the viewport
+              el.classList.remove('in');
+              el.removeAttribute('data-ov-in');
             }
           });
         },
-        { rootMargin: '0px 0px -4% 0px', threshold: 0.04 }
+        { rootMargin: '0px', threshold: [0, 0.06] }
       );
 
       const scanAndObserve = () => {
         if (!revealObserver) return;
-        // Auto-tag storefront section headings, subtitles, cards, and interactive blocks (excluding Hero)
+        // Auto-tag top-level storefront section headings, subtitles, and card grids (excluding Hero, Sticky Journey, Modals, and Footer)
         const autoSelectors = [
           'main > section:not(:first-child) h2',
           'main > section:not(:first-child) h2 + p',
-          'main > section:not(:first-child) .text-center > p',
-          'main > section:not(:first-child) .grid > div',
-          'main > section:not(:first-child) .grid > article',
-          'footer#contact .ov-rv',
+          'main > section:not(:first-child) .max-w-7xl > .text-center > p',
+          'main > section:not(:first-child) .max-w-7xl > .grid > div',
+          'main > section:not(:first-child) .max-w-7xl > .grid > article',
+          'main > section:not(:first-child) .max-w-7xl > div > .grid > div',
+          'main > section:not(:first-child) .max-w-7xl > div > .grid > article',
         ];
         document.querySelectorAll<HTMLElement>(autoSelectors.join(', ')).forEach((el) => {
+          if (
+            el.closest('[role="dialog"]') ||
+            el.closest('#seed-to-tree-journey') ||
+            el.closest('footer#contact') ||
+            el.parentElement?.closest('.ov-rv')
+          ) {
+            return;
+          }
           if (!el.classList.contains('ov-rv')) {
             el.classList.add('ov-rv');
             const parent = el.parentElement;
@@ -76,26 +88,17 @@ export const CustomCursor: React.FC = () => {
               const siblings = Array.from(parent.children);
               const idx = siblings.indexOf(el);
               if (idx >= 0) {
-                el.style.setProperty('--rv-delay', `${Math.min(idx % 4, 3) * 90}ms`);
+                el.style.setProperty('--rv-delay', `${Math.min(idx % 4, 3) * 85}ms`);
               }
             } else if (el.tagName === 'P') {
-              el.style.setProperty('--rv-delay', '90ms');
+              el.style.setProperty('--rv-delay', '85ms');
             }
           }
         });
 
         document.querySelectorAll<HTMLElement>('.ov-rv').forEach((el) => {
-          if (el.getAttribute('data-ov-in') === 'true' || el.classList.contains('in')) {
+          if (el.getAttribute('data-ov-in') === 'true') {
             el.classList.add('in');
-            el.setAttribute('data-ov-in', 'true');
-            return;
-          }
-          const rect = el.getBoundingClientRect();
-          if (rect.top < window.innerHeight * 0.96 && rect.bottom > 0) {
-            el.classList.add('in');
-            el.setAttribute('data-ov-in', 'true');
-            revealObserver?.unobserve(el);
-            return;
           }
           if (!el.dataset.ovObserved) {
             el.dataset.ovObserved = '1';

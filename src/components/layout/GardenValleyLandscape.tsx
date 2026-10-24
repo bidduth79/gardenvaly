@@ -14,12 +14,7 @@ import './valleyLandscape.css';
 export const GardenValleyLandscape: React.FC = () => {
   const { language } = useLanguage();
   const { isDark } = useTheme();
-  const [showVanToast, setShowVanToast] = useState(false);
-
-  const handleVanClick = () => {
-    setShowVanToast(true);
-    setTimeout(() => setShowVanToast(false), 3500);
-  };
+  const [hoveredActor, setHoveredActor] = useState<'shop' | 'van' | 'farmers' | null>(null);
 
   const isBn = language === 'bn';
 
@@ -27,17 +22,22 @@ export const GardenValleyLandscape: React.FC = () => {
     <div
       role="region"
       aria-label="GardenValy Storytelling Botanical Landscape"
-      className="relative w-full aspect-[1440/175] min-h-[76px] overflow-x-clip overflow-y-visible select-none pointer-events-auto"
+      className={`relative w-full aspect-[1440/236] min-h-[115px] shrink-0 overflow-hidden select-none pointer-events-auto ${
+        hoveredActor === 'van' ? 'valley-van-paused' : ''
+      }`}
+      style={{ contain: 'layout paint', overflowAnchor: 'none' }}
     >
-      {/* Unified Master SVG: Full 1440px width spans edge-to-edge across all viewports without clipping top roofs/trees */}
+      {/* Unified Master SVG: Strictly clipped inside overflow-hidden and clipPath so off-screen van movement never shifts the screen */}
       <svg
-        viewBox="0 55 1440 231"
-        preserveAspectRatio="xMidYMax meet"
-        overflow="visible"
-        className="w-full h-full overflow-visible block"
+        viewBox="0 50 1440 236"
+        preserveAspectRatio="none"
+        className="w-full h-full block overflow-hidden"
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
+          <clipPath id="valleyMasterClip">
+            <rect x="0" y="50" width="1440" height="236" />
+          </clipPath>
           <linearGradient id="sunGlow" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#FDE047" />
             <stop offset="100%" stopColor="#F59E0B" />
@@ -59,6 +59,8 @@ export const GardenValleyLandscape: React.FC = () => {
             <stop offset="100%" stopColor="#F59E0B" stopOpacity="0" />
           </radialGradient>
         </defs>
+
+        <g clipPath="url(#valleyMasterClip)">
 
         {/* Night Mode Twinkling Stars in the Sky */}
         {isDark && (
@@ -84,8 +86,8 @@ export const GardenValleyLandscape: React.FC = () => {
           </g>
         )}
 
-        {/* Radiant Sun (Day) / Moon (Night) — Positioned in the clear sky at x: 1160 */}
-        <g transform="translate(1160, 122)">
+        {/* Radiant Sun (Day) / Moon (Night) — Positioned in the clear sky at x: 1190 */}
+        <g transform="translate(1190, 122)">
           <g className="animate-sun-glow">
             <circle cx="0" cy="0" r="32" fill={isDark ? '#6EE7B7' : '#FEF08A'} opacity={isDark ? 0.16 : 0.38} />
             <circle cx="0" cy="0" r="21" fill={isDark ? '#E2E8F0' : 'url(#sunGlow)'} />
@@ -208,23 +210,38 @@ export const GardenValleyLandscape: React.FC = () => {
         )}
 
         {/* Left Side: GardenValy Shop (Firmly anchored on the ground at y: 268) */}
-        <GardenShopCottage isDark={isDark} />
+        <GardenShopCottage
+          isDark={isDark}
+          isBn={isBn}
+          isHovered={hoveredActor === 'shop'}
+          onMouseEnter={() => setHoveredActor('shop')}
+          onMouseLeave={() => setHoveredActor((prev) => (prev === 'shop' ? null : prev))}
+          onClick={() => setHoveredActor((prev) => (prev === 'shop' ? null : 'shop'))}
+        />
 
         {/* Right Side: Village Haven with Krishan, Krishani, Kids & Delivered Plants (Anchored at y: 268) */}
-        <GardenVillageHaven isDark={isDark} />
+        <GardenVillageHaven
+          isDark={isDark}
+          isBn={isBn}
+          isHovered={hoveredActor === 'farmers'}
+          onMouseEnter={() => setHoveredActor('farmers')}
+          onMouseLeave={() => setHoveredActor((prev) => (prev === 'farmers' ? null : prev))}
+          onClick={() => setHoveredActor((prev) => (prev === 'farmers' ? null : 'farmers'))}
+        />
 
         {/* Moving Delivery Van: Enters -> Parks at Shop -> Loads -> Drives -> Stops at Village -> Unloads -> Exits */}
         <g className="animate-story-van">
-          <GardenDeliveryVan isDark={isDark} onClick={handleVanClick} />
+          <GardenDeliveryVan
+            isDark={isDark}
+            isBn={isBn}
+            isHovered={hoveredActor === 'van'}
+            onMouseEnter={() => setHoveredActor('van')}
+            onMouseLeave={() => setHoveredActor((prev) => (prev === 'van' ? null : prev))}
+            onClick={() => setHoveredActor((prev) => (prev === 'van' ? null : 'van'))}
+          />
+        </g>
         </g>
       </svg>
-
-      {/* Interactive Van Speech Toast */}
-      {showVanToast && (
-        <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-30 px-3.5 py-2 rounded-2xl bg-white dark:bg-stone-900 shadow-2xl border-2 border-emerald-500 text-xs font-bold text-emerald-900 dark:text-emerald-200 animate-bounce">
-          🚚🪴 {isBn ? 'গার্ডেনভ্যালি থেকে চারাগাছ পৌঁছে যাচ্ছে আপনার দরজায়!' : 'Fresh plants on their way from GardenValy!'}
-        </div>
-      )}
     </div>
   );
 };

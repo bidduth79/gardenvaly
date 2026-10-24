@@ -12,6 +12,7 @@
 
   html {
     scroll-behavior: smooth;
+    overflow-x: clip;
     -webkit-text-size-adjust: 100%;
     -webkit-tap-highlight-color: transparent;
   }
@@ -345,21 +346,25 @@ html.dark .dm-dd-item:hover .dm-dd-ico {
 
 /* DesignMingle Scroll-Triggered Bottom Blur & Fade-Up Reveal (.ov-rv) */
 .ov-rv {
-  opacity: 0 !important;
-  transform: translate3d(0, 34px, 0) !important;
-  filter: blur(8px) !important;
+  opacity: 0;
+  transform: translate3d(0, 28px, 0);
+  filter: blur(8px);
   transition:
-    opacity 0.88s cubic-bezier(0.2, 0.7, 0.2, 1) var(--rv-delay, 0ms),
-    transform 0.88s cubic-bezier(0.2, 0.7, 0.2, 1) var(--rv-delay, 0ms),
-    filter 0.88s cubic-bezier(0.2, 0.7, 0.2, 1) var(--rv-delay, 0ms) !important;
-  will-change: opacity, transform, filter;
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--rv-delay, 0ms),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--rv-delay, 0ms),
+    filter 0.8s cubic-bezier(0.22, 1, 0.36, 1) var(--rv-delay, 0ms);
 }
 
 .ov-rv.in,
 .ov-rv[data-ov-in="true"] {
-  opacity: 1 !important;
-  transform: translate3d(0, 0, 0) !important;
-  filter: blur(0px) !important;
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  filter: blur(0px);
+}
+
+.ov-rv.ov-tilt-frame.in,
+.ov-rv.ov-tilt-frame[data-ov-in="true"] {
+  transform: perspective(1000px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
 }
 
 /* DesignMingle Hero Word-by-Word Blur Reveal (.ov-w) */
@@ -395,3 +400,404 @@ html.dark .dm-dd-item:hover .dm-dd-ico {
   opacity: 1;
   filter: blur(0px);
 }
+
+/* ─── Storefront Botanical Micro-Animations ─── */
+@keyframes sunSpinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes dropletBob {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-2px) scale(1.12);
+  }
+}
+
+@keyframes indoorPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes cartPopBounce {
+  0% {
+    transform: scale(1);
+  }
+  30% {
+    transform: scale(1.28) rotate(-8deg);
+  }
+  60% {
+    transform: scale(0.92) rotate(6deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes flyLeafToCart {
+  0% {
+    opacity: 0;
+    transform: translate(-34px, 32px) scale(0.4) rotate(-35deg);
+  }
+  25% {
+    opacity: 1;
+    transform: translate(-18px, 14px) scale(1.15) rotate(-12deg);
+  }
+  75% {
+    opacity: 1;
+    transform: translate(-4px, -6px) scale(0.95) rotate(12deg);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(0px, 0px) scale(0.2) rotate(25deg);
+  }
+}
+
+@keyframes boxSlotDropIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px) scale(0.95);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(2px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes promoLeafDrift1 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(-18px, 12px, 0) rotate(18deg);
+  }
+}
+
+@keyframes promoLeafDrift2 {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(16px, -14px, 0) rotate(-22deg);
+  }
+}
+
+@keyframes promoButterflyPath {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) rotate(-6deg);
+  }
+  25% {
+    transform: translate3d(-24px, -12px, 0) rotate(-14deg);
+  }
+  50% {
+    transform: translate3d(-48px, 4px, 0) rotate(-4deg);
+  }
+  75% {
+    transform: translate3d(-22px, 14px, 0) rotate(8deg);
+  }
+}
+
+@keyframes butterflyWingFlap {
+  0%, 100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.35);
+  }
+}
+
+.animate-sun-spin-slow {
+  animation: sunSpinSlow 9s linear infinite;
+}
+
+.animate-droplet-bob {
+  animation: dropletBob 2.2s ease-in-out infinite;
+}
+
+.animate-indoor-pulse {
+  animation: indoorPulse 2.6s ease-in-out infinite;
+}
+
+.animate-cart-pop {
+  animation: cartPopBounce 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-fly-leaf {
+  animation: flyLeafToCart 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-box-drop {
+  animation: boxSlotDropIn 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-leaf-drift-1 {
+  animation: promoLeafDrift1 6.5s ease-in-out infinite;
+}
+
+.animate-leaf-drift-2 {
+  animation: promoLeafDrift2 7.8s ease-in-out infinite;
+}
+
+.animate-butterfly-path {
+  animation: promoButterflyPath 11s ease-in-out infinite;
+}
+
+.animate-butterfly-wings {
+  transform-origin: center;
+  animation: butterflyWingFlap 0.28s ease-in-out infinite;
+}
+
+@keyframes heartBloomPop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.34) rotate(-8deg);
+  }
+  70% {
+    transform: scale(0.9) rotate(6deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes petalBurstOut {
+  0% {
+    opacity: 1;
+    transform: scale(0.3) rotate(0deg);
+  }
+  60% {
+    opacity: 0.95;
+    transform: scale(1.35) rotate(25deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.65) rotate(45deg);
+  }
+}
+
+@keyframes celestialRise {
+  0% {
+    opacity: 0.3;
+    transform: translateY(6px) scale(0.75) rotate(-35deg);
+  }
+  65% {
+    opacity: 1;
+    transform: translateY(-1px) scale(1.1) rotate(8deg);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0deg);
+  }
+}
+
+@keyframes sporeRise1 {
+  0% {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.6);
+  }
+  50% {
+    opacity: 0.85;
+    transform: translate3d(-6px, -8px, 0) scale(1.05);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(4px, -24px, 0) scale(0.7);
+  }
+}
+
+@keyframes whatsappBotanicalRipple {
+  0% {
+    opacity: 0.65;
+    transform: scale(1);
+  }
+  80%, 100% {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+}
+
+@keyframes whatsappLeafSway {
+  0%, 100% {
+    transform: rotate(-8deg) scale(1);
+  }
+  50% {
+    transform: rotate(14deg) scale(1.08);
+  }
+}
+
+.animate-heart-bloom {
+  animation: heartBloomPop 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-petal-burst {
+  animation: petalBurstOut 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-celestial-rise {
+  animation: celestialRise 0.45s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.animate-spore-rise {
+  animation: sporeRise1 2.6s ease-in-out infinite;
+}
+
+.animate-whatsapp-ripple {
+  animation: whatsappBotanicalRipple 2.8s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+.animate-whatsapp-leaf {
+  transform-origin: bottom right;
+  animation: whatsappLeafSway 3s ease-in-out infinite;
+}
+
+/* =========================================================
+   ADMIN PANEL ISOLATION — MONOCHROME BASE + SEMANTIC STATUS COLORS
+   Prevents storefront html.dark green rules from overriding admin cards
+   while preserving semantic Success / Warning / Danger / Info tokens
+   ========================================================= */
+.admin-shell {
+  color-scheme: light !important;
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+html.dark .admin-shell .bg-white,
+html.dark .admin-shell .bg-white\/95,
+html.dark .admin-shell .bg-white\/90,
+html.dark .admin-shell .bg-white\/80 {
+  background-color: #FFFFFF !important;
+}
+
+html.dark .admin-shell .bg-stone-50,
+html.dark .admin-shell .bg-slate-50 {
+  background-color: #F8FAFC !important;
+}
+
+/* Preserve Semantic Status Backgrounds inside Admin Shell */
+html.dark .admin-shell .bg-emerald-50 {
+  background-color: #ECFDF5 !important;
+}
+html.dark .admin-shell .bg-amber-50 {
+  background-color: #FFFBEB !important;
+}
+html.dark .admin-shell .bg-rose-50,
+html.dark .admin-shell .bg-red-50 {
+  background-color: #FFF1F2 !important;
+}
+html.dark .admin-shell .bg-blue-50,
+html.dark .admin-shell .bg-sky-50 {
+  background-color: #EFF6FF !important;
+}
+
+html.dark .admin-shell .bg-stone-100,
+html.dark .admin-shell .bg-slate-100 {
+  background-color: #F1F5F9 !important;
+}
+
+html.dark .admin-shell .border-stone-200,
+html.dark .admin-shell .border-stone-200\/80,
+html.dark .admin-shell .border-stone-100,
+html.dark .admin-shell .border-stone-300,
+html.dark .admin-shell .border-slate-200,
+html.dark .admin-shell .border-slate-100,
+html.dark .admin-shell .border-slate-300 {
+  border-color: #E2E8F0 !important;
+}
+
+html.dark .admin-shell .text-stone-900,
+html.dark .admin-shell .text-slate-950,
+html.dark .admin-shell .text-slate-900 {
+  color: #0F172A !important;
+}
+
+html.dark .admin-shell .text-stone-800,
+html.dark .admin-shell .text-stone-700,
+html.dark .admin-shell .text-slate-800,
+html.dark .admin-shell .text-slate-700 {
+  color: #334155 !important;
+}
+
+html.dark .admin-shell .text-stone-600,
+html.dark .admin-shell .text-stone-500,
+html.dark .admin-shell .text-slate-600,
+html.dark .admin-shell .text-slate-500 {
+  color: #64748B !important;
+}
+
+html.dark .admin-shell .text-stone-400,
+html.dark .admin-shell .text-slate-400 {
+  color: #94A3B8 !important;
+}
+
+html.dark .admin-shell input:not([type="checkbox"]):not([type="radio"]),
+html.dark .admin-shell select,
+html.dark .admin-shell textarea {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+html.dark .admin-shell input::placeholder,
+html.dark .admin-shell textarea::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* Unify any remaining forest-green buttons/accents inside .admin-shell to Slate-Black */
+.admin-shell .bg-\[\#174D35\] {
+  background-color: #0F172A !important;
+}
+.admin-shell .hover\:bg-\[\#123e2a\]:hover,
+.admin-shell .hover\:bg-\[\#174D35\]:hover {
+  background-color: #1E293B !important;
+}
+.admin-shell .text-\[\#174D35\],
+html.dark .admin-shell .text-\[\#174D35\] {
+  color: #0F172A !important;
+}
+
+/* =========================================================
+   OFFICIAL BLACK & WHITE VOUCHER — UNICODE OFFICIAL SERIF
+   Uses Tiro Bangla & Noto Serif Bengali + Times New Roman
+   (Avoids local ANSI SutonnyMJ which corrupts ASCII & ৳ on Windows)
+   ========================================================= */
+.voucher-sutonny,
+.voucher-sutonny * {
+  font-family: 'Tiro Bangla', 'Noto Serif Bengali', 'Times New Roman', Georgia, serif !important;
+  color: #000000 !important;
+  border-color: #000000 !important;
+  font-variant-ligatures: normal;
+}
+
+.voucher-sutonny .voucher-invert {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+}
+
+.voucher-sutonny .voucher-invert * {
+  color: #FFFFFF !important;
+}
+
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+  }
+}
+
+

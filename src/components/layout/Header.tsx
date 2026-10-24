@@ -28,6 +28,8 @@ export const Header: React.FC = () => {
   const { navigate } = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [cartBurstKey, setCartBurstKey] = useState<number>(0);
+  const [wishlistBurstKey, setWishlistBurstKey] = useState<number>(0);
 
   useEffect(() => {
     const onScroll = () => {
@@ -36,6 +38,21 @@ export const Header: React.FC = () => {
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    const handleCartAdd = () => {
+      setCartBurstKey((prev) => prev + 1);
+    };
+    const handleWishlistAdd = () => {
+      setWishlistBurstKey((prev) => prev + 1);
+    };
+    window.addEventListener('gardenvaly:cart-add', handleCartAdd);
+    window.addEventListener('gardenvaly:wishlist-add', handleWishlistAdd);
+    return () => {
+      window.removeEventListener('gardenvaly:cart-add', handleCartAdd);
+      window.removeEventListener('gardenvaly:wishlist-add', handleWishlistAdd);
+    };
   }, []);
 
   const handleAccountClick = () => {
@@ -89,7 +106,7 @@ export const Header: React.FC = () => {
             <Search className="w-5 h-5" />
           </button>
 
-          {/* Wishlist Trigger with Badge */}
+          {/* Wishlist Trigger with Badge & Blossom Heartbeat Animation */}
           <button
             onClick={() => {
               if (isAuthenticated) navigate('/profile?tab=wishlist');
@@ -99,9 +116,27 @@ export const Header: React.FC = () => {
             title={language === 'bn' ? `পছন্দের তালিকা (${wishlistCount})` : `Wishlist (${wishlistCount})`}
             aria-label={`Wishlist, ${wishlistCount} items`}
           >
-            <Heart className="w-5 h-5 text-stone-700 hover:text-rose-600 dark:text-stone-300" />
+            <span
+              key={`wish-icon-${wishlistBurstKey}`}
+              className={`inline-flex items-center justify-center ${
+                wishlistBurstKey > 0 ? 'animate-heart-bloom text-rose-600' : ''
+              }`}
+            >
+              <Heart
+                className={`w-5 h-5 ${
+                  wishlistCount > 0
+                    ? 'text-rose-600 fill-rose-500/20'
+                    : 'text-stone-700 hover:text-rose-600 dark:text-stone-300'
+                }`}
+              />
+            </span>
             {wishlistCount > 0 && (
-              <span className="absolute top-0.5 right-0.5 w-4.5 h-4.5 bg-rose-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-xs">
+              <span
+                key={`wish-badge-${wishlistBurstKey}-${wishlistCount}`}
+                className={`absolute top-0.5 right-0.5 w-4.5 h-4.5 bg-rose-600 text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-xs ${
+                  wishlistBurstKey > 0 ? 'animate-heart-bloom' : ''
+                }`}
+              >
                 {formatNumeral(wishlistCount, language)}
               </span>
             )}
@@ -134,15 +169,45 @@ export const Header: React.FC = () => {
             )}
           </button>
 
-          {/* Shopping Cart Trigger with Dynamic Badge */}
+          {/* Shopping Cart Trigger with Dynamic Badge & Fly-to-Cart Botanical Leaf */}
           <button
+            id="header-cart-button"
             onClick={() => setIsCartOpen(true)}
             className="relative w-10 h-10 sm:w-10 sm:h-10 flex items-center justify-center rounded-full text-stone-700 hover:text-[#121111] hover:bg-[#EFEDEE] dark:text-stone-300 dark:hover:bg-[#153427] transition-colors cursor-pointer focus-visible:ring-2 focus-visible:ring-[#174D35] shrink-0"
             aria-label={`Open cart drawer, ${cart.totalQuantity} items`}
           >
-            <ShoppingBag className="w-5 h-5" />
+            <span
+              key={`bag-${cartBurstKey}`}
+              className={`inline-flex items-center justify-center ${
+                cartBurstKey > 0 ? 'animate-cart-pop text-[#174D35] dark:text-[#4ADE80]' : ''
+              }`}
+            >
+              <ShoppingBag className="w-5 h-5" />
+            </span>
+
+            {/* Flying Botanical Leaf Particle on Add-to-Cart */}
+            {cartBurstKey > 0 && (
+              <span
+                key={`leaf-${cartBurstKey}`}
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-0 flex items-center justify-center animate-fly-leaf z-20"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5 drop-shadow-sm" fill="none">
+                  <path
+                    d="M17 3C11 3 5 7.5 5 14.5C5 17 6.5 19.5 8.5 20.5C9.5 14.5 13.5 10.5 19 8.5C15 11.5 11.5 15.5 10.5 21C16.5 20.5 21 15 21 8C21 5 19.5 3 17 3Z"
+                    fill="#22C55E"
+                  />
+                </svg>
+              </span>
+            )}
+
             {cart.totalQuantity > 0 && (
-              <span className="absolute top-0.5 right-0.5 w-4.5 h-4.5 bg-[#174D35] text-white text-[10px] font-bold rounded-full flex items-center justify-center shadow-xs">
+              <span
+                key={`badge-${cartBurstKey}-${cart.totalQuantity}`}
+                className={`absolute top-0.5 right-0.5 w-4.5 h-4.5 bg-[#174D35] dark:bg-[#22C55E] text-white dark:text-[#061810] text-[10px] font-bold rounded-full flex items-center justify-center shadow-xs ${
+                  cartBurstKey > 0 ? 'animate-cart-pop' : ''
+                }`}
+              >
                 {formatNumeral(cart.totalQuantity, language)}
               </span>
             )}

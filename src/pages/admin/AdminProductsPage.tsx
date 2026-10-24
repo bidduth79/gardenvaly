@@ -1,25 +1,31 @@
 /**
  * @file AdminProductsPage.tsx
- * @description Product catalog management for plants and seeds with searching, filtering, and deletion controls.
+ * @description Clean Laravel Filament-style Products Resource Table in Slate, Black, and White
+ * with Semantic Colors and 100% pure Bengali ('bn') or English ('en') localization.
  */
 
 import React, { useState, useEffect } from 'react';
 import {
   Plus,
   Search,
-  Filter,
   Edit2,
   Trash2,
   ExternalLink,
   Sprout,
   AlertCircle,
-  CheckCircle2,
 } from 'lucide-react';
 import { adminService } from '../../services/adminService';
-import { Product, ProductCategoryType } from '../../types/product';
+import { Product } from '../../types/product';
 import { useRouter } from '../../context/RouterContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
+import {
+  formatAdminCurrency,
+  formatAdminNumber,
+  toBnDigits,
+  translateCategoryName,
+  translateProductType,
+} from '../../utils/adminI18n';
 
 export const AdminProductsPage: React.FC = () => {
   const { navigate } = useRouter();
@@ -27,8 +33,7 @@ export const AdminProductsPage: React.FC = () => {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedType, setSelectedType] = useState<string>('all');
-  const [selectedStock, setSelectedStock] = useState<string>('all');
+  const [activeTab, setActiveTab] = useState<'all' | 'plant' | 'seed' | 'low-stock'>('all');
   const [deleteCandidate, setDeleteCandidate] = useState<Product | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
@@ -56,189 +61,178 @@ export const AdminProductsPage: React.FC = () => {
       p.nameBn.includes(searchTerm) ||
       p.SKU.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesType = selectedType === 'all' || p.type === selectedType;
-
-    const matchesStock =
-      selectedStock === 'all' ||
-      (selectedStock === 'in-stock' && p.stockQuantity > 5) ||
-      (selectedStock === 'low-stock' && p.stockQuantity > 0 && p.stockQuantity <= 5) ||
-      (selectedStock === 'out-of-stock' && p.stockQuantity === 0);
-
-    return matchesSearch && matchesType && matchesStock;
+    if (!matchesSearch) return false;
+    if (activeTab === 'plant') return p.type === 'plant';
+    if (activeTab === 'seed') return p.type === 'seed';
+    if (activeTab === 'low-stock') return p.stockQuantity <= 5;
+    return true;
   });
 
+  const tabs = [
+    { id: 'all' as const, bn: 'সব পণ্য', en: 'All Products' },
+    { id: 'plant' as const, bn: 'গাছের চারা', en: 'Plants' },
+    { id: 'seed' as const, bn: 'উন্নত বীজ', en: 'Seeds' },
+    { id: 'low-stock' as const, bn: 'কম স্টক', en: 'Low Stock' },
+  ];
+
   return (
-    <div className="space-y-6">
-      {/* Top Header & Add Action */}
+    <div className="space-y-5">
+      {/* Laravel Filament Resource Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-stone-900">
-            {language === 'bn' ? 'পণ্য ক্যাটালগ ব্যবস্থাপনা' : 'Botanical Products Catalog'}
-          </h2>
-          <p className="text-xs text-stone-500">
+          <h1 className="text-xl sm:text-2xl font-bold text-slate-950 tracking-tight">
+            {language === 'bn' ? 'সকল পণ্য তালিকা' : 'Products'}
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5 tabular-nums">
             {language === 'bn'
-              ? `মোট ${products.length} টি গাছ ও বীজের তথ্য সংরক্ষিত রয়েছে`
-              : `Total ${products.length} living plant specimens & heirloom seeds registered`}
+              ? `মোট ${formatAdminNumber(products.length, 'bn')} টি গাছ ও বীজ সংরক্ষিত রয়েছে`
+              : `${products.length} total products in catalog`}
           </p>
         </div>
 
         <button
           onClick={() => navigate('/admin/products/new')}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-[#174D35] hover:bg-[#123e2a] text-white text-xs sm:text-sm font-semibold shadow-sm transition-all cursor-pointer"
+          className="inline-flex items-center justify-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-semibold shadow-2xs transition-colors cursor-pointer self-start sm:self-auto whitespace-nowrap"
         >
           <Plus className="w-4 h-4" />
-          <span>{language === 'bn' ? 'নতুন পণ্য যুক্ত করুন' : 'Add New Product'}</span>
+          <span>{language === 'bn' ? 'নতুন পণ্য যোগ করুন' : 'New Product'}</span>
         </button>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="bg-white rounded-2xl border border-stone-200/80 p-4 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3">
-        <div className="relative w-full md:w-80">
-          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder={
-              language === 'bn' ? 'নাম বা SKU দিয়ে খুঁজুন...' : 'Search by name, SKU...'
-            }
-            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-stone-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#174D35]"
-          />
+      {/* Unified Laravel Filament Resource Card */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+        {/* Top Toolbar: Tabs + Search */}
+        <div className="p-4 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3">
+          <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-lg self-start">
+            {tabs.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors cursor-pointer whitespace-nowrap ${
+                  activeTab === tab.id
+                    ? 'bg-slate-950 text-white shadow-2xs font-semibold'
+                    : 'text-slate-600 hover:text-slate-950'
+                }`}
+              >
+                {language === 'bn' ? tab.bn : tab.en}
+              </button>
+            ))}
+          </div>
+
+          <div className="relative w-full md:w-72">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder={language === 'bn' ? 'পণ্যের নাম বা কোড দিয়ে খুঁজুন...' : 'Search name or SKU...'}
+              className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-slate-900"
+            />
+          </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
-          {/* Type Filter */}
-          <select
-            value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
-            className="px-3 py-2 rounded-xl border border-stone-200 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-[#174D35]"
-          >
-            <option value="all">{language === 'bn' ? 'সকল টাইপ' : 'All Types'}</option>
-            <option value="plant">{language === 'bn' ? 'গাছ (Plants)' : 'Plants'}</option>
-            <option value="seed">{language === 'bn' ? 'বীজ (Seeds)' : 'Seeds'}</option>
-          </select>
-
-          {/* Stock Filter */}
-          <select
-            value={selectedStock}
-            onChange={(e) => setSelectedStock(e.target.value)}
-            className="px-3 py-2 rounded-xl border border-stone-200 text-xs font-medium bg-white focus:outline-none focus:ring-2 focus:ring-[#174D35]"
-          >
-            <option value="all">{language === 'bn' ? 'সকল স্টক অবস্থা' : 'All Stock Status'}</option>
-            <option value="in-stock">{language === 'bn' ? 'পর্যাপ্ত স্টক (>5)' : 'In Stock (>5)'}</option>
-            <option value="low-stock">{language === 'bn' ? 'লো-স্টক (১-৫)' : 'Low Stock (1-5)'}</option>
-            <option value="out-of-stock">{language === 'bn' ? 'স্টক শেষ (০)' : 'Out of Stock (0)'}</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Products Table */}
-      <div className="bg-white rounded-3xl border border-stone-200/80 shadow-xs overflow-hidden">
-        <div className="overflow-x-auto -webkit-overflow-scrolling-touch">
+        {/* High-Density Products Table */}
+        <div className="overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm min-w-[680px]">
             <thead>
-              <tr className="bg-stone-50/80 border-b border-stone-200 text-stone-500 uppercase tracking-wider font-semibold text-[11px]">
-                <th className="py-3 px-4">{language === 'bn' ? 'পণ্য' : 'Product'}</th>
-                <th className="py-3 px-4">{language === 'bn' ? 'ক্যাটাগরি' : 'Category'}</th>
-                <th className="py-3 px-4">{language === 'bn' ? 'মূল্য (BDT)' : 'Price'}</th>
-                <th className="py-3 px-4">{language === 'bn' ? 'স্টক পরিমাণ' : 'Stock'}</th>
-                <th className="py-3 px-4">{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</th>
-                <th className="py-3 px-4 text-right">{language === 'bn' ? 'অ্যাকশন' : 'Actions'}</th>
+              <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold text-[11px]">
+                <th className="py-3 px-4">{language === 'bn' ? 'পণ্য ও কোড' : 'Product'}</th>
+                <th className="py-3 px-4">{language === 'bn' ? 'বিভাগ ও ধরন' : 'Category'}</th>
+                <th className="py-3 px-4 text-right">{language === 'bn' ? 'মূল্য' : 'Price'}</th>
+                <th className="py-3 px-4 text-right">{language === 'bn' ? 'মজুদ সংখ্যা' : 'Stock'}</th>
+                <th className="py-3 px-4">{language === 'bn' ? 'অবস্থা' : 'Status'}</th>
+                <th className="py-3 px-4 text-right">{language === 'bn' ? 'পদক্ষেপ' : 'Actions'}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-slate-100">
               {filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="py-12 text-center text-stone-400">
-                    <Sprout className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <td colSpan={6} className="py-12 text-center text-slate-400">
+                    <Sprout className="w-7 h-7 mx-auto mb-2 opacity-40" />
                     <span>{language === 'bn' ? 'কোনো পণ্য পাওয়া যায়নি।' : 'No products found.'}</span>
                   </td>
                 </tr>
               ) : (
                 filteredProducts.map((prod) => (
-                  <tr key={prod.id} className="hover:bg-stone-50/80 transition-colors">
-                    {/* Thumbnail & Name */}
-                    <td className="py-3.5 px-4">
+                  <tr key={prod.id} className="hover:bg-slate-50/70 transition-colors">
+                    <td className="py-3 px-4">
                       <div className="flex items-center gap-3">
                         <img
                           src={getSafeImageUrl(prod.imageUrl, { type: prod.type, categorySlug: prod.categorySlug })}
                           alt={prod.nameEn}
-                          className="w-11 h-11 rounded-xl object-cover border border-stone-200 shrink-0"
+                          className="w-10 h-10 rounded-lg object-cover border border-slate-200 shrink-0"
                           onError={(e) => handleImageError(e, getProductFallbackImage(prod))}
                         />
                         <div className="max-w-xs truncate">
-                          <p className="font-semibold text-stone-900 truncate">
+                          <p className="font-semibold text-slate-950 truncate">
                             {language === 'bn' ? prod.nameBn : prod.nameEn}
                           </p>
-                          <p className="text-[11px] text-stone-400 font-mono">
-                            {prod.SKU}
-                            {prod.botanicalName ? ` • ${prod.botanicalName}` : ''}
+                          <p className="text-[11px] text-slate-400 font-mono tabular-nums">
+                            {language === 'bn' ? `কোড: ${toBnDigits(prod.SKU)}` : prod.SKU}
                           </p>
                         </div>
                       </div>
                     </td>
 
-                    {/* Category & Type */}
-                    <td className="py-3.5 px-4 text-stone-600">
-                      <span className="capitalize">{prod.category}</span>
-                      <span className="ml-1 text-[10px] px-1.5 py-0.5 rounded bg-stone-100 text-stone-500 uppercase">
-                        {prod.type}
+                    <td className="py-3 px-4 text-slate-600 text-xs whitespace-nowrap">
+                      <span className="font-medium text-slate-900">
+                        {translateCategoryName(prod.category, language)}
+                      </span>
+                      <span className="text-slate-400 mx-1.5" aria-hidden="true">·</span>
+                      <span className="text-[11px] text-slate-500">
+                        {translateProductType(prod.type, language)}
                       </span>
                     </td>
 
-                    {/* Price */}
-                    <td className="py-3.5 px-4 font-semibold text-stone-900">
-                      ৳{prod.price.toLocaleString()}
+                    <td className="py-3 px-4 text-right font-semibold text-slate-950 tabular-nums whitespace-nowrap">
+                      {formatAdminCurrency(prod.price, language)}
                       {prod.originalPrice && prod.originalPrice > prod.price && (
-                        <span className="ml-1 text-[10px] text-stone-400 line-through">
-                          ৳{prod.originalPrice}
+                        <span className="ml-1.5 text-[11px] text-slate-400 line-through font-normal">
+                          {formatAdminCurrency(prod.originalPrice, language)}
                         </span>
                       )}
                     </td>
 
-                    {/* Stock */}
-                    <td className="py-3.5 px-4">
-                      <span className="font-semibold text-stone-800">{prod.stockQuantity}</span>
+                    <td className="py-3 px-4 text-right font-semibold text-slate-900 tabular-nums whitespace-nowrap">
+                      {formatAdminNumber(prod.stockQuantity, language)}
                     </td>
 
-                    {/* Status Badge */}
-                    <td className="py-3.5 px-4">
+                    <td className="py-3 px-4 text-xs whitespace-nowrap">
                       {prod.stockQuantity === 0 ? (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-800">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md font-semibold bg-rose-50 text-rose-700 border border-rose-200">
                           {language === 'bn' ? 'স্টক শেষ' : 'Out of Stock'}
                         </span>
                       ) : prod.stockQuantity <= 5 ? (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
-                          {language === 'bn' ? 'লো-স্টক' : 'Low Stock'}
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                          {language === 'bn' ? 'কম স্টক' : 'Low Stock'}
                         </span>
                       ) : (
-                        <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-md font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                           {language === 'bn' ? 'পর্যাপ্ত' : 'In Stock'}
                         </span>
                       )}
                     </td>
 
-                    {/* Actions */}
-                    <td className="py-3.5 px-4 text-right">
-                      <div className="flex items-center justify-end gap-1.5">
+                    <td className="py-3 px-4 text-right whitespace-nowrap">
+                      <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => navigate(`/product/${prod.slug}`)}
-                          className="p-1.5 text-stone-500 hover:text-[#174D35] hover:bg-stone-100 rounded-lg transition-colors cursor-pointer"
-                          title="View on Storefront"
+                          className="p-1.5 text-slate-500 hover:text-slate-950 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
+                          title={language === 'bn' ? 'ওয়েবসাইটে দেখুন' : 'View on Storefront'}
                         >
                           <ExternalLink className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => navigate(`/admin/products/${prod.id}/edit`)}
-                          className="p-1.5 text-stone-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
-                          title="Edit Product"
+                          className="px-2.5 py-1 text-xs font-semibold text-blue-600 hover:bg-blue-50 border border-blue-200 rounded-md transition-colors cursor-pointer inline-flex items-center gap-1"
                         >
-                          <Edit2 className="w-4 h-4" />
+                          <Edit2 className="w-3.5 h-3.5" />
+                          <span>{language === 'bn' ? 'সম্পাদনা' : 'Edit'}</span>
                         </button>
                         <button
                           onClick={() => setDeleteCandidate(prod)}
-                          className="p-1.5 text-stone-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
-                          title="Delete Product"
+                          className="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded-md transition-colors cursor-pointer"
+                          title={language === 'bn' ? 'মুছে ফেলুন' : 'Delete Product'}
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -254,36 +248,40 @@ export const AdminProductsPage: React.FC = () => {
 
       {/* Delete Confirmation Modal */}
       {deleteCandidate && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 space-y-4 shadow-xl border border-stone-200">
-            <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto">
-              <AlertCircle className="w-6 h-6" />
+        <div className="fixed inset-0 z-50 bg-slate-950/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl max-w-sm w-full p-6 space-y-4 shadow-xl border border-slate-200">
+            <div className="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+              <AlertCircle className="w-5 h-5" />
             </div>
-            <div className="text-center">
-              <h3 className="font-bold text-stone-900 text-base">
-                {language === 'bn' ? 'পণ্য মুছে ফেলতে চান?' : 'Confirm Deletion'}
+            <div className="text-center space-y-1">
+              <h3 className="font-bold text-slate-950 text-base">
+                {language === 'bn' ? 'পণ্যটি মুছে ফেলতে চান?' : 'Delete Product?'}
               </h3>
-              <p className="text-xs text-stone-500 mt-1">
+              <p className="text-xs text-slate-500">
                 {language === 'bn'
-                  ? `"${deleteCandidate.nameBn || deleteCandidate.nameEn}" পণ্যটি ড্যাশবোর্ড থেকে মুছে যাবে।`
-                  : `Are you sure you want to remove "${deleteCandidate.nameEn}"?`}
+                  ? `"${deleteCandidate.nameBn}" স্থায়ীভাবে তালিকা থেকে মুছে যাবে।`
+                  : `"${deleteCandidate.nameEn}" will be permanently removed.`}
               </p>
             </div>
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex items-center gap-2 pt-1">
               <button
                 onClick={() => setDeleteCandidate(null)}
-                className="flex-1 py-2 px-3 rounded-xl border border-stone-200 text-xs font-semibold text-stone-700 hover:bg-stone-50 transition-colors cursor-pointer"
+                className="flex-1 py-2 rounded-lg border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
               >
-                {language === 'bn' ? 'বাতিল' : 'Cancel'}
+                {language === 'bn' ? 'ফিরে যান' : 'Cancel'}
               </button>
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="flex-1 py-2 px-3 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-semibold shadow-sm transition-colors cursor-pointer"
+                className="flex-1 py-2 rounded-lg bg-rose-600 hover:bg-rose-700 text-white text-xs font-semibold transition-colors cursor-pointer disabled:opacity-50"
               >
                 {isDeleting
-                  ? language === 'bn' ? 'মুছে ফেলা হচ্ছে...' : 'Deleting...'
-                  : language === 'bn' ? 'হ্যাঁ, মুছুন' : 'Delete'}
+                  ? language === 'bn'
+                    ? 'মুছে ফেলা হচ্ছে...'
+                    : 'Deleting...'
+                  : language === 'bn'
+                  ? 'হ্যাঁ, মুছে ফেলুন'
+                  : 'Delete'}
               </button>
             </div>
           </div>

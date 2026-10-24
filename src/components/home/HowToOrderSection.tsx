@@ -160,8 +160,10 @@ export const HowToOrderSection: React.FC = () => {
 
   const [activeStep, setActiveStep] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isSectionInView, setIsSectionInView] = useState(false);
   const [litWordCount, setLitWordCount] = useState(0);
 
+  const sectionRef = useRef<HTMLElement | null>(null);
   const povRef = useRef<HTMLParagraphElement | null>(null);
   const tiltFrameRef = useRef<HTMLDivElement | null>(null);
 
@@ -171,6 +173,25 @@ export const HowToOrderSection: React.FC = () => {
     'A single sapling brightens your balcony today and nurtures a greener tomorrow — hand-selected at our nursery and delivered safely to your home.';
 
   const words = (isBn ? povTextBn : povTextEn).split(' ');
+
+  // Observe whether HowToOrderSection is visible in the viewport so off-screen timers never mutate DOM or shift scroll
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el || typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+      setIsSectionInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsSectionInView(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // 1. DesignMingle Scroll-Lit Point-of-View Statement (.ov-pov .state)
   useEffect(() => {
@@ -188,14 +209,14 @@ export const HowToOrderSection: React.FC = () => {
     return () => window.removeEventListener('scroll', updateScrollLit);
   }, [words.length]);
 
-  // 2. DesignMingle 4.2s Auto-Advancing Step Carousel
+  // 2. DesignMingle 4.2s Auto-Advancing Step Carousel (Only runs when section is in view)
   useEffect(() => {
-    if (isPaused) return;
+    if (isPaused || !isSectionInView) return;
     const timer = setInterval(() => {
       setActiveStep((prev) => (prev + 1) % ORDER_STEPS.length);
     }, 4200);
     return () => clearInterval(timer);
-  }, [isPaused, activeStep]);
+  }, [isPaused, isSectionInView, activeStep]);
 
   // 3. DesignMingle 3D Pointer-Tilt Effect (--rx, --ry)
   const handleFrameMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -219,7 +240,7 @@ export const HowToOrderSection: React.FC = () => {
   const StepIcon = step.icon;
 
   return (
-    <section className="py-14 sm:py-20 bg-transparent overflow-hidden">
+    <section ref={sectionRef} className="py-14 sm:py-20 bg-transparent overflow-hidden" style={{ overflowAnchor: 'none' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-14 sm:space-y-18">
         {/* ─── PART A: DESIGNMINGLE SCROLL-LIT POINT-OF-VIEW STATEMENT (.ov-pov) ─── */}
         <div className="max-w-4xl mx-auto text-center px-2">
@@ -386,11 +407,11 @@ export const HowToOrderSection: React.FC = () => {
                 <span>{isBn ? step.badgeBn : step.badgeEn}</span>
               </div>
 
-              <h3 className="text-2xl sm:text-3xl font-serif-botanical font-bold text-white leading-snug">
+              <h3 className="text-2xl sm:text-3xl font-serif-botanical font-bold text-white leading-snug min-h-[3.75rem] sm:min-h-[4.5rem] flex items-center">
                 {isBn ? step.titleBn : step.titleEn}
               </h3>
 
-              <p className="text-sm sm:text-base text-stone-300 leading-relaxed">
+              <p className="text-sm sm:text-base text-stone-300 leading-relaxed min-h-[4.5rem] sm:min-h-[3.75rem]">
                 {isBn ? step.descBn : step.descEn}
               </p>
 

@@ -7,19 +7,35 @@ import React from 'react';
 
 interface GardenVillageHavenProps {
   isDark?: boolean;
+  isBn?: boolean;
+  isHovered?: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  onClick?: () => void;
   className?: string;
 }
 
 export const GardenVillageHaven: React.FC<GardenVillageHavenProps> = ({
   isDark = false,
+  isBn = true,
+  isHovered = false,
+  onMouseEnter,
+  onMouseLeave,
+  onClick,
   className = '',
 }) => {
   return (
     <g
       id="village-haven-group"
-      transform="translate(1060, 100)"
-      className={`select-none ${className}`}
+      transform="translate(1090, 100)"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onClick={onClick}
+      className={`cursor-pointer select-none ${className}`}
     >
+      {/* Generous Invisible Hit Box for Smooth Farmers & Cottage Hover */}
+      <rect x="-40" y="30" width="385" height="145" fill="transparent" />
+
       {/* Tall Banana & Areca Palm Trees Behind Cottage (Positioned cleanly behind the roof so trunks never overlap the child on the right) */}
       <g id="village-trees" transform="translate(285, 168)">
         <path d="M 0 0 Q 5 -50 0 -95" stroke="#15803D" strokeWidth="6" strokeLinecap="round" fill="none" />
@@ -132,6 +148,52 @@ export const GardenVillageHaven: React.FC<GardenVillageHavenProps> = ({
           <path d="M 12 13 L 18 8" stroke="#FBBF24" strokeWidth="1.5" strokeLinecap="round" />
         </g>
       </g>
+
+      {/* Interactive Quote Card Above Village Farmers on Hover ("গার্ডেনভ্যালি গাছ-গাছালি খুবই সতেজ।") */}
+      {isHovered && (
+        <g transform="translate(-40, 64)" className="pointer-events-none">
+          <g className="animate-valley-quote">
+            <rect
+              x="0"
+              y="0"
+              width="276"
+              height="34"
+              rx="10"
+              fill={isDark ? '#061810' : '#FFFFFF'}
+              stroke="#22C55E"
+              strokeWidth="2.2"
+            />
+            <text
+              x="138"
+              y="22"
+              textAnchor="middle"
+              fontSize="12"
+              fontWeight="bold"
+              fill={isDark ? '#FDE047' : '#14532D'}
+              fontFamily="system-ui, sans-serif"
+            >
+              {isBn
+                ? '“গার্ডেনভ্যালি গাছ-গাছালি খুবই সতেজ।”'
+                : '“GardenValy plants and saplings are very fresh.”'}
+            </text>
+            {/* Speech Bubble Pointer Tail to Krishan & Krishani */}
+            <polygon
+              points="128,34 142,34 135,43"
+              fill={isDark ? '#061810' : '#FFFFFF'}
+              stroke="#22C55E"
+              strokeWidth="2"
+            />
+            <line
+              x1="129"
+              y1="34"
+              x2="141"
+              y2="34"
+              stroke={isDark ? '#061810' : '#FFFFFF'}
+              strokeWidth="2.6"
+            />
+          </g>
+        </g>
+      )}
     </g>
   );
 };

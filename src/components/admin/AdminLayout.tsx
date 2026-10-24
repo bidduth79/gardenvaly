@@ -1,12 +1,12 @@
 /**
  * @file AdminLayout.tsx
- * @description Master layout wrapper for all Gardenvaly admin views with configurable sidebar placement (left/right), responsive drawer, header, and content canvas.
+ * @description Clean Laravel Filament / Vercel style admin layout with .admin-shell isolation,
+ * fixed left sidebar, command header, and high-contrast Slate, Black & White canvas.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AdminSidebar } from './AdminSidebar';
 import { AdminHeader } from './AdminHeader';
-import { useAdminAuth } from '../../context/AdminAuthContext';
 import { useRouter } from '../../context/RouterContext';
 
 interface AdminLayoutProps {
@@ -14,59 +14,27 @@ interface AdminLayoutProps {
 }
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  const [sidebarPosition, setSidebarPosition] = useState<'left' | 'right'>(() => {
-    try {
-      const saved = localStorage.getItem('gardenvaly_admin_sidebar_position');
-      // Defaults to 'right' as requested by user
-      return saved === 'left' ? 'left' : 'right';
-    } catch {
-      return 'right';
-    }
-  });
+  const { currentPath } = useRouter();
 
-  const { isAuthenticated } = useAdminAuth();
-  const { currentPath, navigate } = useRouter();
-
-  const toggleSidebarPosition = () => {
-    const next = sidebarPosition === 'right' ? 'left' : 'right';
-    setSidebarPosition(next);
-    try {
-      localStorage.setItem('gardenvaly_admin_sidebar_position', next);
-    } catch {}
-  };
-
-  // If user visits /admin/login, don't show the sidebar & header layout
-  if (currentPath === '/admin/login') {
-    return <>{children}</>;
+  // Do not wrap the standalone login page or standalone new-tab voucher in the sidebar/header shell
+  if (currentPath === '/admin/login' || currentPath.startsWith('/admin/voucher/')) {
+    return <div className="admin-shell">{children}</div>;
   }
 
   return (
-    <div
-      className={`min-h-screen bg-[#F7F5EC] text-stone-800 flex flex-col ${
-        sidebarPosition === 'right' ? 'md:flex-row-reverse' : 'md:flex-row'
-      } antialiased`}
-    >
-      {/* Store Management Sidebar Navigation */}
+    <div className="admin-shell min-h-screen bg-[#F8FAFC] text-slate-900 flex flex-col md:flex-row antialiased">
+      {/* Fixed Left Sidebar */}
       <AdminSidebar
-        isCollapsed={isCollapsed}
-        onToggleCollapse={() => setIsCollapsed(!isCollapsed)}
         isMobileOpen={isMobileOpen}
         onCloseMobile={() => setIsMobileOpen(false)}
-        sidebarPosition={sidebarPosition}
-        onTogglePosition={toggleSidebarPosition}
       />
 
-      {/* Main Administrative Work Area */}
-      <div className="flex-1 flex flex-col min-w-0 min-h-screen">
-        <AdminHeader
-          onOpenMobileMenu={() => setIsMobileOpen(true)}
-          sidebarPosition={sidebarPosition}
-          onToggleSidebarPosition={toggleSidebarPosition}
-        />
+      {/* Main Administrative Workspace */}
+      <div className="flex-1 flex flex-col min-w-0 min-h-screen bg-[#F8FAFC]">
+        <AdminHeader onOpenMobileMenu={() => setIsMobileOpen(true)} />
 
-        <main className="flex-1 p-3 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto overflow-x-hidden">
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto overflow-x-hidden">
           {children}
         </main>
       </div>

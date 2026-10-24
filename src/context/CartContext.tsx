@@ -75,6 +75,13 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
       return [...prev, { product, quantity }];
     });
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(
+        new CustomEvent('gardenvaly:cart-add', {
+          detail: { product, quantity },
+        })
+      );
+    }
     loggerService.info(`Added to cart: ${product.nameEn}`, 'CartContext');
   };
 

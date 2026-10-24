@@ -66,6 +66,7 @@ import { AdminBannersPage } from './pages/admin/AdminBannersPage';
 import { AdminReviewsPage } from './pages/admin/AdminReviewsPage';
 import { AdminGuidesPage } from './pages/admin/AdminGuidesPage';
 import { AdminCombosPage } from './pages/admin/AdminCombosPage';
+import { AdminVoucherPage } from './pages/admin/AdminVoucherPage';
 
 import { useLanguage } from './context/LanguageContext';
 import { usePageSeo } from './hooks/usePageSeo';
@@ -186,6 +187,9 @@ const MainShell: React.FC = () => {
       }
       if (currentPath === '/admin/combos') {
         return <AdminCombosPage />;
+      }
+      if (currentPath.match(/^\/admin\/voucher\/[^/]+$/) || currentPath === '/admin/vouchers') {
+        return <AdminVoucherPage />;
       }
       if (currentPath.match(/^\/admin\/orders\/[^/]+$/)) {
         return <AdminOrderDetailPage />;

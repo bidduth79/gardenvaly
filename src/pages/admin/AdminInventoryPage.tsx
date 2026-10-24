@@ -1,24 +1,27 @@
 /**
  * @file AdminInventoryPage.tsx
- * @description Rapid stock control and inventory adjustment table for nursery plants and seed batches.
+ * @description Rapid stock control and inventory adjustment table in Slate, Black, and White
+ * with Semantic Status Colors and 100% pure Bengali ('bn') or English ('en') localization.
  */
 
 import React, { useState, useEffect } from 'react';
 import {
-  Boxes,
   Search,
   AlertTriangle,
   CheckCircle2,
   Plus,
   Minus,
-  Save,
-  Sprout,
-  Filter,
 } from 'lucide-react';
 import { adminService } from '../../services/adminService';
 import { Product } from '../../types/product';
 import { useLanguage } from '../../context/LanguageContext';
 import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
+import {
+  formatAdminNumber,
+  toBnDigits,
+  translateProductType,
+  translateStockUnit,
+} from '../../utils/adminI18n';
 
 export const AdminInventoryPage: React.FC = () => {
   const { language } = useLanguage();
@@ -45,7 +48,7 @@ export const AdminInventoryPage: React.FC = () => {
       setProducts((prev) =>
         prev.map((p) => (p.id === id ? { ...p, stockQuantity: updated.stockQuantity } : p))
       );
-      setFeedback(language === 'bn' ? 'স্টক সফলভাবে পরিবর্তিত হয়েছে!' : 'Stock updated successfully!');
+      setFeedback(language === 'bn' ? 'স্টক সফলভাবে হালনাগাদ হয়েছে!' : 'Stock updated successfully!');
       setTimeout(() => setFeedback(null), 2000);
     }
     setUpdatingId(null);
@@ -66,115 +69,109 @@ export const AdminInventoryPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-stone-900">
-            {language === 'bn' ? 'ইনভেন্টরি ও স্টক নিয়ন্ত্রণ' : 'Nursery Inventory & Stock Levels'}
-          </h2>
-          <p className="text-xs text-stone-500">
-            {language === 'bn'
-              ? 'চারাগাছ ও বীজ প্যাকেটসমূহের স্টক দ্রুত বৃদ্ধি বা হ্রাস করুন'
-              : 'Rapid in-place quantity adjustments for living nursery stock and seed packs'}
-          </p>
-        </div>
+        <h1 className="text-xl sm:text-2xl font-bold text-slate-950 tracking-tight">
+          {language === 'bn' ? 'স্টক ও ইনভেন্টরি' : 'Inventory'}
+        </h1>
 
         {feedback && (
-          <div className="px-3.5 py-1.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-1.5 animate-in fade-in">
+          <div className="px-3.5 py-1.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold flex items-center gap-1.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
             <span>{feedback}</span>
           </div>
         )}
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="bg-white rounded-2xl border border-stone-200/80 p-4 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3">
-        <div className="relative w-full md:w-80">
-          <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder={
-              language === 'bn' ? 'পণ্য বা SKU দিয়ে খুঁজুন...' : 'Search by name or SKU...'
-            }
-            className="w-full pl-9 pr-3.5 py-2 rounded-xl border border-stone-200 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#174D35]"
-          />
+      {/* Unified Resource Card */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
+        {/* Filter and Search Bar */}
+        <div className="p-4 border-b border-slate-200 flex flex-col md:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-1.5 self-start">
+            <button
+              onClick={() => setFilterMode('all')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                filterMode === 'all'
+                  ? 'bg-slate-950 text-white'
+                  : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+              }`}
+            >
+              {language === 'bn' ? 'সকল স্টক' : 'All Stock'}
+            </button>
+            <button
+              onClick={() => setFilterMode('low')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 cursor-pointer transition-colors ${
+                filterMode === 'low'
+                  ? 'bg-amber-600 text-white'
+                  : 'bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100'
+              }`}
+            >
+              <AlertTriangle className="w-3.5 h-3.5" />
+              <span>{language === 'bn' ? 'কম স্টক (১-৫)' : 'Low Stock (1-5)'}</span>
+            </button>
+            <button
+              onClick={() => setFilterMode('out')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-colors ${
+                filterMode === 'out'
+                  ? 'bg-rose-600 text-white'
+                  : 'bg-rose-50 text-rose-800 border border-rose-200 hover:bg-rose-100'
+              }`}
+            >
+              {language === 'bn' ? 'স্টক শেষ (০)' : 'Out of Stock (0)'}
+            </button>
+          </div>
+
+          <div className="relative w-full md:w-72">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder={
+                language === 'bn' ? 'পণ্যের নাম বা কোড দিয়ে খুঁজুন...' : 'Search by name or SKU...'
+              }
+              className="w-full pl-9 pr-3 py-1.5 rounded-lg border border-slate-200 text-xs sm:text-sm focus:outline-hidden focus:ring-2 focus:ring-slate-900"
+            />
+          </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setFilterMode('all')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer ${
-              filterMode === 'all'
-                ? 'bg-[#174D35] text-white shadow-xs'
-                : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
-            }`}
-          >
-            {language === 'bn' ? 'সকল স্টক' : 'All Stock'}
-          </button>
-          <button
-            onClick={() => setFilterMode('low')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1 cursor-pointer ${
-              filterMode === 'low'
-                ? 'bg-amber-600 text-white shadow-xs'
-                : 'bg-amber-50 text-amber-800 border border-amber-200 hover:bg-amber-100'
-            }`}
-          >
-            <AlertTriangle className="w-3.5 h-3.5" />
-            <span>{language === 'bn' ? 'লো-স্টক (১-৫)' : 'Low Stock (1-5)'}</span>
-          </button>
-          <button
-            onClick={() => setFilterMode('out')}
-            className={`px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer ${
-              filterMode === 'out'
-                ? 'bg-red-600 text-white shadow-xs'
-                : 'bg-red-50 text-red-800 border border-red-200 hover:bg-red-100'
-            }`}
-          >
-            {language === 'bn' ? 'স্টক শূন্য (০)' : 'Out of Stock (0)'}
-          </button>
-        </div>
-      </div>
-
-      {/* Inventory Table */}
-      <div className="bg-white rounded-3xl border border-stone-200/80 shadow-xs overflow-hidden">
-        <div className="overflow-x-auto -webkit-overflow-scrolling-touch">
+        {/* Inventory Table */}
+        <div className="overflow-x-auto">
           <table className="w-full text-left text-xs sm:text-sm min-w-[640px]">
             <thead>
-              <tr className="bg-stone-50/80 border-b border-stone-200 text-stone-500 uppercase tracking-wider font-semibold text-[11px]">
-                <th className="py-3 px-4">{language === 'bn' ? 'পণ্য বিবরণ' : 'Botanical Specimen'}</th>
-                <th className="py-3 px-4">{language === 'bn' ? 'টাইপ' : 'Type'}</th>
-                <th className="py-3 px-4">{language === 'bn' ? 'বর্তমান স্টক' : 'Current Stock'}</th>
-                <th className="py-3 px-4">{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</th>
-                <th className="py-3 px-4 text-right">{language === 'bn' ? 'দ্রুত স্টক সমন্বয়' : 'Fast Restock'}</th>
+              <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase tracking-wider font-semibold text-[11px]">
+                <th className="py-3 px-4">{language === 'bn' ? 'পণ্য ও কোড' : 'Product'}</th>
+                <th className="py-3 px-4">{language === 'bn' ? 'ধরন' : 'Type'}</th>
+                <th className="py-3 px-4">{language === 'bn' ? 'বর্তমান মজুদ' : 'Current Stock'}</th>
+                <th className="py-3 px-4">{language === 'bn' ? 'অবস্থা' : 'Status'}</th>
+                <th className="py-3 px-4 text-right">{language === 'bn' ? 'দ্রুত স্টক সমন্বয়' : 'Quick Adjust'}</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-stone-100">
+            <tbody className="divide-y divide-slate-100">
               {filteredProducts.map((p) => (
-                <tr key={p.id} className="hover:bg-stone-50/80 transition-colors">
+                <tr key={p.id} className="hover:bg-slate-50/70 transition-colors">
                   <td className="py-3 px-4">
                     <div className="flex items-center gap-3">
                       <img
                         src={getSafeImageUrl(p.imageUrl, { type: p.type, categorySlug: p.categorySlug })}
                         alt={p.nameEn}
-                        className="w-10 h-10 rounded-xl object-cover border border-stone-200 shrink-0"
+                        className="w-10 h-10 rounded-lg object-cover border border-slate-200 shrink-0"
                         onError={(e) => handleImageError(e, getProductFallbackImage(p))}
                       />
                       <div className="max-w-xs truncate">
-                        <p className="font-semibold text-stone-900 truncate">
+                        <p className="font-semibold text-slate-950 truncate">
                           {language === 'bn' ? p.nameBn : p.nameEn}
                         </p>
-                        <p className="text-[11px] text-stone-400 font-mono">
-                          {p.SKU}
+                        <p className="text-[11px] text-slate-400 font-mono tabular-nums">
+                          {language === 'bn' ? `কোড: ${toBnDigits(p.SKU)}` : p.SKU}
                         </p>
                       </div>
                     </div>
                   </td>
 
-                  <td className="py-3 px-4 capitalize text-stone-600 font-medium">
-                    {p.type}
+                  <td className="py-3 px-4 text-slate-700 font-medium">
+                    {translateProductType(p.type, language)}
                   </td>
 
                   <td className="py-3 px-4">
@@ -185,26 +182,26 @@ export const AdminInventoryPage: React.FC = () => {
                         value={p.stockQuantity}
                         onChange={(e) => handleUpdateStock(p.id, Number(e.target.value))}
                         disabled={updatingId === p.id}
-                        className="w-16 px-2 py-1 rounded-lg border border-stone-300 text-center font-bold text-stone-900 focus:outline-none focus:ring-2 focus:ring-[#174D35]"
+                        className="w-16 px-2 py-1 rounded-lg border border-slate-300 text-center font-bold text-slate-950 focus:outline-hidden focus:ring-2 focus:ring-slate-900 tabular-nums"
                       />
-                      <span className="text-stone-400 text-xs">
-                        {p.type === 'seed' ? 'packs' : 'pots'}
+                      <span className="text-slate-500 text-xs">
+                        {translateStockUnit(p.type, language)}
                       </span>
                     </div>
                   </td>
 
                   <td className="py-3 px-4">
                     {p.stockQuantity === 0 ? (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-100 text-red-800">
+                      <span className="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200">
                         {language === 'bn' ? 'স্টক শেষ' : 'Out of Stock'}
                       </span>
                     ) : p.stockQuantity <= 5 ? (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
-                        {language === 'bn' ? 'লো-স্টক' : 'Low Stock'}
+                      <span className="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                        {language === 'bn' ? 'কম স্টক' : 'Low Stock'}
                       </span>
                     ) : (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                        {language === 'bn' ? 'পর্যাপ্ত' : 'Healthy Stock'}
+                      <span className="px-2.5 py-0.5 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                        {language === 'bn' ? 'পর্যাপ্ত' : 'In Stock'}
                       </span>
                     )}
                   </td>
@@ -214,31 +211,29 @@ export const AdminInventoryPage: React.FC = () => {
                     <div className="inline-flex items-center gap-1.5 justify-end">
                       <button
                         onClick={() => handleUpdateStock(p.id, Math.max(0, p.stockQuantity - 1))}
-                        className="p-1 rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-100 cursor-pointer"
-                        title="-1 unit"
+                        className="p-1 rounded-md border border-slate-200 text-slate-700 hover:bg-slate-100 cursor-pointer"
+                        title={language === 'bn' ? '১ টি কমান' : '-1 unit'}
                       >
                         <Minus className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleUpdateStock(p.id, p.stockQuantity + 1)}
-                        className="p-1 rounded-lg border border-stone-200 text-stone-600 hover:bg-stone-100 cursor-pointer"
-                        title="+1 unit"
+                        className="p-1 rounded-md border border-slate-200 text-slate-700 hover:bg-slate-100 cursor-pointer"
+                        title={language === 'bn' ? '১ টি বাড়ান' : '+1 unit'}
                       >
                         <Plus className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleUpdateStock(p.id, p.stockQuantity + 5)}
-                        className="px-2 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#174D35] font-bold text-xs cursor-pointer"
-                        title="+5 batch restock"
+                        className="px-2 py-1 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold text-xs cursor-pointer tabular-nums"
                       >
-                        +5
+                        +{formatAdminNumber(5, language)}
                       </button>
                       <button
                         onClick={() => handleUpdateStock(p.id, p.stockQuantity + 10)}
-                        className="px-2 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-[#174D35] font-bold text-xs cursor-pointer"
-                        title="+10 nursery shipment"
+                        className="px-2 py-1 rounded-md bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 font-bold text-xs cursor-pointer tabular-nums"
                       >
-                        +10
+                        +{formatAdminNumber(10, language)}
                       </button>
                     </div>
                   </td>

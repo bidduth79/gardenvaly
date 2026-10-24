@@ -1,29 +1,19 @@
 /**
  * @file AdminReportsPage.tsx
- * @description In-depth store analytics, financial reports, COD reconciliation audit,
- * top-selling product metrics, and authorized CSV reporting.
+ * @description Business & Financial Reports page in Slate, Black, and White with Semantic Colors,
+ * 1-click A4 PDF Report generation, CSV export, and 100% pure Bengali/English localization.
  */
 
 import React, { useState, useEffect } from 'react';
 import {
-  BarChart3,
-  TrendingUp,
-  ShoppingBag,
-  Sprout,
-  DollarSign,
   Calendar,
   Download,
-  AlertTriangle,
-  RotateCcw,
+  Printer,
+  TrendingUp,
   CheckCircle2,
-  Clock,
-  Layers,
-  Sparkles,
-  ShieldCheck,
-  RefreshCw,
+  AlertTriangle,
 } from 'lucide-react';
 import { adminService } from '../../services/adminService';
-import { orderService } from '../../services/orderService';
 import {
   DashboardMetrics,
   DateRangeOption,
@@ -32,7 +22,15 @@ import {
 } from '../../types/admin';
 import { useLanguage } from '../../context/LanguageContext';
 import { apiClient } from '../../services/apiClient';
+import { AdminPrintModal } from '../../components/admin/AdminPrintModal';
 import { getSafeImageUrl, getProductFallbackImage, handleImageError } from '../../utils/imageFallback';
+import {
+  formatAdminCurrency,
+  formatAdminNumber,
+  toBnDigits,
+  translateCategoryName,
+  translateProductType,
+} from '../../utils/adminI18n';
 
 export const AdminReportsPage: React.FC = () => {
   const { language } = useLanguage();
@@ -43,6 +41,8 @@ export const AdminReportsPage: React.FC = () => {
   const [topProducts, setTopProducts] = useState<TopSellingProduct[]>([]);
   const [inventoryAlerts, setInventoryAlerts] = useState<InventoryAlertItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [showReportPdf, setShowReportPdf] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
 
   const loadReportData = async () => {
     setLoading(true);
@@ -66,6 +66,17 @@ export const AdminReportsPage: React.FC = () => {
     loadReportData();
   }, [dateRange]);
 
+  const dateRangeLabelMap: Record<DateRangeOption, { bn: string; en: string }> = {
+    today: { bn: 'আজকের হিসাব', en: 'Today' },
+    yesterday: { bn: 'গতকালের হিসাব', en: 'Yesterday' },
+    last_7_days: { bn: 'গত ৭ দিন', en: 'Last 7 Days' },
+    last_30_days: { bn: 'গত ৩০ দিন', en: 'Last 30 Days' },
+    this_month: { bn: 'চলতি মাস', en: 'This Month' },
+    previous_month: { bn: 'পূর্ববর্তী মাস', en: 'Previous Month' },
+    all_time: { bn: 'সর্বকালীন হিসাব', en: 'All Time' },
+    custom: { bn: 'নির্বাচিত সময়কাল', en: 'Custom Range' },
+  };
+
   const handleExportCsv = async (type: string) => {
     try {
       const token = apiClient.getToken();
@@ -84,96 +95,105 @@ export const AdminReportsPage: React.FC = () => {
       window.URL.revokeObjectURL(url);
       document.body.removeChild(a);
     } catch {
-      alert(language === 'bn' ? 'CSV এক্সপোর্ট ব্যর্থ হয়েছে' : 'Failed to export report CSV');
+      setFeedback(language === 'bn' ? 'ফাইল ডাউনলোড ব্যর্থ হয়েছে' : 'Failed to export CSV');
+      setTimeout(() => setFeedback(null), 3000);
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-stone-900">
-            {language === 'bn' ? 'ব্যবসায়িক রিপোর্ট ও অডিট অ্যানালিটিক্স' : 'Business Reports & Financial Analytics'}
-          </h2>
-          <p className="text-xs text-stone-500">
-            {language === 'bn'
-              ? 'বিক্রয় বিশ্লেষণ, ক্যাশ-অন-ডেলিভারি হিসাব এবং ইনভেন্টরি পারফরম্যান্স'
-              : 'Verified financial reconciliation, COD collection audits, and botanical inventory performance'}
-          </p>
-        </div>
+      {/* Page Header with PDF Report & CSV Export Buttons */}
+      <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-2xs flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+        <h1 className="text-xl sm:text-2xl font-extrabold text-slate-950 tracking-tight">
+          {language === 'bn' ? 'বিক্রয় ও আর্থিক রিপোর্ট' : 'Sales & Financial Reports'}
+        </h1>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
           {/* Date Range Selector */}
-          <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-xl border border-stone-200 text-xs shadow-2xs">
-            <Calendar className="w-3.5 h-3.5 text-[#174D35]" />
+          <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-2 rounded-xl border border-slate-200 text-xs">
+            <Calendar className="w-3.5 h-3.5 text-slate-600" />
             <select
               value={dateRange}
               onChange={(e) => setDateRange(e.target.value as DateRangeOption)}
-              className="bg-transparent font-semibold text-stone-800 pr-2 focus:outline-hidden cursor-pointer"
+              className="bg-transparent font-semibold text-slate-900 pr-2 focus:outline-hidden cursor-pointer"
             >
-              <option value="today">{language === 'bn' ? 'আজকের' : 'Today'}</option>
-              <option value="yesterday">{language === 'bn' ? 'গতকালের' : 'Yesterday'}</option>
+              <option value="today">{language === 'bn' ? 'আজকের হিসাব' : 'Today'}</option>
+              <option value="yesterday">{language === 'bn' ? 'গতকালের হিসাব' : 'Yesterday'}</option>
               <option value="last_7_days">{language === 'bn' ? 'গত ৭ দিন' : 'Last 7 Days'}</option>
               <option value="last_30_days">{language === 'bn' ? 'গত ৩০ দিন' : 'Last 30 Days'}</option>
               <option value="this_month">{language === 'bn' ? 'চলতি মাস' : 'This Month'}</option>
-              <option value="previous_month">{language === 'bn' ? 'পূর্ববর্তী মাস' : 'Prev Month'}</option>
-              <option value="all_time">{language === 'bn' ? 'সর্বকালীন' : 'All Time'}</option>
+              <option value="previous_month">{language === 'bn' ? 'পূর্ববর্তী মাস' : 'Previous Month'}</option>
+              <option value="all_time">{language === 'bn' ? 'সর্বকালীন হিসাব' : 'All Time'}</option>
             </select>
           </div>
 
           {/* Export CSV button */}
           <button
             onClick={() => handleExportCsv(activeTab)}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-stone-200 text-xs font-semibold text-stone-700 hover:bg-stone-50 shadow-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 text-xs font-semibold text-slate-800 hover:bg-slate-50 transition-colors cursor-pointer"
           >
-            <Download className="w-4 h-4 text-[#174D35]" />
-            <span>{language === 'bn' ? 'CSV এক্সপোর্ট' : 'Export CSV'}</span>
+            <Download className="w-4 h-4 text-slate-600" />
+            <span>{language === 'bn' ? 'সিএসভি ডাউনলোড' : 'Export CSV'}</span>
+          </button>
+
+          {/* Primary PDF Report Button */}
+          <button
+            onClick={() => setShowReportPdf(true)}
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-2xs transition-colors cursor-pointer"
+          >
+            <Printer className="w-4 h-4" />
+            <span>{language === 'bn' ? 'প্রিন্ট / পিডিএফ' : 'Print / PDF'}</span>
           </button>
         </div>
       </div>
 
+      {feedback && (
+        <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-semibold">
+          {feedback}
+        </div>
+      )}
+
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-stone-200 pb-2 overflow-x-auto text-xs font-semibold">
+      <div className="flex items-center gap-1.5 p-1 bg-slate-200/70 rounded-xl w-fit overflow-x-auto text-xs font-semibold">
         <button
           onClick={() => setActiveTab('financial')}
-          className={`px-4 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-4 py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'financial'
-              ? 'bg-[#174D35] text-white shadow-xs'
-              : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+              ? 'bg-slate-950 text-white shadow-2xs'
+              : 'text-slate-600 hover:text-slate-950'
           }`}
         >
-          {language === 'bn' ? 'আর্থিক বিবরণ ও বিক্রয়' : 'Financial & Sales'}
+          {language === 'bn' ? 'আর্থিক সারসংক্ষেপ' : 'Financial Summary'}
         </button>
         <button
           onClick={() => setActiveTab('cod')}
-          className={`px-4 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-4 py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'cod'
-              ? 'bg-[#174D35] text-white shadow-xs'
-              : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+              ? 'bg-slate-950 text-white shadow-2xs'
+              : 'text-slate-600 hover:text-slate-950'
           }`}
         >
-          {language === 'bn' ? 'COD রিকনসিলিয়েশন' : 'COD Reconciliation'}
+          {language === 'bn' ? 'ক্যাশ অন ডেলিভারি হিসাব' : 'COD Reconciliation'}
         </button>
         <button
           onClick={() => setActiveTab('top_products')}
-          className={`px-4 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-4 py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'top_products'
-              ? 'bg-[#174D35] text-white shadow-xs'
-              : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+              ? 'bg-slate-950 text-white shadow-2xs'
+              : 'text-slate-600 hover:text-slate-950'
           }`}
         >
-          {language === 'bn' ? 'টপ-সেলিং পণ্য' : 'Top Selling Items'}
+          {language === 'bn' ? 'সর্বাধিক বিক্রীত পণ্য' : 'Top Selling Products'}
         </button>
         <button
           onClick={() => setActiveTab('inventory')}
-          className={`px-4 py-2 rounded-xl transition-all cursor-pointer whitespace-nowrap ${
+          className={`px-4 py-2 rounded-lg transition-all cursor-pointer whitespace-nowrap ${
             activeTab === 'inventory'
-              ? 'bg-[#174D35] text-white shadow-xs'
-              : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+              ? 'bg-slate-950 text-white shadow-2xs'
+              : 'text-slate-600 hover:text-slate-950'
           }`}
         >
-          {language === 'bn' ? 'ইনভেন্টরি সতর্কতা' : 'Inventory Alerts'}
+          {language === 'bn' ? 'স্টক সতর্কতা রিপোর্ট' : 'Inventory Alerts'}
         </button>
       </div>
 
@@ -181,80 +201,72 @@ export const AdminReportsPage: React.FC = () => {
       {activeTab === 'financial' && (
         <div className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="bg-white p-5 rounded-3xl border border-stone-200/90 shadow-2xs">
-              <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
-                {language === 'bn' ? 'গ্রস অর্ডার মূল্য (Gross)' : 'Gross Order Value'}
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+              <span className="text-xs font-semibold text-slate-500">
+                {language === 'bn' ? 'সর্বমোট অর্ডার মূল্য' : 'Gross Order Value'}
               </span>
-              <div className="text-2xl font-bold text-stone-900 mt-2">
-                ৳{(metrics?.totalOrderValue ?? 0).toLocaleString()}
+              <div className="text-2xl font-extrabold text-slate-950 mt-2 tabular-nums">
+                {formatAdminCurrency(metrics?.totalOrderValue ?? 0, language)}
               </div>
-              <p className="text-[11px] text-stone-400 mt-1">Non-cancelled order totals</p>
             </div>
 
-            <div className="bg-white p-5 rounded-3xl border border-stone-200/90 shadow-2xs">
-              <span className="text-[11px] font-semibold text-emerald-600 uppercase tracking-wider">
-                {language === 'bn' ? 'ডেলিভার্ড সফল বিক্রয়' : 'Delivered Sales Value'}
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+              <span className="text-xs font-semibold text-emerald-600">
+                {language === 'bn' ? 'সফল ডেলিভারি বিক্রয়' : 'Delivered Sales Value'}
               </span>
-              <div className="text-2xl font-bold text-emerald-800 mt-2">
-                ৳{(metrics?.deliveredOrderValue ?? 0).toLocaleString()}
+              <div className="text-2xl font-extrabold text-emerald-600 mt-2 tabular-nums">
+                {formatAdminCurrency(metrics?.deliveredOrderValue ?? 0, language)}
               </div>
-              <p className="text-[11px] text-emerald-600/80 mt-1">Successfully completed deliveries</p>
             </div>
 
-            <div className="bg-white p-5 rounded-3xl border border-stone-200/90 shadow-2xs">
-              <span className="text-[11px] font-semibold text-stone-400 uppercase tracking-wider">
-                {language === 'bn' ? 'গড় অর্ডার মূল্য (AOV)' : 'Average Order Value'}
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+              <span className="text-xs font-semibold text-blue-600">
+                {language === 'bn' ? 'গড় অর্ডার মূল্য' : 'Average Order Value'}
               </span>
-              <div className="text-2xl font-bold text-[#174D35] mt-2">
-                ৳{(metrics?.averageOrderValue ?? 0).toLocaleString()}
+              <div className="text-2xl font-extrabold text-slate-950 mt-2 tabular-nums">
+                {formatAdminCurrency(metrics?.averageOrderValue ?? 0, language)}
               </div>
-              <p className="text-[11px] text-stone-400 mt-1">Per active order basket</p>
             </div>
 
-            <div className="bg-white p-5 rounded-3xl border border-stone-200/90 shadow-2xs">
-              <span className="text-[11px] font-semibold text-rose-600 uppercase tracking-wider">
-                {language === 'bn' ? 'মোট রিফান্ড' : 'Total Refunds'}
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+              <span className="text-xs font-semibold text-rose-600">
+                {language === 'bn' ? 'মোট মূল্য ফেরত' : 'Total Refunds'}
               </span>
-              <div className="text-2xl font-bold text-rose-700 mt-2">
-                ৳{(metrics?.totalRefunds ?? 0).toLocaleString()}
+              <div className="text-2xl font-extrabold text-rose-600 mt-2 tabular-nums">
+                {formatAdminCurrency(metrics?.totalRefunds ?? 0, language)}
               </div>
-              <p className="text-[11px] text-rose-600/80 mt-1">Recorded customer refunds</p>
             </div>
           </div>
 
-          {/* Formulas and Accounting Definitions Table */}
-          <div className="bg-white rounded-3xl border border-stone-200/80 p-6 shadow-xs space-y-4">
-            <h3 className="font-bold text-stone-900 text-base">
-              {language === 'bn' ? 'অ্যাকাউন্টিং সংজ্ঞা ও ব্যবসায়িক মেট্রিক্স' : 'Accounting Formulas & Metric Definitions'}
+          {/* Accounting Breakdown Table */}
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-2xs space-y-4">
+            <h3 className="font-bold text-slate-950 text-base">
+              {language === 'bn' ? 'বিস্তারিত আর্থিক হিসাব বিবরণী' : 'Financial Accounting Breakdown'}
             </h3>
-            <div className="divide-y divide-stone-100 text-xs">
-              <div className="py-2.5 flex items-center justify-between">
-                <div>
-                  <span className="font-semibold text-stone-800">Net Sales (নেট বিক্রয়)</span>
-                  <p className="text-[11px] text-stone-400">Formula: Delivered Order Value - Verified Refunds</p>
-                </div>
-                <span className="font-bold text-stone-900 text-sm">৳{(metrics?.netSales ?? 0).toLocaleString()}</span>
+            <div className="divide-y divide-slate-100 text-xs">
+              <div className="py-3 flex items-center justify-between">
+                <span className="font-bold text-slate-900">
+                  {language === 'bn' ? 'নিট বিক্রয়' : 'Net Sales'}
+                </span>
+                <span className="font-extrabold text-slate-950 text-sm tabular-nums">
+                  {formatAdminCurrency(metrics?.netSales ?? 0, language)}
+                </span>
               </div>
-              <div className="py-2.5 flex items-center justify-between">
-                <div>
-                  <span className="font-semibold text-stone-800">Actual Collected Payments (সংগৃহীত টাকা)</span>
-                  <p className="text-[11px] text-stone-400">Verified COD cash in hand + Online prepaid payments</p>
-                </div>
-                <span className="font-bold text-emerald-700 text-sm">৳{(metrics?.actualCollectedPayments ?? 0).toLocaleString()}</span>
+              <div className="py-3 flex items-center justify-between">
+                <span className="font-bold text-slate-900">
+                  {language === 'bn' ? 'প্রকৃত আদায়কৃত নগদ টাকা' : 'Actual Collected Payments'}
+                </span>
+                <span className="font-extrabold text-emerald-600 text-sm tabular-nums">
+                  {formatAdminCurrency(metrics?.actualCollectedPayments ?? 0, language)}
+                </span>
               </div>
-              <div className="py-2.5 flex items-center justify-between">
-                <div>
-                  <span className="font-semibold text-stone-800">Outstanding COD Balance (বকেয়া COD)</span>
-                  <p className="text-[11px] text-stone-400">Expected COD on delivered/active orders minus verified collected amounts</p>
-                </div>
-                <span className="font-bold text-amber-700 text-sm">৳{(metrics?.outstandingCod ?? 0).toLocaleString()}</span>
-              </div>
-              <div className="py-2.5 flex items-center justify-between">
-                <div>
-                  <span className="font-semibold text-stone-800">Profit Calculation Policy</span>
-                  <p className="text-[11px] text-stone-400">Inventory purchasing costs and operational nursery overhead</p>
-                </div>
-                <span className="text-xs text-stone-500 font-medium">Profit data not configured (Cost tracking required)</span>
+              <div className="py-3 flex items-center justify-between">
+                <span className="font-bold text-slate-900">
+                  {language === 'bn' ? 'বকেয়া ক্যাশ অন ডেলিভারি' : 'Outstanding COD Balance'}
+                </span>
+                <span className="font-extrabold text-amber-600 text-sm tabular-nums">
+                  {formatAdminCurrency(metrics?.outstandingCod ?? 0, language)}
+                </span>
               </div>
             </div>
           </div>
@@ -264,92 +276,98 @@ export const AdminReportsPage: React.FC = () => {
       {/* TAB 2: COD Reconciliation */}
       {activeTab === 'cod' && (
         <div className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            <div className="bg-white p-5 rounded-3xl border border-stone-200/90 shadow-2xs">
-              <span className="text-xs font-semibold text-stone-400 uppercase tracking-wider">
-                {language === 'bn' ? 'প্রত্যাশিত মোট COD' : 'Expected Total COD'}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-2xs">
+              <span className="text-xs font-semibold text-slate-500">
+                {language === 'bn' ? 'মোট প্রত্যাশিত ক্যাশ অন ডেলিভারি' : 'Expected Total COD'}
               </span>
-              <div className="text-2xl font-bold text-stone-900 mt-2">
-                ৳{((metrics?.actualCollectedPayments ?? 0) + (metrics?.outstandingCod ?? 0)).toLocaleString()}
+              <div className="text-2xl font-extrabold text-slate-950 mt-2 tabular-nums">
+                {formatAdminCurrency(
+                  (metrics?.actualCollectedPayments ?? 0) + (metrics?.outstandingCod ?? 0),
+                  language
+                )}
               </div>
             </div>
 
-            <div className="bg-white p-5 rounded-3xl border border-emerald-200 shadow-2xs bg-emerald-50/20">
-              <span className="text-xs font-semibold text-emerald-700 uppercase tracking-wider">
-                {language === 'bn' ? 'সংগৃহীত COD টাকা' : 'Actual COD Collected'}
+            <div className="bg-white p-5 rounded-2xl border border-emerald-200 shadow-2xs bg-emerald-50/30">
+              <span className="text-xs font-semibold text-emerald-700">
+                {language === 'bn' ? 'আদায়কৃত ক্যাশ টাকা' : 'Actual COD Collected'}
               </span>
-              <div className="text-2xl font-bold text-emerald-800 mt-2">
-                ৳{(metrics?.actualCollectedPayments ?? 0).toLocaleString()}
+              <div className="text-2xl font-extrabold text-emerald-700 mt-2 tabular-nums">
+                {formatAdminCurrency(metrics?.actualCollectedPayments ?? 0, language)}
               </div>
             </div>
 
-            <div className="bg-white p-5 rounded-3xl border border-amber-200 shadow-2xs bg-amber-50/20">
-              <span className="text-xs font-semibold text-amber-700 uppercase tracking-wider">
+            <div className="bg-white p-5 rounded-2xl border border-amber-200 shadow-2xs bg-amber-50/30">
+              <span className="text-xs font-semibold text-amber-700">
                 {language === 'bn' ? 'বকেয়া ক্যাশ ব্যালেন্স' : 'Outstanding COD Balance'}
               </span>
-              <div className="text-2xl font-bold text-amber-800 mt-2">
-                ৳{(metrics?.outstandingCod ?? 0).toLocaleString()}
+              <div className="text-2xl font-extrabold text-amber-700 mt-2 tabular-nums">
+                {formatAdminCurrency(metrics?.outstandingCod ?? 0, language)}
               </div>
             </div>
-          </div>
-
-          <div className="bg-white rounded-3xl border border-stone-200/80 p-6 shadow-xs space-y-3">
-            <h3 className="font-bold text-stone-900 text-sm">
-              {language === 'bn' ? 'ক্যাশ-অন-ডেলিভারি সমন্বয় নীতি' : 'Cash on Delivery Reconciliation Audit Policy'}
-            </h3>
-            <p className="text-xs text-stone-600 leading-relaxed">
-              ডেলিভারি সম্পন্ন হলেই কোনো ক্যাশ-অন-ডেলিভারি অর্ডার স্বয়ংক্রিয়ভাবে সংগৃহীত হিসেবে গণ্য হবে না।
-              প্রতিটি ডেলিভারি এজেন্টের মাধ্যমে প্রাপ্ত টাকা স্বতন্ত্র অডিট রেকর্ডে সংরক্ষিত হতে হবে।
-              বাতিলকৃত বা ফেরত আসা অর্ডার থেকে কোনো বকেয়া যোগ করা হবে না।
-            </p>
           </div>
         </div>
       )}
 
       {/* TAB 3: Top Selling Items */}
       {activeTab === 'top_products' && (
-        <div className="bg-white rounded-3xl border border-stone-200/80 p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-bold text-stone-900 text-base">
-              {language === 'bn' ? 'ঐতিহাসিক অর্ডার অনুযায়ী সর্বাধিক বিক্রীত গাছ ও বীজ' : 'Top Performing Plant & Seed Products'}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+          <div className="p-5 border-b border-slate-200 flex items-center justify-between">
+            <h3 className="font-bold text-slate-950 text-base">
+              {language === 'bn' ? 'সর্বাধিক বিক্রীত গাছ ও বীজের তালিকা' : 'Top Performing Plant & Seed Products'}
             </h3>
-            <span className="text-xs text-stone-400">Sorted by Units Sold</span>
+            <span className="text-xs text-slate-500">
+              {language === 'bn' ? 'বিক্রির সংখ্যা অনুযায়ী সাজানো' : 'Sorted by Units Sold'}
+            </span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-stone-200 text-stone-400 text-[11px] font-semibold uppercase">
-                  <th className="py-2.5 px-3">#</th>
-                  <th className="py-2.5 px-3">{language === 'bn' ? 'পণ্য' : 'Product'}</th>
-                  <th className="py-2.5 px-3">SKU</th>
-                  <th className="py-2.5 px-3">{language === 'bn' ? 'বিক্রিত ইউনিট' : 'Units Sold'}</th>
-                  <th className="py-2.5 px-3">{language === 'bn' ? 'অর্ডার সংখ্যা' : 'Orders Count'}</th>
-                  <th className="py-2.5 px-3 text-right">{language === 'bn' ? 'গ্রস বিক্রয়' : 'Gross Revenue'}</th>
+                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[11px] font-semibold uppercase">
+                  <th className="py-3 px-4">#</th>
+                  <th className="py-3 px-4">{language === 'bn' ? 'পণ্য' : 'Product'}</th>
+                  <th className="py-3 px-4">{language === 'bn' ? 'কোড' : 'SKU'}</th>
+                  <th className="py-3 px-4">{language === 'bn' ? 'বিক্রীত সংখ্যা' : 'Units Sold'}</th>
+                  <th className="py-3 px-4">{language === 'bn' ? 'অর্ডার সংখ্যা' : 'Orders'}</th>
+                  <th className="py-3 px-4 text-right">{language === 'bn' ? 'মোট বিক্রয় মূল্য' : 'Revenue'}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100">
+              <tbody className="divide-y divide-slate-100">
                 {topProducts.map((p, idx) => (
-                  <tr key={idx} className="hover:bg-stone-50/50">
-                    <td className="py-3 px-3 font-bold text-stone-400">{idx + 1}</td>
-                    <td className="py-3 px-3">
+                  <tr key={idx} className="hover:bg-slate-50">
+                    <td className="py-3 px-4 font-bold text-slate-400 tabular-nums">
+                      {formatAdminNumber(idx + 1, language)}
+                    </td>
+                    <td className="py-3 px-4">
                       <div className="flex items-center gap-2.5">
                         <img
                           src={getSafeImageUrl(p.imageUrl, { type: p.type })}
                           alt={p.nameEn}
-                          className="w-8 h-8 rounded-lg object-cover border border-stone-200 shrink-0"
+                          className="w-8 h-8 rounded-lg object-cover border border-slate-200 shrink-0"
                           onError={(e) => handleImageError(e, getProductFallbackImage({ type: p.type }))}
                         />
                         <div>
-                          <p className="font-semibold text-stone-900">{language === 'bn' ? p.nameBn : p.nameEn}</p>
-                          <p className="text-[10px] text-stone-400 capitalize">{p.type}</p>
+                          <p className="font-semibold text-slate-950">{language === 'bn' ? p.nameBn : p.nameEn}</p>
+                          <p className="text-[10px] text-slate-400">
+                            {translateProductType(p.type, language)}
+                          </p>
                         </div>
                       </div>
                     </td>
-                    <td className="py-3 px-3 font-mono text-stone-600">{p.sku}</td>
-                    <td className="py-3 px-3 font-bold text-stone-900">{p.unitsSold}</td>
-                    <td className="py-3 px-3 text-stone-700">{p.qualifyingOrdersCount}</td>
-                    <td className="py-3 px-3 text-right font-bold text-[#174D35]">৳{p.grossSales.toLocaleString()}</td>
+                    <td className="py-3 px-4 font-mono text-slate-600 tabular-nums">
+                      {language === 'bn' ? toBnDigits(p.sku) : p.sku}
+                    </td>
+                    <td className="py-3 px-4 font-bold text-slate-950 tabular-nums">
+                      {formatAdminNumber(p.unitsSold, language)}
+                    </td>
+                    <td className="py-3 px-4 text-slate-700 tabular-nums">
+                      {formatAdminNumber(p.qualifyingOrdersCount, language)}
+                    </td>
+                    <td className="py-3 px-4 text-right font-bold text-emerald-600 tabular-nums">
+                      {formatAdminCurrency(p.grossSales, language)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -360,62 +378,67 @@ export const AdminReportsPage: React.FC = () => {
 
       {/* TAB 4: Inventory Alerts */}
       {activeTab === 'inventory' && (
-        <div className="bg-white rounded-3xl border border-stone-200/80 p-6 shadow-xs space-y-4">
-          <div className="flex items-center justify-between">
-            <h3 className="font-bold text-stone-900 text-base">
-              {language === 'bn' ? 'ইনভেন্টরি স্টক রিপোর্ট ও অ্যালার্ট' : 'Inventory Stock Levels & Alerts'}
+        <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+          <div className="p-5 border-b border-slate-200 flex items-center justify-between">
+            <h3 className="font-bold text-slate-950 text-base">
+              {language === 'bn' ? 'স্টক সতর্কতা ও ইনভেন্টরি রিপোর্ট' : 'Inventory Stock Levels & Alerts'}
             </h3>
-            <span className="text-xs text-stone-400">Threshold: ≤ 10 units</span>
+            <span className="text-xs text-slate-500">
+              {language === 'bn' ? '১০ টির কম মজুদ থাকা পণ্য' : 'Threshold: ≤ 10 units'}
+            </span>
           </div>
 
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs sm:text-sm">
               <thead>
-                <tr className="border-b border-stone-200 text-stone-400 text-[11px] font-semibold uppercase">
-                  <th className="py-2.5 px-3">{language === 'bn' ? 'পণ্য' : 'Product'}</th>
-                  <th className="py-2.5 px-3">SKU</th>
-                  <th className="py-2.5 px-3">{language === 'bn' ? 'ক্যাটাগরি' : 'Category'}</th>
-                  <th className="py-2.5 px-3">{language === 'bn' ? 'মজুদ স্টক' : 'Available Stock'}</th>
-                  <th className="py-2.5 px-3 text-right">{language === 'bn' ? 'স্ট্যাটাস' : 'Status'}</th>
+                <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 text-[11px] font-semibold uppercase">
+                  <th className="py-3 px-4">{language === 'bn' ? 'পণ্য' : 'Product'}</th>
+                  <th className="py-3 px-4">{language === 'bn' ? 'কোড' : 'SKU'}</th>
+                  <th className="py-3 px-4">{language === 'bn' ? 'বিভাগ' : 'Category'}</th>
+                  <th className="py-3 px-4">{language === 'bn' ? 'বর্তমান মজুদ' : 'Available Stock'}</th>
+                  <th className="py-3 px-4 text-right">{language === 'bn' ? 'অবস্থা' : 'Status'}</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100">
+              <tbody className="divide-y divide-slate-100">
                 {inventoryAlerts.map((item, idx) => (
-                  <tr key={idx} className="hover:bg-stone-50/50">
-                    <td className="py-3 px-3">
+                  <tr key={idx} className="hover:bg-slate-50">
+                    <td className="py-3 px-4">
                       <div className="flex items-center gap-2.5">
                         <img
                           src={getSafeImageUrl(item.imageUrl, { categorySlug: item.categorySlug })}
                           alt={item.nameEn}
-                          className="w-8 h-8 rounded-lg object-cover border border-stone-200 shrink-0"
+                          className="w-8 h-8 rounded-lg object-cover border border-slate-200 shrink-0"
                           onError={(e) => handleImageError(e, getProductFallbackImage({ categorySlug: item.categorySlug }))}
                         />
-                        <div>
-                          <p className="font-semibold text-stone-900">{language === 'bn' ? item.nameBn : item.nameEn}</p>
-                          <p className="text-[10px] text-stone-400">{item.nameEn}</p>
-                        </div>
+                        <p className="font-semibold text-slate-950">{language === 'bn' ? item.nameBn : item.nameEn}</p>
                       </div>
                     </td>
-                    <td className="py-3 px-3 font-mono text-stone-600">{item.sku}</td>
-                    <td className="py-3 px-3 text-stone-600 capitalize">{item.categorySlug}</td>
-                    <td className="py-3 px-3 font-bold text-stone-900">{item.stockQuantity}</td>
-                    <td className="py-3 px-3 text-right">
+                    <td className="py-3 px-4 font-mono text-slate-600 tabular-nums">
+                      {language === 'bn' ? toBnDigits(item.sku) : item.sku}
+                    </td>
+                    <td className="py-3 px-4 text-slate-600">
+                      {translateCategoryName(item.categorySlug, language)}
+                    </td>
+                    <td className="py-3 px-4 font-bold text-slate-950 tabular-nums">
+                      {formatAdminNumber(item.stockQuantity, language)}
+                    </td>
+                    <td className="py-3 px-4 text-right">
                       <span
-                        className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                        className={`inline-block px-2.5 py-0.5 rounded-md text-xs font-semibold border ${
                           item.stockStatus === 'out_of_stock'
-                            ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                            ? 'bg-rose-50 text-rose-700 border-rose-200'
                             : item.stockStatus === 'low_stock'
-                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                            : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            ? 'bg-amber-50 text-amber-700 border-amber-200'
+                            : 'bg-emerald-50 text-emerald-700 border-emerald-200'
                         }`}
                       >
                         {item.stockStatus === 'out_of_stock'
                           ? language === 'bn'
-                            ? 'স্টক আউট'
+                            ? 'স্টক শেষ'
                             : 'Out of Stock'
                           : item.stockStatus === 'low_stock'
                           ? language === 'bn'
-                            ? 'লো স্টক'
+                            ? 'কম স্টক'
                             : 'Low Stock'
                           : language === 'bn'
                           ? 'পর্যাপ্ত'
@@ -428,6 +451,23 @@ export const AdminReportsPage: React.FC = () => {
             </table>
           </div>
         </div>
+      )}
+
+      {/* Built-in A4 Report PDF Modal */}
+      {showReportPdf && (
+        <AdminPrintModal
+          mode="report"
+          metrics={metrics}
+          topProducts={topProducts}
+          inventoryAlerts={inventoryAlerts}
+          dateRangeLabel={
+            language === 'bn'
+              ? dateRangeLabelMap[dateRange]?.bn || 'সর্বকালীন'
+              : dateRangeLabelMap[dateRange]?.en || 'All Time'
+          }
+          language={language}
+          onClose={() => setShowReportPdf(false)}
+        />
       )}
     </div>
   );

@@ -160,19 +160,48 @@ export const FloatingWhatsAppWidget: React.FC = () => {
         </div>
       )}
 
-      {/* Trigger Floating Action Button */}
+      {/* Trigger Floating Action Button with Botanical Ripple & Swaying Leaf */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Open WhatsApp live support"
         className="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-[#25D366] hover:bg-[#20bd5a] text-white shadow-xl flex items-center justify-center transition-transform hover:scale-110 active:scale-95 cursor-pointer relative group"
       >
-        <MessageCircle className="w-7 h-7" />
+        {/* Outer Botanical Ripple Wave */}
+        {!isOpen && (
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 rounded-full border-2 border-[#25D366] animate-whatsapp-ripple"
+          />
+        )}
+
+        {/* Swaying Botanical Sprout Leaf on Top-Left of Button */}
+        <svg
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+          className="pointer-events-none absolute -top-2 -left-1.5 w-6 h-6 drop-shadow-xs animate-whatsapp-leaf"
+          fill="none"
+        >
+          <path
+            d="M19 4C11 4 6 9 6 17C12 17 18 12 19 4Z"
+            fill="#174D35"
+            stroke="#4ADE80"
+            strokeWidth="1.5"
+          />
+          <path
+            d="M6 17C10 13 14 9 19 4"
+            stroke="#86EFAC"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+          />
+        </svg>
+
+        <MessageCircle className="w-7 h-7 relative z-10" />
         <span className="sr-only">WhatsApp Chat</span>
         {/* Subtle Ping Animation */}
         {!isOpen && (
-          <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+          <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5 z-10">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-600" />
+            <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-emerald-600 border border-white" />
           </span>
         )}
       </button>

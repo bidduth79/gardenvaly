@@ -29,6 +29,7 @@ const StatCounterCard: React.FC<StatCounterProps> = ({
   delayMs,
 }) => {
   const [count, setCount] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
   const cardRef = useRef<HTMLDivElement | null>(null);
   const isBn = language === 'bn';
 
@@ -66,15 +67,17 @@ const StatCounterCard: React.FC<StatCounterProps> = ({
         (entries) => {
           entries.forEach((entry) => {
             if (entry.isIntersecting) {
+              setIsVisible(true);
               startCountingFromZero();
-            } else {
+            } else if (entry.boundingClientRect.top > window.innerHeight * 0.85) {
+              setIsVisible(false);
               if (rafId) window.cancelAnimationFrame(rafId);
               if (timeoutId) clearTimeout(timeoutId);
               setCount(0);
             }
           });
         },
-        { threshold: 0.25 }
+        { threshold: 0.15 }
       );
       io.observe(el);
       return () => {
@@ -83,6 +86,7 @@ const StatCounterCard: React.FC<StatCounterProps> = ({
         if (timeoutId) clearTimeout(timeoutId);
       };
     } else {
+      setIsVisible(true);
       startCountingFromZero();
     }
   }, [target, delayMs]);
@@ -90,8 +94,9 @@ const StatCounterCard: React.FC<StatCounterProps> = ({
   return (
     <div
       ref={cardRef}
+      data-ov-in={isVisible ? 'true' : undefined}
       style={{ '--rv-delay': `${delayMs}ms` } as React.CSSProperties}
-      className="ov-rv text-center p-5 rounded-2xl bg-white/85 dark:bg-[#0C2018] border border-stone-200/80 dark:border-[#1B3B2E] shadow-xs"
+      className={`ov-rv ${isVisible ? 'in' : ''} text-center p-5 rounded-2xl bg-white/85 dark:bg-[#0C2018] border border-stone-200/80 dark:border-[#1B3B2E] shadow-xs`}
     >
       <div className="text-2xl sm:text-3xl lg:text-4xl font-serif-botanical font-bold text-[#174D35] dark:text-[#4ADE80] tabular-nums">
         {formatNumeral(count.toLocaleString('en-US'), language)}
@@ -141,7 +146,9 @@ export const WhyChooseUs: React.FC = () => {
   const features = [
     {
       id: 'selected-plants',
-      icon: <Sprout className="w-6 h-6 text-[#5C8D50]" />,
+      icon: (
+        <Sprout className="w-6 h-6 text-[#5C8D50] group-hover/feat:scale-120 group-hover/feat:-translate-y-0.5 transition-transform duration-300" />
+      ),
       titleEn: 'Carefully Selected Plants',
       titleBn: 'যত্নে নির্বাচিত গাছ',
       descEn: 'Healthy botanical varieties curated by Hasna Hena for home spaces.',
@@ -149,7 +156,9 @@ export const WhyChooseUs: React.FC = () => {
     },
     {
       id: 'quality-seeds',
-      icon: <ShieldCheck className="w-6 h-6 text-[#174D35]" />,
+      icon: (
+        <ShieldCheck className="w-6 h-6 text-[#174D35] dark:text-[#4ADE80] group-hover/feat:scale-115 group-hover/feat:rotate-6 transition-transform duration-300" />
+      ),
       titleEn: 'Quality Seeds',
       titleBn: 'মানসম্মত বীজ',
       descEn: 'Fresh, tested vegetable and flower seeds from reliable domestic sources.',
@@ -157,7 +166,9 @@ export const WhyChooseUs: React.FC = () => {
     },
     {
       id: 'gardening-guidance',
-      icon: <BookOpen className="w-6 h-6 text-[#C5A059]" />,
+      icon: (
+        <BookOpen className="w-6 h-6 text-[#C5A059] group-hover/feat:scale-115 group-hover/feat:-rotate-6 transition-transform duration-300" />
+      ),
       titleEn: 'Gardening Guidance',
       titleBn: 'বাগান পরিচর্যার পরামর্শ',
       descEn: 'Practical watering, sunlight, and organic soil tips for beginners.',
@@ -165,7 +176,9 @@ export const WhyChooseUs: React.FC = () => {
     },
     {
       id: 'convenient-ordering',
-      icon: <Truck className="w-6 h-6 text-[#174D35]" />,
+      icon: (
+        <Truck className="w-6 h-6 text-[#174D35] dark:text-[#4ADE80] group-hover/feat:translate-x-1.5 group-hover/feat:scale-110 transition-transform duration-300" />
+      ),
       titleEn: 'Convenient Ordering',
       titleBn: 'সহজে অর্ডার',
       descEn: 'Smooth plant browsing and responsive customer support for every gardener.',
@@ -222,13 +235,17 @@ export const WhyChooseUs: React.FC = () => {
                 style={{ '--rv-delay': `${idx * 110}ms` } as React.CSSProperties}
                 onMouseMove={handleCardTilt}
                 onMouseLeave={resetCardTilt}
-                className="ov-rv ov-tilt-frame bg-[#F7F5EC]/80 dark:bg-[#0C2018] p-6 rounded-2xl border border-stone-200/80 dark:border-[#1B3B2E] hover:shadow-xl transition-shadow flex flex-col justify-between"
+                className="group/feat ov-rv ov-tilt-frame bg-[#F7F5EC]/80 dark:bg-[#0C2018] p-6 rounded-2xl border border-stone-200/80 dark:border-[#1B3B2E] hover:border-[#22C55E]/50 hover:shadow-xl transition-all flex flex-col justify-between relative overflow-hidden"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-xl bg-white dark:bg-[#10261E] dark:border dark:border-[#1B3B2E] flex items-center justify-center shadow-xs mb-4">
+                  <div className="relative w-12 h-12 rounded-xl bg-white dark:bg-[#10261E] border border-stone-100 dark:border-[#1B3B2E] group-hover/feat:border-[#22C55E]/40 flex items-center justify-center shadow-xs mb-4 transition-colors">
                     {feat.icon}
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#4ADE80] opacity-0 group-hover/feat:opacity-100 scale-50 group-hover/feat:scale-100 transition-all duration-300"
+                    />
                   </div>
-                  <h3 className="font-serif-botanical font-bold text-base text-stone-900 dark:text-white">
+                  <h3 className="font-serif-botanical font-bold text-base text-stone-900 dark:text-white group-hover/feat:text-[#174D35] dark:group-hover/feat:text-[#4ADE80] transition-colors">
                     {title}
                   </h3>
                   <p className="text-xs text-stone-600 dark:text-[#CBD5E1] mt-2 leading-relaxed">

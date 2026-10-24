@@ -7,21 +7,34 @@ import React from 'react';
 
 interface GardenDeliveryVanProps {
   isDark?: boolean;
+  isBn?: boolean;
+  isHovered?: boolean;
   className?: string;
   onClick?: () => void;
+  onMouseEnter?: (e: React.MouseEvent<SVGGElement>) => void;
+  onMouseLeave?: () => void;
 }
 
 export const GardenDeliveryVan: React.FC<GardenDeliveryVanProps> = ({
   isDark = false,
+  isBn = true,
+  isHovered = false,
   className = '',
   onClick,
+  onMouseEnter,
+  onMouseLeave,
 }) => {
   return (
     <g
       id="story-delivery-van"
       onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
       className={`cursor-pointer select-none ${className}`}
     >
+      {/* Seamless Hover Hit Box so cursor stays locked on van when paused */}
+      <rect x="6" y="-4" width="206" height="106" fill="transparent" />
+
       {/* Headlight beam */}
       <polygon
         points="195,50 255,36 255,68 195,58"
@@ -100,6 +113,7 @@ export const GardenDeliveryVan: React.FC<GardenDeliveryVanProps> = ({
         <circle cx="0" cy="0" r="14" fill="#1C1917" />
         <circle cx="0" cy="0" r="9" fill="#E2E8F0" />
         <g className="animate-story-wheel">
+          <circle cx="0" cy="0" r="10" fill="transparent" />
           <line x1="-9" y1="0" x2="9" y2="0" stroke="#64748B" strokeWidth="1.8" />
           <line x1="0" y1="-9" x2="0" y2="9" stroke="#64748B" strokeWidth="1.8" />
           <line x1="-6.5" y1="-6.5" x2="6.5" y2="6.5" stroke="#64748B" strokeWidth="1.5" />
@@ -114,6 +128,7 @@ export const GardenDeliveryVan: React.FC<GardenDeliveryVanProps> = ({
         <circle cx="0" cy="0" r="14" fill="#1C1917" />
         <circle cx="0" cy="0" r="9" fill="#E2E8F0" />
         <g className="animate-story-wheel">
+          <circle cx="0" cy="0" r="10" fill="transparent" />
           <line x1="-9" y1="0" x2="9" y2="0" stroke="#64748B" strokeWidth="1.8" />
           <line x1="0" y1="-9" x2="0" y2="9" stroke="#64748B" strokeWidth="1.8" />
           <line x1="-6.5" y1="-6.5" x2="6.5" y2="6.5" stroke="#64748B" strokeWidth="1.5" />
@@ -129,6 +144,52 @@ export const GardenDeliveryVan: React.FC<GardenDeliveryVanProps> = ({
         <circle cx="2" cy="70" r="2" fill="#4ADE80" />
         <path d="M 5 72 Q 3 67 7 65 Q 9 70 5 72 Z" fill="#22C55E" />
       </g>
+
+      {/* Interactive Quote Card Above Stopped Van on Hover ("ভাই খুবই ব্যস্ত, সারাদিন ডেলিভারি।") */}
+      {isHovered && (
+        <g transform="translate(-4, -42)" className="pointer-events-none">
+          <g className="animate-valley-quote">
+            <rect
+              x="0"
+              y="0"
+              width="248"
+              height="34"
+              rx="10"
+              fill={isDark ? '#061810' : '#FFFFFF'}
+              stroke="#C5A059"
+              strokeWidth="2.2"
+            />
+            <text
+              x="124"
+              y="22"
+              textAnchor="middle"
+              fontSize="12.5"
+              fontWeight="bold"
+              fill={isDark ? '#4ADE80' : '#14532D'}
+              fontFamily="system-ui, sans-serif"
+            >
+              {isBn
+                ? '“ভাই খুবই ব্যস্ত, সারাদিন ডেলিভারি।”'
+                : '“Brother, very busy—delivering all day!”'}
+            </text>
+            {/* Speech Bubble Pointer Tail to Driver Cabin */}
+            <polygon
+              points="128,34 142,34 135,43"
+              fill={isDark ? '#061810' : '#FFFFFF'}
+              stroke="#C5A059"
+              strokeWidth="2"
+            />
+            <line
+              x1="129"
+              y1="34"
+              x2="141"
+              y2="34"
+              stroke={isDark ? '#061810' : '#FFFFFF'}
+              strokeWidth="2.6"
+            />
+          </g>
+        </g>
+      )}
 
       <defs>
         <linearGradient id="vanDayBeam" x1="0%" y1="0%" x2="100%" y2="0%">

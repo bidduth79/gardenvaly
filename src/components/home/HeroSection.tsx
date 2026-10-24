@@ -116,9 +116,11 @@ export const HeroSection: React.FC = () => {
   const [displayMode, setDisplayMode] = useState<HeroDisplayMode>(() => getStoredHeroDisplayMode());
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [isHeroInView, setIsHeroInView] = useState(true);
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [toastIndex, setToastIndex] = useState(0);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const heroContainerRef = useRef<HTMLDivElement | null>(null);
 
   const isBn = language === 'bn';
   const isIllustrationMode = displayMode === 'illustration';
@@ -138,12 +140,29 @@ export const HeroSection: React.FC = () => {
     },
   ];
 
+  // Observe whether HeroSection is visible in viewport so off-screen intervals never trigger re-renders
   useEffect(() => {
+    const el = heroContainerRef.current;
+    if (!el || typeof window === 'undefined' || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsHeroInView(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isHeroInView) return;
     const tId = setInterval(() => {
       setToastIndex((prev) => (prev + 1) % 3);
     }, 3200);
     return () => clearInterval(tId);
-  }, []);
+  }, [isHeroInView]);
 
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
@@ -198,9 +217,9 @@ export const HeroSection: React.FC = () => {
     };
   }, []);
 
-  // Auto-play interval when in carousel mode
+  // Auto-play interval when in carousel mode and visible in viewport
   useEffect(() => {
-    if (isPaused || isIllustrationMode) {
+    if (isPaused || isIllustrationMode || !isHeroInView) {
       if (timerRef.current) clearInterval(timerRef.current);
       return;
     }
@@ -212,7 +231,7 @@ export const HeroSection: React.FC = () => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [isPaused, isIllustrationMode, nextSlide]);
+  }, [isPaused, isIllustrationMode, isHeroInView, nextSlide]);
 
   // Touch swipe support for mobile viewports
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -237,7 +256,7 @@ export const HeroSection: React.FC = () => {
   const nextSlidePreview = slides[(safeIndex + 1) % slides.length] || slides[0];
 
   return (
-    <div id="home" className="relative w-full overflow-hidden bg-stone-950">
+    <div id="home" ref={heroContainerRef} className="relative w-full overflow-hidden bg-stone-950" style={{ overflowAnchor: 'none' }}>
       {/* ─── FULLSCREEN BOTANICAL HERO VIEWPORT ─────────────────────── */}
       <section
         className="relative w-full min-h-[580px] sm:min-h-[640px] lg:min-h-[720px] lg:h-[84vh] max-h-[820px] flex items-center overflow-hidden select-none"

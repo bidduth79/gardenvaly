@@ -7,19 +7,35 @@ import React from 'react';
 
 interface GardenShopCottageProps {
   isDark?: boolean;
+  isBn?: boolean;
+  isHovered?: boolean;
   className?: string;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+  onClick?: () => void;
 }
 
 export const GardenShopCottage: React.FC<GardenShopCottageProps> = ({
   isDark = false,
+  isBn = true,
+  isHovered = false,
   className = '',
+  onMouseEnter,
+  onMouseLeave,
+  onClick,
 }) => {
   return (
     <g
       id="shop-cottage-group"
-      transform="translate(5, 114)"
-      className={`select-none ${className}`}
+      transform="translate(-12, 114)"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onClick={onClick}
+      className={`cursor-pointer select-none ${className}`}
     >
+      {/* Seamless Hover Hit Box covering Shop Roof, Signboard & Plant Porch */}
+      <rect x="10" y="10" width="202" height="146" fill="transparent" />
+
       {/* Foundation & Stone Base (Rests on road line at y: 154) */}
       <rect x="25" y="144" width="170" height="10" rx="2" fill="#292524" />
       <rect x="28" y="146" width="164" height="6" rx="1" fill="#44403C" />
@@ -72,14 +88,14 @@ export const GardenShopCottage: React.FC<GardenShopCottageProps> = ({
           strokeWidth="2"
         />
         <rect x="7" y="5" width="92" height="20" rx="2" fill="#1E5E3A" />
-        <path d="M 14 15 C 14 10 20 8 23 15 C 20 18 16 18 14 15 Z" fill="#4ADE80" />
+        <path d="M 12 15 C 12 10 18 8 21 15 C 18 18 14 18 12 15 Z" fill="#4ADE80" />
         <text
-          x="59"
+          x="64"
           y="19"
           textAnchor="middle"
           fontSize="10.5"
           fontWeight="bold"
-          letterSpacing="0.8"
+          letterSpacing="0.6"
           fill="#FEF08A"
           fontFamily="system-ui, -apple-system, sans-serif"
         >
@@ -139,6 +155,80 @@ export const GardenShopCottage: React.FC<GardenShopCottageProps> = ({
       {/* Vintage Wall Lantern */}
       <rect x="40" y="98" width="4" height="10" fill="#1C1917" />
       <circle cx="42" cy="104" r="3.5" fill={isDark ? '#F59E0B' : '#FEF08A'} opacity={isDark ? 0.95 : 0.8} />
+
+      {/* Interactive Quote Card Above Shop on Hover (চলমান অফারসমূহ — ডানে সরানো হয়েছে) */}
+      {isHovered && (
+        <g transform="translate(165, -48)" className="pointer-events-none">
+          <g className="animate-valley-quote">
+            {/* Speech Bubble Card Box */}
+            <rect
+              x="0"
+              y="0"
+              width="340"
+              height="62"
+              rx="12"
+              fill={isDark ? '#061810' : '#FFFFFF'}
+              stroke="#22C55E"
+              strokeWidth="2.2"
+            />
+            {/* Top Accent Ribbon */}
+            <rect x="98" y="7" width="144" height="16" rx="8" fill="#174D35" />
+            <text
+              x="170"
+              y="18.5"
+              textAnchor="middle"
+              fontSize="9.5"
+              fontWeight="bold"
+              fill="#4ADE80"
+              fontFamily="system-ui, sans-serif"
+            >
+              {isBn ? '🎁 গার্ডেনভ্যালির চলমান অফার' : '🎁 Current Offers at GardenValy'}
+            </text>
+            {/* Offer Lines */}
+            <text
+              x="170"
+              y="37"
+              textAnchor="middle"
+              fontSize="11"
+              fontWeight="bold"
+              fill={isDark ? '#F8FAFC' : '#14532D'}
+              fontFamily="system-ui, sans-serif"
+            >
+              {isBn
+                ? '🌿 ১,৫০০৳+ অর্ডারে ফ্রি ডেলিভারি ও কম্বো প্যাকে ২৫% ছাড়!'
+                : '🌿 Free Delivery on 1,500৳+ & up to 25% OFF Combos!'}
+            </text>
+            <text
+              x="170"
+              y="53"
+              textAnchor="middle"
+              fontSize="10"
+              fontWeight="600"
+              fill={isDark ? '#FDE047' : '#B45309'}
+              fontFamily="system-ui, sans-serif"
+            >
+              {isBn
+                ? '✨ প্রথম অর্ডারে WELCOME10 কোডে আরও ১০% বিশেষ ছাড়!'
+                : '✨ Extra 10% OFF on first order with code WELCOME10!'}
+            </text>
+            {/* Speech Bubble Pointer Tail Pointing Toward Shop Roof/Porch */}
+            <polygon
+              points="18,62 34,62 8,74"
+              fill={isDark ? '#061810' : '#FFFFFF'}
+              stroke="#22C55E"
+              strokeWidth="2"
+            />
+            <line
+              x1="19"
+              y1="62"
+              x2="33"
+              y2="62"
+              stroke={isDark ? '#061810' : '#FFFFFF'}
+              strokeWidth="2.6"
+            />
+          </g>
+        </g>
+      )}
     </g>
   );
 };

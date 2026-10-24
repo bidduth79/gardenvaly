@@ -232,7 +232,7 @@ export const ComboPacksSection: React.FC<ComboPacksSectionProps> = ({
               return (
                 <article
                   key={combo.id}
-                  className="ov-rv bg-white dark:bg-[#0C2018] rounded-3xl border border-stone-200/85 dark:border-[#1B3B2E] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
+                  className="group/combo ov-rv bg-white dark:bg-[#0C2018] rounded-3xl border border-stone-200/85 dark:border-[#1B3B2E] shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between"
                 >
                   <div>
                     {/* Top Cover Banner with Savings & Rating Badges */}
@@ -240,14 +240,14 @@ export const ComboPacksSection: React.FC<ComboPacksSectionProps> = ({
                       <img
                         src={combo.imageUrl}
                         alt={title}
-                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
+                        className="w-full h-full object-cover group-hover/combo:scale-105 transition-transform duration-700"
                         loading="lazy"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent" />
 
                       {/* Top Left: Theme Badge */}
                       <div className="absolute top-3.5 left-3.5 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#174D35]/90 backdrop-blur-md text-[#4ADE80] text-xs font-bold border border-[#4ADE80]/30 shadow-md">
-                        <Gift className="w-3.5 h-3.5" />
+                        <Gift className="w-3.5 h-3.5 group-hover/combo:rotate-12 transition-transform duration-300" />
                         <span>{badge}</span>
                       </div>
 
@@ -291,13 +291,46 @@ export const ComboPacksSection: React.FC<ComboPacksSectionProps> = ({
                         {subtitle}
                       </p>
 
-                      {/* IDEA A: "What's Inside the Box" Visual Breakdown */}
+                      {/* IDEA A: "What's Inside the Box" Visual Breakdown with Unboxing Lid Animation */}
                       <div className="rounded-2xl bg-[#F7F5EC]/90 dark:bg-[#10261E] p-3.5 border border-stone-200/70 dark:border-[#1B3B2E]">
                         <div className="flex items-center justify-between mb-2.5">
-                          <span className="text-[11px] font-bold uppercase tracking-wider text-[#174D35] dark:text-[#4ADE80]">
-                            {isBn
-                              ? '📦 এই কম্বো প্যাকে যা যা থাকছে:'
-                              : "📦 What's Inside This Combo:"}
+                          <span className="inline-flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-[#174D35] dark:text-[#4ADE80]">
+                            {/* Animated Unboxing Botanical Crate Icon */}
+                            <svg
+                              viewBox="0 0 24 24"
+                              className="w-4 h-4 shrink-0 overflow-visible"
+                              fill="none"
+                            >
+                              {/* Box Base */}
+                              <rect
+                                x="3"
+                                y="10"
+                                width="18"
+                                height="11"
+                                rx="2"
+                                fill="#C5A059"
+                                fillOpacity="0.28"
+                                stroke="currentColor"
+                                strokeWidth="1.8"
+                              />
+                              {/* Sprouting Leaf inside Box on Card Hover */}
+                              <path
+                                d="M12 11C12 7.5 15 5.5 17.5 5.5C17.5 8.5 15 11 12 11Z"
+                                fill="#22C55E"
+                                className="opacity-0 group-hover/combo:opacity-100 -translate-y-0.5 group-hover/combo:-translate-y-2 transition-all duration-500"
+                              />
+                              {/* Box Lid that Lifts & Tilts on Card Hover */}
+                              <path
+                                d="M2 7.5H22V10H2V7.5Z"
+                                fill="currentColor"
+                                className="origin-left group-hover/combo:-translate-y-1.5 group-hover/combo:-rotate-6 transition-transform duration-500"
+                              />
+                            </svg>
+                            <span>
+                              {isBn
+                                ? 'এই কম্বো প্যাকে যা যা থাকছে:'
+                                : "What's Inside This Combo:"}
+                            </span>
                           </span>
                           <span className="text-[11px] font-semibold text-stone-500 dark:text-[#9CB5A7]">
                             {isBn
@@ -310,7 +343,7 @@ export const ComboPacksSection: React.FC<ComboPacksSectionProps> = ({
                           {combo.items.map((item) => (
                             <div
                               key={item.id}
-                              className="flex items-center gap-2.5 bg-white dark:bg-[#0C2018] p-2 rounded-xl border border-stone-200/60 dark:border-[#1B3B2E]"
+                              className="flex items-center gap-2.5 bg-white dark:bg-[#0C2018] p-2 rounded-xl border border-stone-200/60 dark:border-[#1B3B2E] group-hover/combo:-translate-y-0.5 group-hover/combo:border-[#22C55E]/40 transition-all duration-300"
                             >
                               <img
                                 src={item.imageUrl}
@@ -554,7 +587,7 @@ export const ComboPacksSection: React.FC<ComboPacksSectionProps> = ({
               </div>
 
               {/* Right 4 Cols: Live Custom Bundle Summary & Instant Discount Box */}
-              <div className="lg:col-span-4 lg:sticky lg:top-24 rounded-3xl bg-[#174D35] text-white p-6 space-y-5 shadow-xl">
+              <div className="lg:col-span-4 lg:sticky lg:top-24 rounded-3xl bg-[#174D35] text-white p-6 space-y-5 shadow-xl relative overflow-hidden">
                 <div className="flex items-center justify-between border-b border-white/15 pb-3.5">
                   <div>
                     <span className="text-[11px] uppercase tracking-wider text-[#C5A059] font-bold block">
@@ -569,7 +602,7 @@ export const ComboPacksSection: React.FC<ComboPacksSectionProps> = ({
                   </span>
                 </div>
 
-                {/* Selected 3 Items Visual Stack */}
+                {/* Selected 3 Items Visual Stack with Animated Box Slot Drop-In */}
                 <div className="space-y-2.5">
                   {[
                     { labelBn: 'গাছ', labelEn: 'Plant', item: selectedPlant },
@@ -578,13 +611,13 @@ export const ComboPacksSection: React.FC<ComboPacksSectionProps> = ({
                   ].map((slot, i) =>
                     slot.item ? (
                       <div
-                        key={i}
-                        className="flex items-center gap-3 bg-white/10 p-2.5 rounded-2xl border border-white/10"
+                        key={`${i}-${slot.item.id}`}
+                        className="animate-box-drop flex items-center gap-3 bg-white/10 p-2.5 rounded-2xl border border-white/15 hover:border-[#4ADE80]/50 transition-colors"
                       >
                         <img
                           src={slot.item.imageUrl}
                           alt={isBn ? slot.item.nameBn : slot.item.nameEn}
-                          className="w-11 h-11 rounded-xl object-cover shrink-0"
+                          className="w-11 h-11 rounded-xl object-cover shrink-0 ring-2 ring-[#4ADE80]/40"
                         />
                         <div className="min-w-0 flex-1">
                           <span className="text-[10px] text-[#4ADE80] font-semibold block">

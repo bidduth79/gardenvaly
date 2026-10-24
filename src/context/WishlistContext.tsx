@@ -69,6 +69,13 @@ export const WishlistProvider: React.FC<{ children: ReactNode }> = ({ children }
     setWishlistIds((prev) => {
       const isPresent = prev.includes(productId);
       const next = isPresent ? prev.filter((id) => id !== productId) : [...prev, productId];
+      if (!isPresent && typeof window !== 'undefined') {
+        window.dispatchEvent(
+          new CustomEvent('gardenvaly:wishlist-add', {
+            detail: { productId },
+          })
+        );
+      }
       return next;
     });
 

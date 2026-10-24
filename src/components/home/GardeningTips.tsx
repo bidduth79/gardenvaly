@@ -206,8 +206,34 @@ export const GardeningTips: React.FC = () => {
                 <article
                   key={tip.id}
                   onClick={() => setSelectedTip(tip)}
-                  className="w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] shrink-0 snap-start bg-white dark:bg-[#0C2018] rounded-2xl overflow-hidden border border-stone-200/80 dark:border-[#1B3B2E] shadow-xs hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col cursor-pointer group/card"
+                  className="relative w-full md:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] shrink-0 snap-start bg-white dark:bg-[#0C2018] rounded-2xl overflow-hidden border border-stone-200/80 dark:border-[#1B3B2E] shadow-xs hover:shadow-xl transition-all duration-300 hover:-translate-y-1 flex flex-col cursor-pointer group/card"
                 >
+                  {/* Decorative Corner Vine & Sprout Animation on Card Hover */}
+                  <svg
+                    viewBox="0 0 80 80"
+                    aria-hidden="true"
+                    className="pointer-events-none absolute bottom-0 right-0 w-20 h-20 opacity-15 group-hover/card:opacity-90 translate-y-2 translate-x-2 group-hover/card:translate-y-0 group-hover/card:translate-x-0 scale-90 group-hover/card:scale-105 transition-all duration-500 ease-out z-0"
+                    fill="none"
+                  >
+                    <path
+                      d="M78 78C62 66 52 48 48 24"
+                      stroke="#22C55E"
+                      strokeWidth="2.2"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M60 58C46 58 38 50 38 40C48 40 56 46 60 58Z"
+                      fill="#4ADE80"
+                      fillOpacity="0.45"
+                    />
+                    <path
+                      d="M52 40C60 32 68 30 74 34C68 42 60 44 52 40Z"
+                      fill="#174D35"
+                      fillOpacity="0.4"
+                    />
+                    <circle cx="48" cy="22" r="3.5" fill="#C5A059" />
+                  </svg>
+
                   <div className="relative h-48 sm:h-52 overflow-hidden bg-stone-100 dark:bg-[#10261E]">
                     <img
                       src={tip.imageUrl || DEFAULT_FALLBACK_IMAGE}
@@ -222,7 +248,7 @@ export const GardeningTips: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="p-6 flex-1 flex flex-col justify-between">
+                  <div className="relative z-10 p-6 flex-1 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center gap-2 text-xs text-stone-400 mb-2">
                         <Clock className="w-3.5 h-3.5 text-stone-400" />

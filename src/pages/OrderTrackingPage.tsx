@@ -134,7 +134,103 @@ export const OrderTrackingPage: React.FC = () => {
           </div>
 
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 mb-4">{isBn ? 'ডেলিভারি স্ট্যাটাস' : 'Delivery Status'}</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500">
+                {isBn ? 'ডেলিভারি স্ট্যাটাস' : 'Delivery Status'}
+              </h3>
+              <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#174D35]">
+                <span className="w-2 h-2 rounded-full bg-[#22C55E] animate-ping" />
+                <span>
+                  {order.status === 'delivered'
+                    ? isBn
+                      ? 'ডেলিভারি সম্পন্ন হয়েছে'
+                      : 'Delivered Successfully'
+                    : isBn
+                    ? 'লাইভ নার্সারি ট্র্যাকিং'
+                    : 'Live Nursery Tracking'}
+                </span>
+              </span>
+            </div>
+
+            {/* Animated GardenValy Delivery Van Road Track */}
+            {(() => {
+              const progressPct =
+                order.status === 'pending'
+                  ? 12
+                  : order.status === 'confirmed'
+                  ? 38
+                  : order.status === 'shipped'
+                  ? 68
+                  : 92;
+              return (
+                <div className="relative h-12 mb-3 rounded-2xl bg-[#F7F5EC] border border-stone-200/80 px-4 flex items-center overflow-hidden">
+                  {/* Base Road Track */}
+                  <div className="w-full h-2 rounded-full bg-stone-200/90 overflow-hidden relative">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-[#174D35] via-[#22C55E] to-[#4ADE80] transition-all duration-1000 ease-out"
+                      style={{ width: `${progressPct}%` }}
+                    />
+                  </div>
+
+                  {/* Animated Delivery Van SVG */}
+                  <div
+                    className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 transition-all duration-1000 ease-out pointer-events-none"
+                    style={{ left: `${progressPct}%` }}
+                  >
+                    <div className="relative flex items-center justify-center">
+                      <svg
+                        viewBox="0 0 48 30"
+                        className="w-11 h-7 drop-shadow-sm"
+                        fill="none"
+                      >
+                        {/* Van Body */}
+                        <rect
+                          x="4"
+                          y="6"
+                          width="26"
+                          height="16"
+                          rx="3"
+                          fill="#174D35"
+                        />
+                        {/* Van Cabin */}
+                        <path
+                          d="M30 10H38C40.5 10 42.5 12 43.5 14.5L45 18V22H30V10Z"
+                          fill="#22C55E"
+                        />
+                        {/* Cabin Window */}
+                        <path
+                          d="M32 12H37.5L40.5 16.5H32V12Z"
+                          fill="#E2F8EC"
+                        />
+                        {/* Botanical Leaf Emblem on Van */}
+                        <path
+                          d="M14 17C14 12.5 18.5 10 22 10C22 14.5 18.5 17 14 17Z"
+                          fill="#4ADE80"
+                        />
+                        {/* Wheels */}
+                        <circle
+                          cx="13"
+                          cy="23"
+                          r="4"
+                          fill="#1C1917"
+                          stroke="#F5F5F4"
+                          strokeWidth="1.5"
+                        />
+                        <circle
+                          cx="36"
+                          cy="23"
+                          r="4"
+                          fill="#1C1917"
+                          stroke="#F5F5F4"
+                          strokeWidth="1.5"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
+
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {STEPS.map((step, idx) => {
                 const state = getStepState(idx, order.status);
@@ -142,12 +238,12 @@ export const OrderTrackingPage: React.FC = () => {
                 const isDone = state === 'completed';
                 const isCur = state === 'current';
                 return (
-                  <div key={idx} className={`p-3.5 rounded-xl border text-center ${
+                  <div key={idx} className={`p-3.5 rounded-xl border text-center transition-all ${
                     isDone ? 'bg-emerald-50/70 border-emerald-200 text-emerald-900' :
-                    isCur ? 'bg-[#174D35] border-[#174D35] text-white shadow-md' : 'bg-stone-50 border-stone-200 text-stone-400'
+                    isCur ? 'bg-[#174D35] border-[#174D35] text-white shadow-md scale-[1.02]' : 'bg-stone-50 border-stone-200 text-stone-400'
                   }`}>
                     <div className="w-8 h-8 rounded-full mx-auto flex items-center justify-center mb-1.5 bg-white/20">
-                      {isDone ? <CheckCircle2 className="w-4 h-4 text-emerald-700" /> : <Icon className="w-4 h-4" />}
+                      {isDone ? <CheckCircle2 className="w-4 h-4 text-emerald-700" /> : <Icon className={`w-4 h-4 ${isCur ? 'animate-bounce' : ''}`} />}
                     </div>
                     <p className="text-xs font-bold leading-tight">{isBn ? step.labelBn : step.labelEn}</p>
                   </div>

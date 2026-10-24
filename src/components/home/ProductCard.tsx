@@ -30,6 +30,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
   const { isInCompare, toggleCompare } = useCompare();
   const { navigate } = useRouter();
   const [isJustAdded, setIsJustAdded] = useState(false);
+  const [wishlistBurstKey, setWishlistBurstKey] = useState(0);
   const [isQuickViewOpen, setIsQuickViewOpen] = useState(false);
   const [isInstantBuyOpen, setIsInstantBuyOpen] = useState(false);
 
@@ -83,13 +84,40 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView, 
           )}
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); toggleWishlist(product.id); }}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!isWishlisted) {
+                setWishlistBurstKey((prev) => prev + 1);
+              }
+              toggleWishlist(product.id);
+            }}
             className={`absolute top-2 right-2 sm:top-2.5 sm:right-2.5 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center backdrop-blur-xs transition-all shadow-xs cursor-pointer z-10 ${
               isWishlisted ? 'bg-rose-50 text-rose-600 ring-1 ring-rose-300' : 'bg-white/90 text-stone-600 hover:text-rose-600 hover:bg-white'
             }`}
             aria-label="Wishlist toggle"
           >
-            <Heart className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isWishlisted ? 'fill-rose-500 text-rose-500' : ''}`} />
+            <Heart
+              key={`heart-${wishlistBurstKey}`}
+              className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${
+                isWishlisted ? 'fill-rose-500 text-rose-500 animate-heart-bloom' : ''
+              }`}
+            />
+            {wishlistBurstKey > 0 && isWishlisted && (
+              <svg
+                key={`petals-${wishlistBurstKey}`}
+                viewBox="0 0 36 36"
+                aria-hidden="true"
+                className="pointer-events-none absolute -inset-1.5 w-10 h-10 sm:w-11 sm:h-11 animate-petal-burst"
+                fill="none"
+              >
+                <circle cx="18" cy="4" r="2.2" fill="#F43F5E" />
+                <circle cx="31" cy="11" r="2" fill="#C5A059" />
+                <circle cx="31" cy="25" r="2.2" fill="#FB7185" />
+                <circle cx="18" cy="32" r="2" fill="#4ADE80" />
+                <circle cx="5" cy="25" r="2.2" fill="#F43F5E" />
+                <circle cx="5" cy="11" r="2" fill="#C5A059" />
+              </svg>
+            )}
           </button>
           <div className="absolute bottom-2 right-2 sm:bottom-2.5 sm:right-2.5 flex items-center gap-1 bg-white/95 backdrop-blur-xs px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-bold text-stone-800 shadow-xs z-10">
             <Star className="w-3 h-3 fill-[#C5A059] text-[#C5A059]" />
